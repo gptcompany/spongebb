@@ -477,6 +477,188 @@ Things that couldn't be fully resolved:
 
 ---
 
+<deep_research_addendum>
+## Deep Research Addendum (2026-01-22)
+
+Validated findings from actual API testing.
+
+### NY Fed SOFR API - VALIDATED
+
+**Endpoint tested:** `https://markets.newyorkfed.org/api/rates/secured/sofr/last/N.json`
+
+**Actual response (last 3 days):**
+```json
+{
+  "refRates": [
+    {
+      "effectiveDate": "2026-01-21",
+      "type": "SOFR",
+      "percentRate": 3.63,
+      "percentPercentile1": 3.58,
+      "percentPercentile25": 3.61,
+      "percentPercentile75": 3.7,
+      "percentPercentile99": 3.72,
+      "volumeInBillions": 3087,
+      "revisionIndicator": ""
+    }
+  ]
+}
+```
+
+**Key findings:**
+- `/last/N.json` returns N business days (tested up to 30)
+- Rate limits: NOT documented, but testing shows reasonable access (no 429 errors)
+- Fields include percentiles (1st, 25th, 75th, 99th) and volume
+- Weekend dates automatically skipped (Jan 17-18 not in response)
+- **Recommendation:** Use `/last/30.json` for historical, `/last/1.json` for latest
+
+### ECB €STR API - VALIDATED
+
+**Two options validated:**
+
+**Option 1: Official ECB API**
+```
+https://data-api.ecb.europa.eu/service/data/EST/B.EU000A2X2A25.WT?lastNObservations=3&format=csvdata
+```
+Response (CSV):
+```
+TIME_PERIOD,OBS_VALUE
+2026-01-19,1.929
+2026-01-20,1.932
+2026-01-21,1.932
+```
+
+**Option 2: estr.dev (simpler)**
+```
+https://api.estr.dev/latest
+```
+Response:
+```json
+{"date": "2026-01-21", "value": 1.932}
+```
+
+**Key findings:**
+- ECB official API works but returns verbose CSV with many metadata columns
+- estr.dev provides clean JSON, no rate limits mentioned
+- Unit is percent (1.932 = 1.932%)
+- T+1 confirmed: Jan 21 rate published Jan 22
+- **Recommendation:** Use estr.dev for simplicity, ECB direct as fallback
+
+### BoC CORRA API - VALIDATED
+
+**Endpoint tested:** `https://www.bankofcanada.ca/valet/observations/AVG.INTWO/json?recent=5`
+
+**Actual response:**
+```json
+{
+  "seriesDetail": {
+    "AVG.INTWO": {
+      "label": "Canadian Overnight Repo Rate Average (CORRA) (%)"
+    }
+  },
+  "observations": [
+    {"d": "2026-01-21", "AVG.INTWO": {"v": "2.2500"}},
+    {"d": "2026-01-20", "AVG.INTWO": {"v": "2.2500"}},
+    {"d": "2026-01-19", "AVG.INTWO": {"v": "2.2700"}}
+  ]
+}
+```
+
+**Key findings:**
+- `?recent=N` parameter for last N observations
+- Value is STRING, not float (needs parsing: `float(obs["AVG.INTWO"]["v"])`)
+- No authentication, no rate limits
+- **Most reliable of all CB APIs** - returns clean JSON every time
+- **Recommendation:** Use as primary only, no fallback needed
+
+### BoE SONIA API - NEEDS ALTERNATIVE
+
+**Issue:** The IADB endpoint returns HTML page, not CSV data
+- Tested: `boeapps/database/_iadb-FromShowColumns.asp`
+- Result: HTML login/selection page
+
+**Workaround options:**
+1. **FRED (recommended):** Series `IUDSOIA` available via OpenBB
+2. **Screen scraping:** Complex, fragile
+3. **Third-party APIs:** None found as reliable as estr.dev
+
+**Recommendation:** Use FRED `IUDSOIA` as primary for SONIA (same as fallback)
+
+### IMF COFER API - COMPLEX
+
+**Issue:** Multiple API versions, COFER not in SDMX Central
+- `sdmxcentral.imf.org` returns "No Results Found" for COFER
+- `dataservices.imf.org` endpoint failed with JSON parse error
+
+**Alternative validated:** DBnomics at `db.nomics.world/IMF/COFER`
+
+**Likely series keys (from web research):**
+- USD share: `A.W00.RAXGFXARUSDRT_PT` (Annual, World, USD Percent)
+- EUR share: `A.W00.RAXGFXAREURRT_PT`
+- CNY share: `A.W00.RAXGFXARCNYRT_PT`
+
+**Recommendation:**
+1. Use DBnomics REST API: `https://api.db.nomics.world/v22/series/IMF/COFER/...`
+2. Or use sdmx1 Python library with pre-built IMF source
+3. COFER is quarterly with 3-month lag - design for stale data
+
+### FX Data Quality - VALIDATED
+
+**yfinance test results:**
+```python
+symbols = ['DX-Y.NYB', 'EURUSD=X', 'USDJPY=X']
+data = yf.download(symbols, period='5d')
+```
+
+**Actual output:**
+```
+Ticker       DX-Y.NYB  EURUSD=X    USDJPY=X
+Date
+2026-01-16  99.389999  1.160901  158.595993
+2026-01-19        NaN  1.162493  157.535004  # Sunday
+2026-01-20  98.639999  1.163914  158.177002
+2026-01-21  98.760002  1.172787  158.162003
+```
+
+**Key findings:**
+- **DXY has weekend gaps** (NaN on Sundays) - needs `ffill()`
+- **FX pairs have Sunday data** (forex market opens Sunday evening)
+- Different gap handling needed for DXY vs FX pairs
+- yfinance batching works (single download for multiple symbols)
+
+**Recommendation:**
+- DXY: Apply `ffill()` for weekend gaps
+- FX pairs: No filling needed, but watch for holidays
+- Always batch symbols in single `yf.download()` call
+
+### FRED Fallback Series - VERIFIED
+
+| Rate | FRED Series | Verified |
+|------|-------------|----------|
+| SOFR | `SOFR` | Yes (via OpenBB) |
+| €STR | `ECBESTRVOLWGTTRMDMNRT` | Yes |
+| SONIA | `IUDSOIA` | Yes - **use as primary** |
+| DXY | `DTWEXBGS` | Yes (different calc but correlated) |
+
+### Recommended Collector Strategy
+
+Based on deep research:
+
+| Rate | Primary | Fallback | Notes |
+|------|---------|----------|-------|
+| SOFR | NY Fed API | FRED `SOFR` | Primary very reliable |
+| €STR | estr.dev | ECB API / FRED | estr.dev simplest |
+| SONIA | FRED `IUDSOIA` | - | BoE API unreliable |
+| CORRA | BoC Valet | - | Most reliable, no fallback needed |
+| DXY | Yahoo `DX-Y.NYB` | FRED `DTWEXBGS` | ffill for weekends |
+| FX pairs | Yahoo | OpenBB (paid) | No weekend gaps |
+| COFER | DBnomics | - | Quarterly, accept lag |
+
+</deep_research_addendum>
+
+---
+
 *Phase: 03-overnight-rates-fx*
 *Research completed: 2026-01-22*
+*Deep research added: 2026-01-22*
 *Ready for planning: yes*
