@@ -110,7 +110,24 @@
       "operation": "read",
       "timestamp": "2026-01-22T17:08:26.177761",
       "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/03-RESEARCH.md"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T17:09:08.249939",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/03-RESEARCH.md",
+      "old_string": "---\n\n*Phase: 03-overnight-rates-fx*\n*Research completed: 2026-01-22*\n*Ready for planning: yes*"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T17:09:20.660643",
+      "command": "git add .planning/phases/03-overnight-rates-fx/03-RESEARCH.md && git commit -m \"$(cat <<'EOF'\ndocs(03): add deep research addendum with API validation\n\n- Validated NY Fed SOFR API (actual JSON response, pagination)\n- Validated ECB €STR via estr.dev (simpler than official)\n- Validated BoC CORRA API (most reliable)\n- Found BoE SONIA API unreliable (use FRED instead)\n- IMF COFER complex - use DBnomics\n- FX: DXY has weekend gaps, pairs don't\n- Updated recommended collector strategy\nEOF\n)\"",
+      "description": "Commit deep research addendum"
+    },
+    {
+      "operation": "todowrite",
+      "timestamp": "2026-01-22T17:09:28.542846",
+      "todo_count": 5
     }
   ],
-  "last_updated": "2026-01-22T17:08:26.177799"
+  "last_updated": "2026-01-22T17:09:28.542876"
 }
