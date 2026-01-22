@@ -1868,7 +1868,99 @@
       "timestamp": "2026-01-22T15:56:03.596226",
       "command": "grep -A 15 \"### Phase 3:\" .planning/ROADMAP.md",
       "description": "Check Phase 3 details in ROADMAP"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:57:15.409018",
+      "command": "gh api graphql -f query='\n{\n  organization(login: \"gptcompany\") {\n    projectV2(number: 14) {\n      title\n      field(name: \"Status\") {\n        ... on ProjectV2SingleSelectField {\n          options {\n            id\n            name\n          }\n        }\n      }\n      items(first: 50) {\n        nodes {\n          fieldValueByName(name: \"Status\") {\n            ... on ProjectV2ItemFieldSingleSelectValue {\n              name\n            }\n          }\n          content {\n            ... on Issue {\n              number\n              state\n              title\n            }\n          }\n        }\n      }\n    }\n  }\n}' | jq '.'",
+      "description": "Check project board status field and items"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-22T15:57:29.280784",
+      "pattern": "def close_issue",
+      "path": "/tmp/claude-config/scripts/github_sync_core.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-22T15:57:34.908406",
+      "pattern": "def set_issue_status",
+      "path": "/tmp/claude-config/scripts/github_sync_core.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:57:44.435173",
+      "command": "gh api graphql -f query='\n{\n  organization(login: \"gptcompany\") {\n    projectV2(number: 14) {\n      items(first: 100) {\n        nodes {\n          content {\n            ... on Issue {\n              number\n              state\n              repository {\n                name\n                owner {\n                  login\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}' | jq '.data.organization.projectV2.items.nodes[] | select(.content.number >= 6 and .content.number <= 12) | {number: .content.number, state: .content.state, repo: .content.repository.name, owner: .content.repository.owner.login}'",
+      "description": "Check if closed issues #6-12 are in project and from which repo"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:57:55.895512",
+      "command": "# Get all item IDs from old gptprojectmanager repo and delete them\ngh api graphql -f query='\n{\n  organization(login: \"gptcompany\") {\n    projectV2(number: 14) {\n      id\n      items(first: 100) {\n        nodes {\n          id\n          content {\n            ... on Issue {\n              repository {\n                owner {\n                  login\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}' | jq -r '.data.organization.projectV2 as $proj | $proj.items.nodes[] | select(.content.repository.owner.login == \"gptprojectmanager\") | \"\\($proj.id) \\(.id)\"' > /tmp/items_to_delete.txt\n\nwc -l /tmp/items_to_delete.txt",
+      "description": "Find items from old repo to delete"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:58:03.192439",
+      "command": "# Delete all items from old gptprojectmanager repo\nwhile read proj_id item_id; do\n  gh api graphql -f query=\"mutation { deleteProjectV2Item(input: {projectId: \\\"$proj_id\\\", itemId: \\\"$item_id\\\"}) { deletedItemId } }\" 2>/dev/null\ndone < /tmp/items_to_delete.txt\n\necho \"Deleted old items\"",
+      "description": "Delete items from old repo"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:58:30.173168",
+      "command": "python /tmp/claude-config/scripts/roadmaptoissues.py --roadmap .planning/ROADMAP.md --auto-project 2>&1",
+      "description": "Re-sync with correct repo issues"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:59:49.762793",
+      "command": "gh api graphql -f query='\n{\n  organization(login: \"gptcompany\") {\n    projectV2(number: 14) {\n      items(first: 50) {\n        totalCount\n        nodes {\n          fieldValueByName(name: \"Status\") {\n            ... on ProjectV2ItemFieldSingleSelectValue {\n              name\n            }\n          }\n          content {\n            ... on Issue {\n              number\n              state\n            }\n          }\n        }\n      }\n    }\n  }\n}' | jq '{total: .data.organization.projectV2.items.totalCount, by_status: [.data.organization.projectV2.items.nodes[] | {status: .fieldValueByName.name, state: .content.state}] | group_by(.status) | map({status: .[0].status, count: length})}'",
+      "description": "Check project board status distribution"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T15:59:57.534713",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T16:00:07.275306",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    # Close issues for completed plans\n    for plan in plans:\n        if plan.status != \"completed\":..."
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-22T16:00:17.810421",
+      "pattern": "from github_sync_core import",
+      "path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T16:00:24.010488",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    from github_sync_core import (\n        run_gh_command,\n        get_repo_info,\n        ensure_lab..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T16:00:34.280210",
+      "command": "python /tmp/claude-config/scripts/roadmaptoissues.py --roadmap .planning/ROADMAP.md --auto-project 2>&1 | head -40",
+      "description": "Test sync with Done status for completed issues"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T16:02:06.664902",
+      "command": "gh api graphql -f query='\n{\n  organization(login: \"gptcompany\") {\n    projectV2(number: 14) {\n      items(first: 50) {\n        totalCount\n        nodes {\n          fieldValueByName(name: \"Status\") {\n            ... on ProjectV2ItemFieldSingleSelectValue {\n              name\n            }\n          }\n          content {\n            ... on Issue {\n              number\n              state\n            }\n          }\n        }\n      }\n    }\n  }\n}' | jq '{total: .data.organization.projectV2.items.totalCount, by_status: [.data.organization.projectV2.items.nodes[] | {status: .fieldValueByName.name, state: .content.state}] | group_by(.status) | map({status: .[0].status, count: length})}'",
+      "description": "Verify project board status distribution"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T16:02:14.810313",
+      "command": "cd /tmp/claude-config && git add scripts/roadmaptoissues.py && git commit -m \"$(cat <<'EOF'\nfix(sync): ensure completed issues are in project as Done\n\n- Add completed issues to project board (not just pending ones)\n- Set status to \"Done\" for completed plan issues\n- Handles edge case where issues were closed before linking\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\" && git push",
+      "description": "Push edge case fix"
     }
   ],
-  "last_updated": "2026-01-22T15:56:03.596252"
+  "last_updated": "2026-01-22T16:02:14.810333"
 }
