@@ -1557,7 +1557,115 @@
       "timestamp": "2026-01-22T21:04:31.648281",
       "command": "claude mcp add --help 2>&1 | grep -i scope",
       "description": "Check for scope option"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:05:43.641311",
+      "command": "claude mcp add --scope user claude-flow -- npx -y claude-flow@latest mcp start 2>&1",
+      "description": "Add claude-flow to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:05:47.560120",
+      "command": "claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp 2>&1",
+      "description": "Add context7 to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:05:51.659607",
+      "command": "claude mcp add --scope user playwright -- npx -y @playwright/mcp@latest 2>&1",
+      "description": "Add playwright to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:05:55.183923",
+      "command": "claude mcp add --scope user serena -- serena start-mcp-server --context ide-assistant 2>&1",
+      "description": "Add serena to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:05:59.188908",
+      "command": "claude mcp add --scope user wolframalpha -- node /media/sam/1TB/mcpservers/wolframalpha-llm-mcp/build/index.js 2>&1",
+      "description": "Add wolframalpha to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:03.428328",
+      "command": "claude mcp add --scope user download-mcp -- python3 /media/sam/1TB/mcpservers/mcp-download/bridging_download_mcp.py 2>&1",
+      "description": "Add download-mcp to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:17.279267",
+      "command": "claude mcp add --scope user linear -- /home/sam/.claude/scripts/linear-mcp-wrapper.sh 2>&1",
+      "description": "Add linear to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:21.943230",
+      "command": "claude mcp add --scope user grafana -- bash -c 'eval \"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep GRAFANA | sed '\"'\"'s/^/export /'\"'\"')\" && /home/sam/go/bin/mcp-grafana' 2>&1",
+      "description": "Add grafana to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:26.074734",
+      "command": "claude mcp add --scope user -e N8N_API_URL=https://n8nubuntu.princyx.xyz/ -e MCP_MODE=stdio -e LOG_LEVEL=warning n8n-mcp -- bash -c 'eval \"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep N8N_API | sed '\"'\"'s/^/export /'\"'\"')\" && npx -y n8n-mcp' 2>&1",
+      "description": "Add n8n-mcp to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:29.985997",
+      "command": "claude mcp add --scope user firecrawl-mcp -- bash -c 'eval \"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep FIRECRAWL | sed '\"'\"'s/^/export /'\"'\"')\" && npx -y firecrawl-mcp' 2>&1",
+      "description": "Add firecrawl-mcp to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:33.914913",
+      "command": "claude mcp add --scope user sentry -- bash -c 'eval \"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep SENTRY | sed '\"'\"'s/^/export /'\"'\"')\" && npx -y @sentry/mcp-server --access-token=$SENTRY_AUTH_TOKEN' 2>&1",
+      "description": "Add sentry to user scope"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:42.609741",
+      "command": "claude mcp add --scope user -e \"N8N_API_URL=https://n8nubuntu.princyx.xyz/\" -e \"MCP_MODE=stdio\" -e \"LOG_LEVEL=warning\" n8n-mcp -- bash -c 'eval \"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep N8N_API | sed '\"'\"'s/^/export /'\"'\"')\" && npx -y n8n-mcp' 2>&1",
+      "description": "Add n8n-mcp with env vars"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:50.351608",
+      "command": "claude mcp add --scope user n8n-mcp -- bash -c 'export N8N_API_URL=https://n8nubuntu.princyx.xyz/ && export MCP_MODE=stdio && export LOG_LEVEL=warning && eval \"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep N8N_API | sed '\"'\"'s/^/export /'\"'\"')\" && npx -y n8n-mcp' 2>&1",
+      "description": "Add n8n-mcp with inline env"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:06:59.861180",
+      "command": "claude mcp list --scope user 2>&1 | head -20",
+      "description": "Verify user-scoped MCP servers"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:07:03.630754",
+      "command": "rm /media/sam/1TB/openbb_liquidity/.mcp.json && echo \"Rimosso symlink\"",
+      "description": "Remove project symlink"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:07:07.686686",
+      "command": "claude mcp list 2>&1",
+      "description": "List all MCP servers"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T21:07:32.862811",
+      "file_path": "/home/sam/.claude/scripts/new-project.py",
+      "old_string": "    # Symlink MCP configuration from global\n    global_mcp = Path.home() / \".mcp.json\"\n    mcp_dest ..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T21:07:45.827227",
+      "file_path": "/home/sam/.claude/scripts/new-project.py",
+      "old_string": "    print(\"Next steps:\")\n    print(\"  1. Review .claude/CLAUDE.md and customize\")\n    print(\"  2. Ve..."
     }
   ],
-  "last_updated": "2026-01-22T21:04:31.648303"
+  "last_updated": "2026-01-22T21:07:45.827256"
 }
