@@ -1293,7 +1293,55 @@
       "timestamp": "2026-01-22T20:43:29.183564",
       "command": "wc -l .planning/phases/03-overnight-rates-fx/03-RESEARCH.md && echo \"\" && echo \"=== Sections ===\" && grep \"^##\" .planning/phases/03-overnight-rates-fx/03-RESEARCH.md",
       "description": "Research file stats"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:49:49.105804",
+      "command": "echo \"=== Current .claude directory ===\" && ls -la .claude/ 2>/dev/null || echo \"No .claude directory\" && echo \"\" && echo \"=== Expected from claude-config ===\" && ls -la /tmp/claude-config/ | head -20",
+      "description": "Check .claude directory status"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:49:56.953751",
+      "command": "echo \"=== ~/.claude structure ===\" && ls -la ~/.claude/ | head -20 && echo \"\" && echo \"=== ~/.claude/scripts? ===\" && ls -la ~/.claude/scripts 2>/dev/null || echo \"No scripts directory!\"",
+      "description": "Check global ~/.claude"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:50:05.405831",
+      "command": "echo \"=== Script Version Comparison ===\" && echo \"Local (~/.claude/scripts):\" && stat ~/.claude/scripts/roadmaptoissues.py | grep Modify && echo \"Repo (/tmp/claude-config):\" && stat /tmp/claude-config/scripts/roadmaptoissues.py | grep Modify && echo \"\" && echo \"=== Diff Summary ===\" && diff ~/.claude/scripts/roadmaptoissues.py /tmp/claude-config/scripts/roadmaptoissues.py | wc -l && echo \"lines different\"",
+      "description": "Compare script versions"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:50:16.003240",
+      "command": "echo \"=== Syncing scripts from repo to ~/.claude ===\" && cp /tmp/claude-config/scripts/roadmaptoissues.py ~/.claude/scripts/ && cp /tmp/claude-config/scripts/github_sync_core.py ~/.claude/scripts/ && echo \"Done\" && echo \"\" && echo \"=== Verify ===\" && diff ~/.claude/scripts/roadmaptoissues.py /tmp/claude-config/scripts/roadmaptoissues.py && echo \"roadmaptoissues.py: OK\" && diff ~/.claude/scripts/github_sync_core.py /tmp/claude-config/scripts/github_sync_core.py && echo \"github_sync_core.py: OK\"",
+      "description": "Sync scripts to ~/.claude"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:50:22.851812",
+      "command": "cd ~/.claude && git status --short && echo \"\" && git pull 2>&1 | tail -5",
+      "description": "Sync ~/.claude with remote"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:50:29.676088",
+      "command": "cd ~/.claude && git stash && git pull --rebase && git stash pop 2>&1 | tail -10",
+      "description": "Pull with rebase and restore changes"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:50:39.078467",
+      "command": "cd ~/.claude && git add scripts/roadmaptoissues.py scripts/github_sync_core.py && git commit -m \"feat(sync): UAT tracking + milestone fix\n\n- Add UAT parsing and issue creation for UAT failures\n- Add UAT verification status tracking  \n- Fix milestone lookup to include closed milestones\n- Add UAT-XXX pattern to issue lookup regex\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\" && git push 2>&1 | tail -10",
+      "description": "Commit and push updated scripts"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:50:48.262694",
+      "command": "cd ~/.claude && git push 2>&1 | tail -15",
+      "description": "Push commits"
     }
   ],
-  "last_updated": "2026-01-22T20:43:29.183587"
+  "last_updated": "2026-01-22T20:50:48.262725"
 }
