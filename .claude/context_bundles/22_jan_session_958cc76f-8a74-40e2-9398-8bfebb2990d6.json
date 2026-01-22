@@ -2144,7 +2144,13 @@
       "timestamp": "2026-01-22T16:11:57.293451",
       "command": "gh run view 21255675136 --repo gptcompany/openbb_liquidity --log 2>&1 | grep \"Bidirectional Sync\" | tail -30",
       "description": "Get bidirectional sync logs"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-22T16:17:41.320375",
+      "query": "GitHub Issues sync Plane two-way integration conflicts problems"
     }
   ],
-  "last_updated": "2026-01-22T16:11:57.293474"
+  "last_updated": "2026-01-22T16:17:41.320395"
+}1.291991"
 }
