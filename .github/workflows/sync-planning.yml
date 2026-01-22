@@ -37,8 +37,7 @@ jobs:
 
       - name: Sync to GitHub
         env:
-          GH_TOKEN: ${{ secrets.GH_PROJECT_PAT }}
-          GH_PROJECT_ORG: gptcompany  # Project under gptcompany org, not repo owner
+          GH_TOKEN: ${{ secrets.GH_PROJECT_PAT }}  # PAT with repo + project scope
         run: |
           cd .github/scripts
           python roadmaptoissues.py --roadmap ../../.planning/ROADMAP.md --auto-project --create-project --sync-todos
