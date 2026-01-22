@@ -250,7 +250,35 @@
       "timestamp": "2026-01-22T17:09:45.420413",
       "file_path": "/home/sam/.claude/plans/effervescent-churning-wilkinson.md",
       "content_length": 6277
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-22T17:10:05.680697",
+      "file_path": "/home/sam/.claude/plans/effervescent-churning-wilkinson.md",
+      "content_length": 4303
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T17:10:24.639511",
+      "command": "mkdir -p /home/sam/.claude/plans && cat > /home/sam/.claude/plans/effervescent-churning-wilkinson.md << 'PLANEOF'\n# Plan: GitHub Sync 80% → 100% Feature Parity\n\n## Objective\nAdd missing features to reach Plane/Linear parity. KISS + framework-agnostic.\n\n## Features (Prioritized by ROI)\n\n| Feature | Impact | Effort | Phase |\n|---------|--------|--------|-------|\n| In Progress `[~]` | +5% | 30min | 1 |\n| Progress tracking | +2% | 30min | 1 |\n| Dependencies `depends:X` | +2% | 1h | 2 |\n| Sub-issues `01-02-01` | +3% | 1h | 2 |\n| Sprint labels | +3% | 30min | 3 |\n\n---\n\n## Phase 1: In Progress + Progress (1h)\n\n### New Syntax\n```markdown\n- [ ] 01-01: Pending        # Backlog\n- [~] 01-02: In progress    # In Progress  \n- [x] 01-03: Completed      # Done\n```\n\n### Changes\n\n**github_sync_core.py** (+20 lines)\n```python\ndef get_status_from_checkbox(checkbox: str) -> tuple[str, str]:\n    c = checkbox.upper() if checkbox else ' '\n    if c == 'X': return (\"completed\", \"Done\")\n    if c == '~': return (\"in_progress\", \"In Progress\")\n    return (\"pending\", \"Backlog\")\n\ndef calculate_progress(items: list) -> dict:\n    total = len(items)\n    completed = sum(1 for i in items if i.status == \"completed\")\n    in_progress = sum(1 for i in items if i.status == \"in_progress\")\n    return {\"total\": total, \"completed\": completed, \n            \"in_progress\": in_progress,\n            \"percent\": round(completed/total*100) if total else 0}\n```\n\n**roadmaptoissues.py**\n- Line 159: Update regex `[ xX~]` \n- Line 260: Use `get_status_from_checkbox()`\n- Line 600: Set kanban \"In Progress\" for `[~]` items\n\n**taskstoissues.py** - Same pattern\n\n---\n\n## Phase 2: Dependencies (1h)\n\n### Syntax\n```markdown\n- [ ] 03-01: SOFR | depends:01-02 | priority:high\n```\n\n### Changes\n- Add `depends_on: list[str]` to Plan dataclass\n- Parse `depends:X,Y` from pipe metadata\n- Add \"Dependencies\" section to issue body\n\n---\n\n## Phase 3: Sprint Labels (30min)\n\n### Syntax  \n```markdown\n- [ ] 03-01: SOFR | sprint:2025-W04\n```\n\n### Changes\n- Add `sprint-*` label color (blue) to ensure_labels_exist()\n- Add sprint label to issue creation\n\n---\n\n## Files to Modify\n\n| File | Location |\n|------|----------|\n| `/tmp/claude-config/scripts/github_sync_core.py` | +2 functions, label colors |\n| `/tmp/claude-config/scripts/roadmaptoissues.py` | Regex, dataclass, sync logic |\n| `/tmp/claude-config/scripts/taskstoissues.py` | Same pattern |\n\n## Verification\n\n```bash\n# Dry run\npython roadmaptoissues.py --roadmap .planning/ROADMAP.md --dry-run\n\n# Live test\npython roadmaptoissues.py --roadmap .planning/ROADMAP.md --auto-project\ngh project item-list 14 --owner gptcompany --format json\n```\n\n## Total: ~3 hours\nPLANEOF\necho \"Plan written successfully\"",
+      "description": "Write plan file via bash"
+    },
+    {
+      "operation": "exitplanmode",
+      "timestamp": "2026-01-22T17:10:32.313770",
+      "plan": "# Plan: GitHub Sync 80% → 100% Feature Parity\n\n## Objective\nAdd missing features to reach Plane/Line..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T17:23:56.094742",
+      "command": "cat >> /home/sam/.claude/plans/effervescent-churning-wilkinson.md << 'PLANEOF'\n\n---\n\n## Phase 4: PR Auto-linking (30min)\n\n### Branch Convention\n```\nfeat/Plan-03-01-sofr-collector\nfix/T001-data-model-bug\n```\n\n### Changes\n\n**github_sync_core.py** (+15 lines)\n```python\ndef suggest_branch_name(task_id: str, description: str) -> str:\n    \"\"\"Generate branch name: feat/Plan-03-01-sofr-collector\"\"\"\n    import re\n    slug = re.sub(r\"[^a-z0-9]+\", \"-\", description.lower())[:40]\n    prefix = \"feat\"\n    if \"fix\" in description.lower(): prefix = \"fix\"\n    return f\"{prefix}/{task_id}-{slug}\"\n\ndef get_linked_prs(issue_number: int) -> list[dict]:\n    \"\"\"Get PRs that close this issue via GraphQL.\"\"\"\n    # Uses closedByPullRequestsReferences query\n```\n\n### Usage\n- Issue body includes: `**Branch**: \\`feat/Plan-03-01-sofr-collector\\``\n- GitHub auto-links PRs with matching branch or \"Closes #N\" in PR body\n- Sync shows linked PRs count in progress output\n\n### Total Updated: ~3.5 hours\nPLANEOF\necho \"PR auto-link added\"",
+      "description": "Add PR auto-link to plan"
+    },
+    {
+      "operation": "exitplanmode",
+      "timestamp": "2026-01-22T17:24:02.833467",
+      "plan": "# Plan: GitHub Sync 80% → 100% Feature Parity\n\n## Objective\nAdd missing features to reach Plane/Line..."
     }
   ],
-  "last_updated": "2026-01-22T17:09:45.420442"
+  "last_updated": "2026-01-22T17:24:02.833495"
 }
