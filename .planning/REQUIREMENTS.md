@@ -188,7 +188,7 @@ Which phases cover which requirements. Updated by create-roadmap.
 | FX-02 | Phase 3 | Pending |
 | FX-03 | Phase 3 | Pending |
 | FX-04 | Phase 3 | Pending |
-| FX-05 | Phase 3 | Pending |
+| FX-05 | Phase 5 | Pending |
 | CMDTY-01 | Phase 4 | Pending |
 | CMDTY-02 | Phase 4 | Pending |
 | CMDTY-03 | Phase 4 | Pending |

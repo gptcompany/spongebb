@@ -59,15 +59,17 @@ Plans:
 ### Phase 3: Overnight Rates & FX
 **Goal**: Overnight rate monitoring and FX collectors for carry trade signals
 **Depends on**: Phase 1
-**Requirements**: DATA-08, DATA-09, DATA-10, DATA-11, FX-01, FX-02, FX-03, FX-04, FX-05
+**Requirements**: DATA-08, DATA-09, DATA-10, DATA-11, FX-01, FX-02, FX-03, FX-04
 **Research**: Likely (NY Fed Data Hub API, BoC/BoE rate APIs)
 **Research topics**: NY Fed Data Hub SOFR endpoint, ECB €STR API, BoE SONIA API, BoC CORRA API
-**Plans**: TBD
+**Plans**: 3 plans in 1 wave (all parallel)
 
 Plans:
-- [ ] 03-01: SOFR collector (NY Fed Data Hub) | priority:high | effort:M
-- [ ] 03-02: €STR, SONIA, CORRA collectors | priority:medium | effort:L
-- [ ] 03-03: FX collectors (DXY, major pairs, IMF COFER) | priority:high | effort:M
+- [ ] 03-01: SOFR collector (NY Fed + FRED fallback) | priority:high | effort:M
+- [ ] 03-02: €STR, SONIA, CORRA collectors + rate differentials | priority:high | effort:M
+- [ ] 03-03: FX collectors (DXY, major pairs via yfinance) | priority:high | effort:M
+
+Note: FX-05 (IMF COFER) moved to Phase 5 - quarterly data fits better with Capital Flows.
 
 ### Phase 4: Market Indicators
 **Goal**: Commodities collectors for economic signals
@@ -83,9 +85,9 @@ Plans:
 ### Phase 5: Capital Flows & Stress
 **Goal**: Capital flow tracking and funding market stress indicators
 **Depends on**: Phase 2, Phase 3
-**Requirements**: FLOW-01, FLOW-02, FLOW-03, FLOW-04, STRESS-01, STRESS-02, STRESS-03, STRESS-04
-**Research**: Likely (TIC data format, cross-currency basis sources)
-**Research topics**: US Treasury TIC API, Fed custody data, cross-currency basis data sources
+**Requirements**: FLOW-01, FLOW-02, FLOW-03, FLOW-04, FX-05, STRESS-01, STRESS-02, STRESS-03, STRESS-04
+**Research**: Likely (TIC data format, cross-currency basis sources, IMF COFER API)
+**Research topics**: US Treasury TIC API, Fed custody data, cross-currency basis data sources, IMF SDMX/DBnomics
 **Plans**: TBD
 
 Plans:
@@ -93,6 +95,7 @@ Plans:
 - [ ] 05-02: ETF flows collector (SPY, TLT, GLD, HYG)
 - [ ] 05-03: Fed custody holdings collector
 - [ ] 05-04: Stress indicators (SOFR-OIS spread, cross-currency basis, FRA-OIS, repo stress)
+- [ ] 05-05: IMF COFER collector (quarterly FX reserves composition) | from Phase 3
 
 ### Phase 6: Credit & BIS Data
 **Goal**: Credit market monitoring and BIS Eurodollar system tracking
