@@ -1488,7 +1488,76 @@
       "timestamp": "2026-01-22T20:58:16.160228",
       "command": "ls -la /tmp/test-new-project/.mcp.json && head -5 /tmp/test-new-project/.mcp.json && rm -rf /tmp/test-new-project",
       "description": "Verify MCP file and cleanup"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T21:00:29.235014",
+      "file_path": "/home/sam/.mcp.json"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:00:39.051089",
+      "command": "cp /home/sam/.mcp.json /home/sam/.claude/templates/project-mcp.json",
+      "description": "Copy full global MCP to template"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:00:39.528267",
+      "command": "cp /home/sam/.mcp.json /media/sam/1TB/openbb_liquidity/.mcp.json",
+      "description": "Copy full global MCP to current project"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:00:44.793439",
+      "command": "echo \"=== Template ===\" && cat ~/.claude/templates/project-mcp.json | jq '.mcpServers | keys' && echo && echo \"=== openbb_liquidity ===\" && cat /media/sam/1TB/openbb_liquidity/.mcp.json | jq '.mcpServers | keys'",
+      "description": "Verify both files have all MCP servers"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:01:07.858850",
+      "command": "rm /media/sam/1TB/openbb_liquidity/.mcp.json && ln -s /home/sam/.mcp.json /media/sam/1TB/openbb_liquidity/.mcp.json && ls -la /media/sam/1TB/openbb_liquidity/.mcp.json",
+      "description": "Replace copy with symlink to global"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T21:01:16.556525",
+      "file_path": "/home/sam/.claude/scripts/new-project.py",
+      "old_string": "    # Copy MCP configuration template\n    mcp_template = Path.home() / \".claude\" / \"templates\" / \"pr..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:01:30.247117",
+      "command": "claude config list 2>/dev/null || echo \"No config command\"",
+      "description": "Check Claude Code config options"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-22T21:03:19.606310",
+      "query": "Claude Code MCP configuration global vs project .mcp.json 2025"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T21:03:45.642281",
+      "file_path": "/home/sam/.claude.json"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:04:00.513162",
+      "command": "claude mcp list 2>&1 | head -30",
+      "description": "List MCP servers in Claude Code"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:04:24.220982",
+      "command": "claude mcp add --help 2>&1 | head -20",
+      "description": "Check MCP add command options"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T21:04:31.648281",
+      "command": "claude mcp add --help 2>&1 | grep -i scope",
+      "description": "Check for scope option"
     }
   ],
-  "last_updated": "2026-01-22T20:58:16.160255"
+  "last_updated": "2026-01-22T21:04:31.648303"
 }
