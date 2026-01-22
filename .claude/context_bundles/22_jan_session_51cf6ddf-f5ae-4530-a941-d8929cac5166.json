@@ -249,7 +249,264 @@
       "timestamp": "2026-01-22T18:17:18.478174",
       "command": "cd /tmp && rm -rf claude-config && git clone --depth 1 https://github.com/gptcompany/claude-config.git 2>&1 | tail -5",
       "description": "Clone claude-config repo"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:17:25.718554",
+      "file_path": "/tmp/claude-config/scripts/github_sync_core.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T18:17:34.233338",
+      "file_path": "/tmp/claude-config/scripts/github_sync_core.py",
+      "old_string": "    if project_id:\n        issue_node_id = get_issue_node_id(issue_num)\n        if issue_node_id:\n  ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:17:47.221497",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T18:17:53.537215",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    from github_sync_core import (\n        run_gh_command,\n        get_repo_info,\n        ensure_lab..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:18:04.588214",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:18:10.595364",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T18:18:17.000811",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    milestones_existing: int = 0\n    milestones_closed: int = 0\n    issues_created: int = 0\n    issu..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T18:18:33.095533",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    # Create issues for plans\n    for plan in plans:\n        if plan.status == \"completed\":\n        ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:18:42.710442",
+      "command": "grep -n \"Summary\" /tmp/claude-config/scripts/roadmaptoissues.py | head -5",
+      "description": "Find summary output"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:18:47.860906",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T18:18:55.170206",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    # Print summary\n    print(\"\\n=== Summary ===\")\n    if args.roadmap:\n        print(f\"Milestones c..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:19:08.861875",
+      "command": "cd /tmp/claude-config && git add scripts/github_sync_core.py scripts/roadmaptoissues.py && git commit -m \"$(cat <<'EOF'\nfeat(sync): add issue title update support\n\n- Add update_issue() function to github_sync_core.py\n- Modify sync_roadmap_to_github to update existing issue titles when they differ from ROADMAP\n- Add issues_updated counter to SyncResult\n- Update summary output to show issues_updated\n\nThis enables the sync workflow to update GitHub issue titles when\nplan descriptions change in ROADMAP.md, not just create new issues.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\" 2>&1",
+      "description": "Commit changes to claude-config"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:19:13.444944",
+      "command": "cd /tmp/claude-config && git push origin main 2>&1",
+      "description": "Push changes to claude-config"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:19:26.160677",
+      "command": "gh workflow run sync-planning.yml --repo gptcompany/openbb_liquidity 2>&1 && echo \"Workflow triggered\"",
+      "description": "Trigger sync workflow manually"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:19:33.038687",
+      "command": "sleep 40 && gh run list --repo gptcompany/openbb_liquidity --limit 3 2>&1",
+      "description": "Wait and check workflow status"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:08.164097",
+      "command": "gh run view 21259868866 --log 2>/dev/null | grep -A5 -E \"(Issues updated|Updated issue|Sync summary)\" | head -30",
+      "description": "Check workflow logs for issue update results"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:10.643368",
+      "command": "gh issue list --state all --json number,title,state --jq '.[] | \"\\(.number): [\\(.state)] \\(.title)\"' | head -20",
+      "description": "List current GitHub issues to verify titles"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:17.118540",
+      "command": "gh issue list --state all --json number,title --jq '.[] | select(.title | contains(\"03-\") or contains(\"05-\")) | \"\\(.number): \\(.title)\"' | sort -t: -k1 -n",
+      "description": "Check Phase 3 and 5 issue titles"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:26.641931",
+      "command": "grep -E \"^- \\[(x| )\\]\" /media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md | grep -E \"(03-|05-)\"",
+      "description": "Check ROADMAP plan titles for Phase 3 and 5"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:33.844261",
+      "command": "gh run view 21259868866 --log 2>/dev/null | grep -E \"(Bidirectional Sync|sync\\t)\" | tail -50",
+      "description": "Check full sync workflow log"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:43.034876",
+      "command": "grep -n \"update_issue\" /media/sam/1TB/openbb_liquidity/.github/scripts/roadmaptoissues.py 2>/dev/null || echo \"update_issue not found\"",
+      "description": "Check if update_issue is in the repo script"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:46.971022",
+      "command": "cat /media/sam/1TB/openbb_liquidity/.github/workflows/sync-planning.yml",
+      "description": "Check workflow configuration"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:54.188065",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/github_sync_core.py\" | grep -A20 \"def update_issue\"",
+      "description": "Verify update_issue function is in claude-config"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:21:54.801646",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | grep -E \"(update_issue|issues_updated)\" | head -10",
+      "description": "Verify roadmaptoissues uses update_issue"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:00.617165",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/github_sync_core.py\" | grep -E \"^def update_issue|^__all__\" | head -5",
+      "description": "Check if update_issue is defined and exported"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:05.784344",
+      "command": "gh run view 21259868866 --log 2>/dev/null | grep -iE \"(error|exception|traceback|import|skip)\" | head -20",
+      "description": "Check for errors in workflow"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:22:13.829893",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:18.105748",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | grep -A40 \"if issue_key in existing_issues:\"",
+      "description": "Check the issue update logic"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:22.484479",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | grep -n \"existing_issues\" | head -20",
+      "description": "Find existing_issues logic"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:26.705399",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | sed -n '690,720p'",
+      "description": "Check update logic around line 700"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:36.287972",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/github_sync_core.py\" | grep -A30 \"def get_existing_issues\"",
+      "description": "Check how existing issues are keyed"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:40.458229",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/github_sync_core.py\" | grep -A60 \"def get_existing_issues\" | tail -40",
+      "description": "Check how issues are parsed and keyed"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:46.519016",
+      "command": "gh issue view 15 --json labels,title",
+      "description": "Check issue 15 labels"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:22:53.595297",
+      "command": "cd /tmp/claude-config/scripts && python3 -c \"\nfrom github_sync_core import get_existing_issues\nexisting = get_existing_issues('gsd-plan')\nfor key, val in existing.items():\n    if '03-' in key:\n        print(f'{key}: #{val[\\\"number\\\"]} -> {val[\\\"title\\\"][:60]}...')\n\" 2>&1",
+      "description": "Debug existing issues retrieval"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:23:00.525911",
+      "command": "python3 /tmp/claude-config/scripts/roadmaptoissues.py --sync .planning --dry-run 2>&1 | head -40",
+      "description": "Run sync in openbb_liquidity context"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:23:35.920756",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | grep -n \"def sync_bidirectional\" -A5",
+      "description": "Find sync_bidirectional function"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:23:40.593248",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | sed -n '762,850p'",
+      "description": "Check sync_bidirectional function"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:23:48.654058",
+      "command": "curl -sL \"https://raw.githubusercontent.com/gptcompany/claude-config/main/scripts/roadmaptoissues.py\" | tail -100 | head -80",
+      "description": "Check main function and CLI arguments"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T18:23:55.222609",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T18:24:02.203075",
+      "file_path": "/tmp/claude-config/scripts/roadmaptoissues.py",
+      "old_string": "    # Build lookup\n    plans_by_id = {f\"Plan-{p.id}\": p for p in plans}\n\n    # Completed plans -> Cl..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:24:14.738877",
+      "command": "python3 /tmp/claude-config/scripts/roadmaptoissues.py --sync .planning --dry-run 2>&1",
+      "description": "Test the fixed sync script"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:24:52.476345",
+      "command": "python3 /tmp/claude-config/scripts/roadmaptoissues.py --sync .planning 2>&1",
+      "description": "Apply the title updates"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:25:34.206647",
+      "command": "gh issue list --state all --json number,title --jq '.[] | select(.title | contains(\"03-\")) | \"\\(.number): \\(.title)\"' | sort -t: -k1 -n",
+      "description": "Verify updated titles"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T18:25:35.339164",
+      "command": "cd /tmp/claude-config && git add scripts/roadmaptoissues.py && git commit -m \"fix(sync): add title update support to bidirectional sync\n\nThe --sync mode now also updates existing issue titles when they\nchange in ROADMAP.md. Previously, title updates only worked with\n--roadmap mode.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\" && git push",
+      "description": "Commit and push fix to claude-config"
     }
   ],
-  "last_updated": "2026-01-22T18:17:18.478195"
+  "last_updated": "2026-01-22T18:25:35.339192"
 }
