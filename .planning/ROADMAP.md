@@ -65,9 +65,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 03-01: SOFR collector (NY Fed Data Hub)
-- [ ] 03-02: €STR, SONIA, CORRA collectors
-- [ ] 03-03: FX collectors (DXY, major pairs, IMF COFER)
+- [ ] 03-01: SOFR collector (NY Fed Data Hub) | priority:high | effort:M
+- [ ] 03-02: €STR, SONIA, CORRA collectors | priority:medium | effort:L
+- [ ] 03-03: FX collectors (DXY, major pairs, IMF COFER) | priority:high | effort:M
 
 ### Phase 4: Market Indicators
 **Goal**: Commodities collectors for economic signals

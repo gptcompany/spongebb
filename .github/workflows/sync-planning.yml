@@ -5,6 +5,8 @@ name: Sync Planning
       - '.planning/**'
       - 'tasks.md'
   workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours for bidirectional sync
 
 jobs:
   sync:
@@ -12,6 +14,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PROJECT_PAT }}  # Need PAT for push back
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -35,9 +39,22 @@ jobs:
           echo "Token is set (masked)"
           gh api user --jq '.login' || echo "Cannot identify user"
 
-      - name: Sync to GitHub
+      - name: Bidirectional Sync
         env:
-          GH_TOKEN: ${{ secrets.GH_PROJECT_PAT }}  # PAT with repo + project scope
+          GH_TOKEN: ${{ secrets.GH_PROJECT_PAT }}
         run: |
           cd .github/scripts
-          python roadmaptoissues.py --roadmap ../../.planning/ROADMAP.md --auto-project --create-project --sync-todos
+          # Bidirectional: ROADMAP <-> GitHub Issues
+          python roadmaptoissues.py --sync ../../.planning --auto-project --create-project
+
+      - name: Commit ROADMAP changes (if any)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet .planning/ROADMAP.md; then
+            echo "No changes to ROADMAP.md"
+          else
+            git add .planning/ROADMAP.md
+            git commit -m "chore(sync): update ROADMAP from GitHub Issues [skip ci]"
+            git push
+          fi
