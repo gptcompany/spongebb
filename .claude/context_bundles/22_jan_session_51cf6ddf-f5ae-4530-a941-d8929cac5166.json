@@ -1341,7 +1341,154 @@
       "timestamp": "2026-01-22T20:50:48.262694",
       "command": "cd ~/.claude && git push 2>&1 | tail -15",
       "description": "Push commits"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:53:03.624427",
+      "command": "echo \"=== Global MCP Config ===\" && cat ~/.mcp.json 2>/dev/null | head -50 || echo \"No ~/.mcp.json\" && echo \"\" && echo \"=== Project MCP Config ===\" && cat .mcp.json 2>/dev/null || echo \"No .mcp.json in project\"",
+      "description": "Check MCP configurations"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:53:12.734341",
+      "command": "echo \"=== Claude Code MCP Status ===\" && claude mcp list 2>/dev/null || echo \"Cannot list MCP servers\" && echo \"\" && echo \"=== Check if project needs specific MCP ===\" && cat ~/.claude/templates/project-mcp.json 2>/dev/null || echo \"No template\"",
+      "description": "Check MCP status"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:53:24.914393",
+      "command": "echo \"=== Check claude settings.json ===\" && cat ~/.claude/settings.json 2>/dev/null || echo \"No settings.json\" && echo \"\" && echo \"=== Check project .claude/settings.json ===\" && cat .claude/settings.json 2>/dev/null || echo \"No project settings\"",
+      "description": "Check Claude settings"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-22T20:53:36.129309",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.mcp.json",
+      "content_length": 231
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:53:50.306580",
+      "command": "claude mcp list 2>&1",
+      "description": "Check MCP status after adding config"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T20:54:10.498641",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.mcp.json",
+      "old_string": "{\n  \"mcpServers\": {\n    \"claude-flow\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"claude-flow@l..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:54:22.699241",
+      "command": "claude mcp list 2>&1",
+      "description": "Verify all MCP servers"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:54:38.567884",
+      "command": "git add .mcp.json && git commit -m \"chore: add project MCP configuration\n\nEnables:\n- claude-flow: state persistence, github sync\n- context7: library documentation lookup  \n- n8n-mcp: workflow automation\n- grafana: metrics dashboards\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\"",
+      "description": "Commit MCP config"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:55:09.522248",
+      "command": "echo \"=== Global ~/.claude files that should be copied ===\" && ls -la ~/.claude/*.md ~/.claude/*.yaml 2>/dev/null | head -10 && echo \"\" && echo \"=== Current project .claude ===\" && ls -la .claude/",
+      "description": "Check what to copy from global"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:55:18.209046",
+      "command": "echo \"=== Key directories in ~/.claude ===\" && ls -d ~/.claude/*/ 2>/dev/null | head -20",
+      "description": "List key directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:55:36.834173",
+      "command": "echo \"=== Creating MCP template ===\" && mkdir -p ~/.claude/templates && cat > ~/.claude/templates/project-mcp.json << 'EOF'\n{\n  \"mcpServers\": {\n    \"claude-flow\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"claude-flow@latest\", \"mcp\", \"start\"]\n    },\n    \"context7\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@upstash/context7-mcp\"]\n    },\n    \"n8n-mcp\": {\n      \"command\": \"bash\",\n      \"args\": [\n        \"-c\",\n        \"eval \\\"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep N8N_API | sed 's/^/export /')\\\" && npx -y n8n-mcp\"\n      ],\n      \"env\": {\n        \"N8N_API_URL\": \"https://n8nubuntu.princyx.xyz/\",\n        \"MCP_MODE\": \"stdio\",\n        \"LOG_LEVEL\": \"warning\"\n      }\n    },\n    \"grafana\": {\n      \"command\": \"bash\",\n      \"args\": [\n        \"-c\",\n        \"eval \\\"$(sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep GRAFANA | sed 's/^/export /')\\\" && /home/sam/go/bin/mcp-grafana\"\n      ]\n    }\n  }\n}\nEOF\necho \"Template created at ~/.claude/templates/project-mcp.json\"",
+      "description": "Create MCP template"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:55:44.716196",
+      "command": "echo \"=== Now update new-project.py to include MCP ===\" && grep -n \"def create_project_structure\" ~/.claude/scripts/new-project.py -A5",
+      "description": "Find where to add MCP copy in new-project"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:55:49.773690",
+      "command": "head -100 ~/.claude/scripts/new-project.py",
+      "description": "Check new-project.py structure"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:55:56.473927",
+      "command": "grep -n \"def setup_project\\|\\.mcp\\|mcp\\|shutil.copy\" ~/.claude/scripts/new-project.py | head -20",
+      "description": "Search for MCP or copy operations"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:56:02.500652",
+      "command": "sed -n '264,330p' ~/.claude/scripts/new-project.py",
+      "description": "Read setup_project function"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-22T20:57:10.740973",
+      "pattern": "**/.mcp.json",
+      "path": "/home/sam/.claude"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T20:57:10.768218",
+      "file_path": "/home/sam/.claude/scripts/new-project.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:57:18.425900",
+      "command": "ls -la ~/.mcp.json 2>/dev/null || echo \"No ~/.mcp.json\"",
+      "description": "Check for global MCP config"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T20:57:18.524179",
+      "file_path": "/home/sam/.claude/templates/project-mcp.json"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T20:57:25.314154",
+      "file_path": "/home/sam/.claude/scripts/new-project.py",
+      "old_string": "import argparse\nimport json\nimport sys\nfrom datetime import datetime\nfrom pathlib import Path\n\nimpor..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-22T20:57:38.639856",
+      "file_path": "/home/sam/.claude/scripts/new-project.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T20:57:45.869241",
+      "file_path": "/home/sam/.claude/scripts/new-project.py",
+      "old_string": "    # Generate settings.local.json\n    settings_path = claude_dir / \"settings.local.json\"\n    if not..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-22T20:58:00.032224",
+      "file_path": "/home/sam/.claude/scripts/new-project.py",
+      "old_string": "    print(\"Next steps:\")\n    print(\"  1. Review .claude/CLAUDE.md and customize\")\n    print(\"  2. Ru..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:58:10.536662",
+      "command": "cd /tmp && mkdir -p test-new-project && python ~/.claude/scripts/new-project.py --path /tmp/test-new-project python 2>&1",
+      "description": "Test new-project.py with MCP copying"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T20:58:16.160228",
+      "command": "ls -la /tmp/test-new-project/.mcp.json && head -5 /tmp/test-new-project/.mcp.json && rm -rf /tmp/test-new-project",
+      "description": "Verify MCP file and cleanup"
     }
   ],
-  "last_updated": "2026-01-22T20:50:48.262725"
+  "last_updated": "2026-01-22T20:58:16.160255"
 }
