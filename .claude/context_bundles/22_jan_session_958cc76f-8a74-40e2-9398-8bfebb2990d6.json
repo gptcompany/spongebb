@@ -1850,7 +1850,13 @@
       "timestamp": "2026-01-22T15:27:41.670192",
       "command": "git add .planning/.github-project && git commit -m \"$(cat <<'EOF'\nchore: add GitHub project config for persistent assignment\n\nLinks this repo to gptcompany org project #14.\nPrevents duplicate project boards on future syncs.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\" && git push",
       "description": "Commit and push project config"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-22T15:45:37.779027",
+      "command": "head -10 .github/workflows/sync-planning.yml",
+      "description": "Check workflow triggers"
     }
   ],
-  "last_updated": "2026-01-22T15:27:41.670225"
+  "last_updated": "2026-01-22T15:45:37.779049"
 }
