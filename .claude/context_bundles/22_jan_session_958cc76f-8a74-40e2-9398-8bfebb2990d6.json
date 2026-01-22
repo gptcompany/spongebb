@@ -1960,7 +1960,17 @@
       "timestamp": "2026-01-22T16:02:14.810313",
       "command": "cd /tmp/claude-config && git add scripts/roadmaptoissues.py && git commit -m \"$(cat <<'EOF'\nfix(sync): ensure completed issues are in project as Done\n\n- Add completed issues to project board (not just pending ones)\n- Set status to \"Done\" for completed plan issues\n- Handles edge case where issues were closed before linking\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\" && git push",
       "description": "Push edge case fix"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-22T16:03:39.333747",
+      "query": "GitHub Projects V2 automation roadmap sync issues best practices 2025"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-22T16:03:39.386560",
+      "query": "open source project management GitHub issues sync Linear Plane alternative 2025"
     }
   ],
-  "last_updated": "2026-01-22T16:02:14.810333"
+  "last_updated": "2026-01-22T16:03:39.386587"
 }
