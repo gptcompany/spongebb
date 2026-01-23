@@ -1303,7 +1303,144 @@
       "timestamp": "2026-01-23T18:33:23.153261",
       "command": "git add .planning/phases/05-capital-flows-stress/05-UAT.md .planning/ROADMAP.md && git commit -m \"$(cat <<'EOF'\ntest(05): complete UAT - 7 passed, 1 issue, 2 skipped\n\nPhase 5 Capital Flows & Stress validation complete:\n- TIC, Risk ETFs, COFER collectors verified working\n- Fed Custody, Stress skipped (require FRED API key)\n- Minor issue: calculate_risk_appetite() API expects shares_df param\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
       "description": "Commit UAT results"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:35:52.120919",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/risk_etfs.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:36:07.810469",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/risk_etfs.py",
+      "old_string": "    @staticmethod\n    def calculate_risk_appetite(shares_df: pd.DataFrame) -> dict[str, Any]:\n      ..."
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T18:36:14.737427",
+      "pattern": "calculate_risk_appetite",
+      "path": "tests/integration/test_risk_etfs.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:36:22.339025",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:36:32.473873",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py",
+      "old_string": "    @pytest.mark.integration\n    @pytest.mark.asyncio\n    async def test_risk_appetite_ratio(\n      ..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:36:52.855180",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/risk_etfs.py",
+      "old_string": "    async def calculate_risk_appetite(\n        self, shares_df: pd.DataFrame | None = None\n    ) -> ..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:36:58.403961",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py",
+      "old_string": "RiskETFCollector.calculate_risk_appetite"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:37:06.026368",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import RiskETFCollector\nimport asyncio\n\nc = RiskETFCollector()\nresult = asyncio.run(c.calculate_risk_appetite())\nprint('Risk Appetite (auto-fetch):')\nprint(f'  SPY shares: {result[\\\"spy_shares\\\"]:,.0f}')\nprint(f'  TLT shares: {result[\\\"tlt_shares\\\"]:,.0f}')\nprint(f'  SPY/TLT ratio: {result[\\\"spy_tlt_ratio\\\"]:.2f}')\nprint(f'  Sentiment: {result[\\\"sentiment\\\"]}')\n\" 2>&1",
+      "description": "Test fixed calculate_risk_appetite"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:37:30.585572",
+      "command": "uv run pytest tests/integration/test_risk_etfs.py -v --tb=short 2>&1 | tail -40",
+      "description": "Run risk ETF tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:38:11.049958",
+      "command": "git add src/liquidity/collectors/risk_etfs.py tests/integration/test_risk_etfs.py && git commit -m \"$(cat <<'EOF'\nfix(risk_etfs): make calculate_risk_appetite() work without params\n\nUAT-001: Method now auto-fetches SPY/TLT shares if no DataFrame provided.\n- Added _calculate_risk_appetite_from_df() static helper for unit tests\n- Async method fetches data automatically when called without args\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
+      "description": "Commit risk appetite fix"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:38:17.481946",
+      "command": "sops /media/sam/1TB/.env.enc 2>&1 | head -5 || echo \"Need to add key manually\"",
+      "description": "Open SOPS for editing"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:38:24.541615",
+      "command": "# Check project config for where to set FRED API key\ngrep -r \"FRED_API_KEY\\|fred_api_key\" /media/sam/1TB/openbb_liquidity/src --include=\"*.py\" | head -5",
+      "description": "Check FRED API key usage"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:38:30.745325",
+      "command": "grep -r \"LIQUIDITY_FRED\" /media/sam/1TB/openbb_liquidity --include=\"*.py\" | head -10",
+      "description": "Find FRED API key config"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:38:36.289393",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T18:38:41.791963",
+      "pattern": "fred_api_key|obb\\.user\\.credentials",
+      "path": "src/liquidity/collectors",
+      "output_mode": "content"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:38:48.824719",
+      "command": "echo \"LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379\" > /media/sam/1TB/openbb_liquidity/.env && echo \"Created .env with FRED API key\"",
+      "description": "Create .env with FRED API key"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:38:53.672615",
+      "command": "grep \"\\.env\" /media/sam/1TB/openbb_liquidity/.gitignore || echo \".env\" >> /media/sam/1TB/openbb_liquidity/.gitignore && echo \".env added to gitignore\"",
+      "description": "Ensure .env is in gitignore"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T18:39:00.448939",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.gitignore",
+      "content_length": 327
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:39:06.798672",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_fed_custody.py tests/integration/test_stress.py -v --tb=short 2>&1 | tail -50",
+      "description": "Test FRED-dependent collectors"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:39:51.541865",
+      "command": "git add .gitignore && git commit -m \"chore: add .gitignore with secrets protection\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\"",
+      "description": "Commit .gitignore"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:39:58.268246",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py --tb=no -q 2>&1 | tail -5",
+      "description": "Run all Phase 5 tests with FRED key"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:42:38.683660",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/05-capital-flows-stress/05-UAT.md",
+      "old_string": "## Issues for /gsd:plan-fix\n\n- UAT-001: RiskETFCollector.calculate_risk_appetite() requires shares_d..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:42:43.927997",
+      "command": "git add .planning/phases/05-capital-flows-stress/05-UAT.md && git commit -m \"docs(05): mark UAT-001 as fixed\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\"",
+      "description": "Commit UAT update"
     }
   ],
-  "last_updated": "2026-01-23T18:33:23.153283"
+  "last_updated": "2026-01-23T18:42:43.928022"
 }
