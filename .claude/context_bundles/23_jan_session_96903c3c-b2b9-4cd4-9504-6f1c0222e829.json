@@ -31,7 +31,738 @@
       "operation": "read",
       "timestamp": "2026-01-23T17:57:20.650725",
       "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_market_collectors.py"
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T17:57:26.729335",
+      "url": "https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD?observations=1",
+      "prompt": "Extract the JSON structure of the DBnomics API response. Focus on:\n1. The structure of the series da..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:57:26.786773",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:58:08.082860",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fed_custody.py",
+      "content_length": 13287
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:58:14.810543",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/risk_etfs.py",
+      "content_length": 16969
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:58:23.709794",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/stress.py",
+      "content_length": 19949
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:58:35.331113",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/cofer.py",
+      "content_length": 14016
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:58:39.972964",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:58:42.922200",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "content_length": 22543
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:58:43.670905",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fed_custody.py",
+      "content_length": 9624
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:58:44.268391",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.boc import SERIES_MAP as BOC_SERIES_MAP\nfrom liquidity.collectors.boc impo..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:58:48.025041",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:58:49.274035",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # ETF Flows (Phase 4)\n    \"ETFFlowCollector\",\n    \"ETF_TICKERS\",\n    \"ETF_UNDERLYING\",\n]"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:58:56.519961",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:01.253032",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.etf_flows import (\n    ETF_TICKERS,\n    ETF_UNDERLYING,\n    ETFFlowCollect..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:05.930025",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # COFER (Phase 5)\n    \"COFERCollector\",\n    \"COFER_SERIES\",\n]"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:59:10.191235",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "content_length": 16578
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:11.403048",
+      "command": "uv run python -c \"from liquidity.collectors import FedCustodyCollector, CUSTODY_SERIES; print('Import OK'); print(f'CUSTODY_SERIES: {CUSTODY_SERIES}')\"",
+      "description": "Verify FedCustodyCollector import works"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:59:14.572858",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:18.756672",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.registry import CollectorRegistry, registry\nfrom liquidity.collectors.snb ..."
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:59:20.110299",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py",
+      "content_length": 19370
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:23.040369",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # Fed Custody (Phase 5)\n    \"FedCustodyCollector\",\n    \"CUSTODY_SERIES\",\n]"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:59:25.536023",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py",
+      "content_length": 11644
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:28.027745",
+      "command": "uv run python -c \"from liquidity.collectors import StressIndicatorCollector, STRESS_THRESHOLDS; print('Import OK'); print(f'Thresholds: {STRESS_THRESHOLDS}')\"",
+      "description": "Verify StressIndicatorCollector import"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:28.612993",
+      "command": "uv run pyright src/liquidity/collectors/fed_custody.py",
+      "description": "Run pyright type checking on fed_custody.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:59:28.985519",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:59:29.134161",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:34.400239",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.stress import (\n    STRESS_THRESHOLDS,\n    StressIndicatorCollector,\n)\nfro..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:39.450508",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # Stress Indicators (Phase 5)\n    \"StressIndicatorCollector\",\n    \"STRESS_THRESHOLDS\",\n]"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:40.705925",
+      "command": "uv run pyright src/liquidity/collectors/fred.py 2>&1 | head -20",
+      "description": "Check pyright on existing fred.py for comparison"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:59:41.109280",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:59:41.225839",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_cofer.py",
+      "content_length": 15033
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:44.864254",
+      "command": "uv run python -c \"from liquidity.collectors import TICCollector; print('TICCollector import OK')\"",
+      "description": "Verify TICCollector can be imported"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:45.589853",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.registry import CollectorRegistry, registry\nfrom liquidity.collectors.snb ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T17:59:46.398789",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_cofer.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:47.457079",
+      "command": "uv run pyright src/liquidity/collectors/stress.py",
+      "description": "Type check stress.py with pyright"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:50.669413",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_cofer.py",
+      "old_string": "from liquidity.collectors.cofer import COFERCollector"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T17:59:51.249710",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # ETF Flows (Phase 4)\n    \"ETFFlowCollector\",\n    \"ETF_TICKERS\",\n    \"ETF_UNDERLYING\",\n    # COF..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:52.378456",
+      "command": "uv run pytest tests/integration/test_fed_custody.py -v --tb=short 2>&1",
+      "description": "Run Fed Custody integration tests"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T17:59:56.764221",
+      "pattern": "TestCOFERSeries",
+      "path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_cofer.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:57.503319",
+      "command": "uv run pyright src/liquidity/collectors/fred.py 2>&1 | head -20",
+      "description": "Check if fred.py has same type errors"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:59:58.439449",
+      "command": "uv run python -c \"from liquidity.collectors import RiskETFCollector; print('OK')\"",
+      "description": "Verify RiskETFCollector can be imported"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:01.139492",
+      "command": "uv run pyright src/liquidity/collectors/tic.py --outputjson 2>&1 | head -100",
+      "description": "Run pyright type check on tic.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:02.042443",
+      "command": "uv run python -c \"from liquidity.collectors import COFERCollector; print('OK')\"",
+      "description": "Verify COFERCollector import works"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:10.179170",
+      "command": "uv run pytest tests/integration/test_stress.py -v --tb=short 2>&1",
+      "description": "Run stress collector integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:13.965475",
+      "command": "uv run pyright src/liquidity/collectors/fred.py --outputjson 2>&1 | head -50",
+      "description": "Check if FRED collector has same pyright issues"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:15.518914",
+      "command": "uv run python -c \"from liquidity.collectors import RISK_ETF_TICKERS, RISK_ETF_TYPE; print('TICKERS:', RISK_ETF_TICKERS); print('TYPES:', RISK_ETF_TYPE)\"",
+      "description": "Verify constants can be imported"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:18.883530",
+      "command": "uv run python -c \"from liquidity.collectors import COFER_SERIES; print('COFER_SERIES:', COFER_SERIES)\"",
+      "description": "Verify COFER_SERIES export works"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:22.166388",
+      "command": "sops -d /media/sam/1TB/.env.enc 2>/dev/null | grep -q \"LIQUIDITY_FRED_API_KEY\" && echo \"Key exists in SOPS\" || echo \"Key NOT found\"",
+      "description": "Check if FRED API key exists in SOPS"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:25.061388",
+      "command": "uv run pytest tests/integration/test_tic.py -v --tb=short -x 2>&1 | head -150",
+      "description": "Run TIC integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:26.889858",
+      "command": "sops -d /media/sam/1TB/.env.enc 2>/dev/null | grep -i fred | cut -d= -f1",
+      "description": "Check FRED related keys in SOPS"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:30.474988",
+      "command": "sops -d /media/sam/1TB/openbb_liquidity/.env.enc 2>/dev/null | grep -i fred | cut -d= -f1",
+      "description": "Check FRED API key in project-specific SOPS"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:31.046934",
+      "command": "uv run pyright src/liquidity/collectors/risk_etfs.py 2>&1",
+      "description": "Run pyright type checking on risk_etfs.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:34.848417",
+      "command": "ls -la /media/sam/1TB/openbb_liquidity/.env* 2>/dev/null || echo \"No .env files\"",
+      "description": "Check for .env files in project"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:36.937748",
+      "command": "sops -d /media/sam/1TB/.env.enc 2>/dev/null | grep -q \"LIQUIDITY_FRED_API_KEY\" && echo \"Key exists\" || echo \"Key not found\"",
+      "description": "Check if FRED API key exists in SOPS"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:38.086839",
+      "command": "uv run pyright src/liquidity/collectors/cofer.py 2>&1",
+      "description": "Run pyright type checking on cofer.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:00:39.878197",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/risk_etfs.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:40.129282",
+      "command": "grep -r \"LIQUIDITY_FRED_API_KEY\" /media/sam/1TB/openbb_liquidity --include=\"*.py\" --include=\"*.toml\" | head -20",
+      "description": "Find FRED API key usage in project"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:40.497758",
+      "command": "sops -d /media/sam/1TB/.env.enc 2>/dev/null | grep -i fred | cut -d= -f1",
+      "description": "Find FRED-related keys in SOPS"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:45.126454",
+      "command": "uv run pyright src/liquidity/collectors/etf_flows.py 2>&1",
+      "description": "Check if etf_flows.py has the same type errors"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:45.355040",
+      "command": "sops -d /media/sam/1TB/openbb_liquidity/.env.enc 2>/dev/null | grep -i fred | cut -d= -f1 2>/dev/null || echo \"No local .env.enc\"",
+      "description": "Check local project .env.enc for FRED key"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:00:47.352605",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/cofer.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:00:48.735718",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:52.199274",
+      "command": "ls -la /media/sam/1TB/openbb_liquidity/.env* 2>/dev/null || echo \"No .env files found\"",
+      "description": "Check for .env files"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:00:52.777907",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/cofer.py",
+      "old_string": "        # Calculate shares as percentages\n        shares_data: list[dict[str, Any]] = []\n        for..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:55.901229",
+      "command": "uv run pytest tests/integration/test_risk_etfs.py -v --tb=short 2>&1",
+      "description": "Run integration tests for risk_etfs collector"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:56.324547",
+      "command": "uv run pyright src/liquidity/collectors/cofer.py 2>&1",
+      "description": "Re-run pyright type checking on cofer.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:00:56.955371",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.env.example"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:00:57.047816",
+      "command": "cat /media/sam/1TB/openbb_liquidity/.env.example | grep -i fred",
+      "description": "Check .env.example for FRED key format"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:02.489774",
+      "command": "source /media/sam/1TB/openbb_liquidity/.venv/bin/activate && eval \"$(sops -d /media/sam/1TB/openbb_liquidity/.env.enc 2>/dev/null)\" && uv run pytest tests/integration/test_stress.py -v --tb=short 2>&1 | head -100",
+      "description": "Run tests with SOPS-decrypted env vars"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:04.213043",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import registry, FedCustodyCollector\n\n# Check registry\nprint('Registered collectors:', registry.list_collectors())\nassert 'fed_custody' in registry.list_collectors(), 'fed_custody not registered'\n\n# Get and instantiate\ncollector_cls = registry.get('fed_custody')\nassert collector_cls is FedCustodyCollector, 'Wrong class returned'\n\ncollector = collector_cls()\nassert collector.name == 'fed_custody', 'Wrong name'\n\nprint('Registry integration: OK')\nprint(f'Collector: {collector}')\n\"",
+      "description": "Verify registry integration works"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:01:08.532733",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/cofer.py",
+      "old_string": "        # Calculate shares as percentages\n        shares_data: list[dict[str, Any]] = []\n        for..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:08.909228",
+      "command": "source <(sops -d .env.enc 2>/dev/null | sed 's/^/export /') && echo \"FRED key length: ${#LIQUIDITY_FRED_API_KEY}\" && uv run pytest tests/integration/test_stress.py::TestRegistryIntegration -v --tb=short 2>&1",
+      "description": "Run registry tests with SOPS env vars"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:11.918521",
+      "command": "uv run pyright src/liquidity/collectors/cofer.py 2>&1",
+      "description": "Re-run pyright type checking on cofer.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:23.393832",
+      "command": "uv run pytest tests/integration/test_cofer.py -v --tb=short 2>&1",
+      "description": "Run COFER integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:24.281357",
+      "command": "uv run pytest tests/integration/test_fed_custody.py::TestCustodySeries -v --tb=short 2>&1",
+      "description": "Run non-integration tests that don't need API key"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:01:35.174500",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.risk_etfs import RiskETFCollector\n\nasync def main():\n    collector = RiskETFCollector()\n    df = await collector.collect_current_shares(etfs=['SPY', 'TLT'])\n    print(df[['etf', 'shares_outstanding']].to_string())\n    \n    spy_shares = df[df['etf'] == 'SPY']['shares_outstanding'].values[0]\n    tlt_shares = df[df['etf'] == 'TLT']['shares_outstanding'].values[0]\n    print(f'\\nSPY shares: {spy_shares:,.0f}')\n    print(f'TLT shares: {tlt_shares:,.0f}')\n    print(f'Ratio: {spy_shares/tlt_shares:.2f}')\n\nasyncio.run(main())\n\" 2>&1 | grep -v \"UserWarning\\|DeprecationWarning\\|PydanticDeprecated\\|Pandas4Warning\"",
+      "description": "Check actual SPY/TLT shares ratio"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:01:35.583687",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:01:43.298236",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "\"\"\"Integration tests for stress indicator collector.\n\nTests funding market stress indicators:\n- SOFR..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:01:48.881666",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestSOFROISSpread:\n    \"\"\"Tests for SOFR-OIS spread indicator.\"\"\"\n\n    @pytest.mark.integratio..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:01:52.081904",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fed_custody.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:01:54.221830",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "    @pytest.mark.integration\n    @pytest.mark.asyncio\n    async def test_sofr_ois_values_reasonable(..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:01:57.386674",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fed_custody.py",
+      "old_string": "class TestCustodySeries:\n    \"\"\"Tests for CUSTODY_SERIES constant.\"\"\"\n\n    def test_series_mapping_c..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:01:59.935077",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestSOFRDistribution:\n    \"\"\"Tests for SOFR distribution width indicator.\"\"\"\n\n    @pytest.mark..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:00.072405",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/risk_etfs.py",
+      "old_string": "        ratio = spy_shares / tlt_shares\n\n        # Determine sentiment based on ratio\n        # SPY ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:02:01.270137",
+      "command": "uv run pytest tests/integration/test_fed_custody.py::TestCustodySeries -v --tb=short 2>&1",
+      "description": "Run unit tests that don't need API key"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:04.621502",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestRepoStress:\n    \"\"\"Tests for repo stress ratio indicator.\"\"\"\n\n    @pytest.mark.integration..."
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T18:02:05.177534",
+      "url": "https://api.db.nomics.world/v22/series?provider_code=IMF&dataset_code=COFER&limit=20",
+      "prompt": "List all available series codes in the IMF COFER dataset. Show the series_code for each series, espe..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:07.738044",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py",
+      "old_string": "        # If data is valid, verify ratio makes sense\n        if result[\"spy_shares\"] is not None and..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:09.607929",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "    @pytest.mark.integration\n    @pytest.mark.asyncio\n    async def test_repo_stress_normalized(\n   ..."
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T18:02:10.508538",
+      "url": "https://api.db.nomics.world/v22/datasets/IMF/COFER?facets=true",
+      "prompt": "Show me the available dimensions and values in the IMF COFER dataset. I need to understand the struc..."
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T18:02:14.468384",
+      "url": "https://db.nomics.world/IMF/COFER",
+      "prompt": "Extract information about the IMF COFER dataset structure. What are the available series codes? How ..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:14.711664",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestCPSpread:\n    \"\"\"Tests for CP-Treasury spread indicator.\"\"\"\n\n    @pytest.mark.integration\n..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:19.366929",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py",
+      "old_string": "    def test_risk_appetite_risk_on(self) -> None:\n        \"\"\"Test risk_on sentiment calculation.\"\"\"\n..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:20.185585",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestCollectAll:\n    \"\"\"Tests for combined stress indicator collection.\"\"\"\n\n    @pytest.mark.in..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:02:24.109537",
+      "command": "uv run pytest tests/integration/test_risk_etfs.py -v --tb=short 2>&1 | tail -50",
+      "description": "Run integration tests for risk_etfs collector"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:24.853495",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "    @pytest.mark.integration\n    @pytest.mark.asyncio\n    async def test_output_format(\n        self..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:29.750661",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestRegimeClassification:\n    \"\"\"Tests for stress regime classification.\"\"\"\n\n    @pytest.mark...."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:02:34.726463",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:02:39.366474",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:02:45.737107",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py",
+      "old_string": "class TestDataQuality:\n    \"\"\"Tests for data quality and NaN handling.\"\"\"\n\n    @pytest.mark.integrat..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:02:50.230810",
+      "command": "uv run pytest tests/integration/test_stress.py -v --tb=short 2>&1",
+      "description": "Run stress collector integration tests"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T18:02:55.113667",
+      "pattern": "pytestmark.*=.*\\[\\]",
+      "path": "/media/sam/1TB/openbb_liquidity/tests"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:03:00.927717",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fed_custody.py",
+      "old_string": "@pytest.mark.unit\nclass TestCustodySeries:\n    \"\"\"Tests for CUSTODY_SERIES constant (no API key requ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:04.993153",
+      "command": "ls -la /media/sam/1TB/openbb_liquidity/tests/",
+      "description": "List test directory structure"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:08.338571",
+      "command": "uv run python -c \"from liquidity.collectors import RiskETFCollector; print('OK')\"",
+      "description": "Final verification: import RiskETFCollector"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-23T18:03:09.151377",
+      "pattern": "/media/sam/1TB/openbb_liquidity/tests/unit/*.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:09.972510",
+      "command": "curl -sI \"https://ticdata.treasury.gov/resource-center/data-chart-center/tic/Documents/slt_table5.csv\" 2>&1 | head -15",
+      "description": "Test Treasury TIC URL"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:19.631983",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER?observations=1&limit=50\" | jq '.series.docs[:10] | .[] | {series_code, series_name}' 2>/dev/null || echo \"API query failed, trying alternative...\"",
+      "description": "Query DBnomics API for COFER series"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T18:03:21.993884",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/unit/test_fed_custody.py",
+      "content_length": 3162
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:23.024849",
+      "command": "uv run python -c \"from liquidity.collectors import RISK_ETF_TICKERS, RISK_ETF_TYPE; print('RISK_ETF_TICKERS:', RISK_ETF_TICKERS); print('RISK_ETF_TYPE:', RISK_ETF_TYPE)\"",
+      "description": "Final verification: import constants"
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T18:03:23.344143",
+      "url": "https://ticdata.treasury.gov/Publish/mfh.txt",
+      "prompt": "Extract all the data from this text file. Is this the Major Foreign Holders TIC data?"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:23.451552",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import StressIndicatorCollector, STRESS_THRESHOLDS, registry\nprint('Import OK')\nprint(f'StressIndicatorCollector: {StressIndicatorCollector}')\nprint(f'STRESS_THRESHOLDS: {STRESS_THRESHOLDS}')\nprint(f'Registry has stress: {\\\"stress\\\" in registry.list_collectors()}')\nprint(f'All collectors: {registry.list_collectors()}')\n\"",
+      "description": "Final verification of imports and registry"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:26.556533",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER?observations=1&limit=200\" | jq '.series.docs[] | select(.series_code | contains(\"USD\")) | {series_code, series_name}' 2>/dev/null | head -50",
+      "description": "Query DBnomics API for USD-related COFER series"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:26.712083",
+      "command": "uv run pytest tests/unit/test_fed_custody.py -v --tb=short 2>&1",
+      "description": "Run Fed Custody unit tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:33.200994",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER?observations=1&limit=500\" | jq '.series.docs[] | select(.series_code | startswith(\"Q.\")) | {series_code, series_name}' 2>/dev/null | head -50",
+      "description": "Query DBnomics API for quarterly COFER series"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:38.470308",
+      "command": "uv run python -c \"from liquidity.collectors import registry; print('risk_etfs registered:', 'risk_etfs' in registry.list_collectors())\"",
+      "description": "Final verification: registry registration"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:43.273441",
+      "command": "uv run pyright src/liquidity/collectors/stress.py 2>&1 | grep -v \"reportAttributeAccessIssue\" | grep -E \"(error|warning)\" || echo \"No additional type errors\"",
+      "description": "Check for non-OpenBB type errors"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:03:44.723437",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "# US Treasury TIC data URLs\nTIC_URLS = {\n    # Major Foreign Holders of Treasury Securities\n    \"mfh..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:03:53.518505",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fed_custody.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:55.319101",
+      "command": "uv run pyright tests/integration/test_stress.py 2>&1",
+      "description": "Type check test file"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:03:55.587907",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "    def _fetch_major_holders_sync(self, top_n: int = 25) -> pd.DataFrame:\n        \"\"\"Synchronous fet..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:03:58.131868",
+      "command": "uv run pytest tests/integration/test_fed_custody.py tests/unit/test_fed_custody.py -v --tb=short 2>&1 | tail -40",
+      "description": "Run all Fed Custody tests"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:04:04.295084",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:07.396088",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER?observations=1&limit=500\" | jq '.series.docs[] | select(.series_code | startswith(\"Q.\") and (.series_code | contains(\"USD_USD\") or contains(\"USDRT\"))) | {series_code, series_name}' 2>/dev/null",
+      "description": "Query DBnomics API for quarterly USD COFER series"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:09.470052",
+      "command": "grep -n \"collector_cls()\" /media/sam/1TB/openbb_liquidity/tests/integration/*.py",
+      "description": "Check how other tests instantiate collectors from registry"
     }
   ],
-  "last_updated": "2026-01-23T17:57:20.650754"
+  "last_updated": "2026-01-23T18:04:09.470083"
 }
