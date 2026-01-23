@@ -920,7 +920,19 @@
       "operation": "read",
       "timestamp": "2026-01-23T18:05:15.704884",
       "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:05:28.003949",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "        # Build result DataFrame\n        results = []\n        for _, row in df.iterrows():\n         ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:05:35.229769",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.tic import TICCollector\n\nasync def test():\n    c = TICCollector()\n    df = await c.collect_major_holders()\n    if df.empty:\n        print('No data returned')\n    else:\n        print(f'Records: {len(df)}')\n        print(f'Columns: {df.columns.tolist()}')\n        print()\n        print(df.to_string())\n        print()\n        \n        # Check Japan and China\n        japan = await c.get_japan_holdings()\n        china = await c.get_china_holdings()\n        print(f'Japan holdings: {japan:,.0f} million USD' if japan else 'Japan: N/A')\n        print(f'China holdings: {china:,.0f} million USD' if china else 'China: N/A')\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Test TICCollector with improved parsing"
     }
   ],
-  "last_updated": "2026-01-23T18:05:15.704905"
+  "last_updated": "2026-01-23T18:05:35.229791"
 }

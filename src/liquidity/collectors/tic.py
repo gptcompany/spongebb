@@ -461,11 +461,38 @@ class TICCollector(BaseCollector[pd.DataFrame]):
                     except ValueError:
                         pass
 
+        # Patterns to exclude (aggregate rows, not individual countries)
+        exclude_patterns = [
+            "total",
+            "grand total",
+            "foreign official",
+            "foreign private",
+            "t-bonds",
+            "tbonds",
+            "treasury bills",
+            "country",
+            "region",
+            "all other",
+            "of which",
+            "memo:",
+            "note:",
+            "source:",
+        ]
+
         # Build result DataFrame
         results = []
+        total_value = None
         for _, row in df.iterrows():
             country = str(row[country_col]).strip()
             if not country or country.lower() in ("nan", ""):
+                continue
+
+            # Skip aggregate rows
+            country_lower = country.lower()
+            if any(pat in country_lower for pat in exclude_patterns):
+                # Capture grand total separately
+                if "grand total" in country_lower:
+                    total_value = _parse_value(row[value_col])
                 continue
 
             value = _parse_value(row[value_col])
@@ -492,15 +519,23 @@ class TICCollector(BaseCollector[pd.DataFrame]):
 
         result_df = pd.DataFrame(results)
 
-        # Sort by value descending and take top_n (excluding total)
-        result_df = result_df[result_df["series_id"] != "tic_total_holdings"]
+        # Sort by value descending and take top_n
         result_df = result_df.sort_values("value", ascending=False).head(top_n)
 
-        # Add total back if present in original results
-        total_rows = [r for r in results if r["series_id"] == "tic_total_holdings"]
-        if total_rows:
-            total_df = pd.DataFrame(total_rows)
-            result_df = pd.concat([result_df, total_df], ignore_index=True)
+        # Add total row if captured
+        if total_value is not None:
+            total_row = pd.DataFrame(
+                [
+                    {
+                        "timestamp": timestamp,
+                        "series_id": "tic_total_holdings",
+                        "source": "treasury",
+                        "value": total_value,
+                        "unit": "millions_usd",
+                    }
+                ]
+            )
+            result_df = pd.concat([result_df, total_row], ignore_index=True)
 
         logger.info("Normalized %d TIC major holder records", len(result_df))
 
