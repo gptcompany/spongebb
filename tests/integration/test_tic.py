@@ -47,8 +47,8 @@ class TestTICCollectorMajorHolders:
         # Verify source
         assert (df["source"] == "treasury").all()
 
-        # Verify unit
-        assert (df["unit"] == "millions_usd").all()
+        # Verify unit (Treasury data is in billions)
+        assert (df["unit"] == "billions_usd").all()
 
         # Verify we have data
         assert len(df) > 0, "Should have at least some holder data"
@@ -56,7 +56,7 @@ class TestTICCollectorMajorHolders:
         # Print summary
         print(f"\nMajor holders fetched: {len(df)}")
         for _, row in df.head(5).iterrows():
-            print(f"  {row['series_id']}: {row['value']:,.0f} million USD")
+            print(f"  {row['series_id']}: {row['value']:,.1f} billion USD")
 
     @pytest.mark.integration
     @pytest.mark.asyncio
@@ -106,17 +106,16 @@ class TestTICCollectorMajorHolders:
         # Holdings should be positive
         assert (holders["value"] > 0).all(), "Holdings should be positive"
 
-        # Individual country holdings: 100B to 5T USD
-        # (100,000 to 5,000,000 millions)
+        # Individual country holdings: 50B to 2T USD (in billions)
         min_val = holders["value"].min()
         max_val = holders["value"].max()
 
-        # Japan and China are typically the largest holders (>1T USD each)
-        # Smaller holders might have ~100B USD
-        assert min_val > 10_000, f"Minimum holding too low: {min_val:,.0f} million"
-        assert max_val < 5_000_000, f"Maximum holding too high: {max_val:,.0f} million"
+        # Japan and China are typically the largest holders (~1T USD each)
+        # Smaller holders in top 25 might have ~50B USD
+        assert min_val > 50, f"Minimum holding too low: {min_val:,.1f} billion"
+        assert max_val < 2000, f"Maximum holding too high: {max_val:,.1f} billion"
 
-        print(f"\nHoldings range: {min_val:,.0f} - {max_val:,.0f} million USD")
+        print(f"\nHoldings range: {min_val:,.1f} - {max_val:,.1f} billion USD")
 
 
 class TestTICCollectorTreasuryHoldings:
@@ -245,7 +244,7 @@ class TestTICCollectorSymbols:
         """Test TIC URLs are defined."""
         assert "mfh" in TIC_URLS
         assert "holdings" in TIC_URLS
-        assert "mfh_txt" in TIC_URLS
+        assert "mfh_csv" in TIC_URLS
 
     def test_fred_series_defined(self) -> None:
         """Test FRED series are defined."""
@@ -275,11 +274,11 @@ class TestTICCollectorConvenienceMethods:
         if holdings is None:
             pytest.skip("Japan holdings not available")
 
-        # Japan typically holds >1T USD (>1,000,000 million)
-        assert holdings > 500_000, f"Japan holdings too low: {holdings:,.0f}"
-        assert holdings < 3_000_000, f"Japan holdings too high: {holdings:,.0f}"
+        # Japan typically holds ~1T USD (in billions: 500 to 1500)
+        assert holdings > 500, f"Japan holdings too low: {holdings:,.1f} billion"
+        assert holdings < 1500, f"Japan holdings too high: {holdings:,.1f} billion"
 
-        print(f"\nJapan holdings: {holdings:,.0f} million USD")
+        print(f"\nJapan holdings: {holdings:,.1f} billion USD")
 
     @pytest.mark.integration
     @pytest.mark.asyncio
@@ -290,11 +289,11 @@ class TestTICCollectorConvenienceMethods:
         if holdings is None:
             pytest.skip("China holdings not available")
 
-        # China typically holds ~800B-1T USD
-        assert holdings > 500_000, f"China holdings too low: {holdings:,.0f}"
-        assert holdings < 2_000_000, f"China holdings too high: {holdings:,.0f}"
+        # China typically holds ~800B-1T USD (in billions: 500 to 1200)
+        assert holdings > 500, f"China holdings too low: {holdings:,.1f} billion"
+        assert holdings < 1200, f"China holdings too high: {holdings:,.1f} billion"
 
-        print(f"\nChina holdings: {holdings:,.0f} million USD")
+        print(f"\nChina holdings: {holdings:,.1f} billion USD")
 
 
 class TestTICCollectorInstantiation:
@@ -324,7 +323,7 @@ if __name__ == "__main__":
                 print(f"Records: {len(df)}")
                 print("\nTop 5 holders:")
                 for _, row in df.head(5).iterrows():
-                    print(f"  {row['series_id']}: {row['value']:,.0f} million USD")
+                    print(f"  {row['series_id']}: {row['value']:,.1f} billion USD")
             else:
                 print("No data returned")
         except Exception as e:
@@ -333,7 +332,7 @@ if __name__ == "__main__":
         print("\n\nFetching Japan and China holdings...")
         japan = await collector.get_japan_holdings()
         china = await collector.get_china_holdings()
-        print(f"Japan: {japan:,.0f} million USD" if japan else "Japan: N/A")
-        print(f"China: {china:,.0f} million USD" if china else "China: N/A")
+        print(f"Japan: {japan:,.1f} billion USD" if japan else "Japan: N/A")
+        print(f"China: {china:,.1f} billion USD" if china else "China: N/A")
 
     asyncio.run(main())

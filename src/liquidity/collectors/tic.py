@@ -467,8 +467,11 @@ class TICCollector(BaseCollector[pd.DataFrame]):
             "grand total",
             "foreign official",
             "foreign private",
+            "for official",  # Handles "For. Official" parsed as "For Official"
+            "forofficial",  # Handles concatenated version
             "t-bonds",
             "tbonds",
+            "t bonds",
             "treasury bills",
             "country",
             "region",
@@ -508,7 +511,7 @@ class TICCollector(BaseCollector[pd.DataFrame]):
                     "series_id": series_id,
                     "source": "treasury",
                     "value": value,
-                    "unit": "millions_usd",
+                    "unit": "billions_usd",
                 }
             )
 
@@ -531,7 +534,7 @@ class TICCollector(BaseCollector[pd.DataFrame]):
                         "series_id": "tic_total_holdings",
                         "source": "treasury",
                         "value": total_value,
-                        "unit": "millions_usd",
+                        "unit": "billions_usd",
                     }
                 ]
             )

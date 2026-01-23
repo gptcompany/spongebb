@@ -944,7 +944,117 @@
       "timestamp": "2026-01-23T18:05:59.944587",
       "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_cofer.py",
       "old_string": "            # YoY change should be in reasonable range (-5 to +5 percentage points)\n            for ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:06:03.830700",
+      "command": "uv run pytest tests/integration/test_cofer.py -v --tb=short 2>&1 | tail -30",
+      "description": "Run COFER integration tests (final)"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:06:22.928690",
+      "command": "curl -s \"https://ticdata.treasury.gov/Publish/mfh.txt\" 2>&1 | head -30",
+      "description": "Check TIC file header for units"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:06:37.930048",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "                \"unit\": \"millions_usd\","
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:06:44.271875",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "        # Patterns to exclude (aggregate rows, not individual countries)\n        exclude_patterns = ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:06:49.094225",
+      "command": "uv run python -c \"from liquidity.collectors import COFERCollector; print('COFERCollector import: OK')\" && uv run python -c \"from liquidity.collectors import COFER_SERIES; print('COFER_SERIES:', list(COFER_SERIES.keys()))\"",
+      "description": "Verify imports work"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T18:06:49.513028",
+      "pattern": "millions_usd",
+      "path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:06:58.010960",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:07:03.570880",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py",
+      "old_string": "        # Verify source\n        assert (df[\"source\"] == \"treasury\").all()\n\n        # Verify unit\n   ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:07:06.958314",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:07:13.413216",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py",
+      "old_string": "        # Holdings should be positive\n        assert (holders[\"value\"] > 0).all(), \"Holdings should ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:07:17.282695",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:07:20.819816",
+      "command": "uv run pyright src/liquidity/collectors/cofer.py 2>&1 | grep -E \"^[0-9]+ error|^0 error\"",
+      "description": "Run pyright type checking"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:07:21.450154",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:07:26.674215",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py",
+      "old_string": "    def test_tic_urls_defined(self) -> None:\n        \"\"\"Test TIC URLs are defined.\"\"\"\n        assert..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:07:30.463403",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import registry\nprint('Registered collectors:', registry.list_collectors())\nprint()\nprint('COFER registered:', 'cofer' in registry)\ncollector_cls = registry.get('cofer')\nprint('Collector class:', collector_cls.__name__)\n\"",
+      "description": "Verify registry integration"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:07:35.176598",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py",
+      "old_string": "    @pytest.mark.integration\n    @pytest.mark.asyncio\n    async def test_get_japan_holdings(self, ti..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:07:38.796891",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:07:46.026582",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py",
+      "old_string": "if __name__ == \"__main__\":\n    # Run a quick sanity check\n    async def main() -> None:\n        coll..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:07:50.556797",
+      "command": "uv run pytest tests/integration/test_tic.py -v --tb=short -x 2>&1 | head -100",
+      "description": "Run TIC integration tests"
     }
   ],
-  "last_updated": "2026-01-23T18:05:59.944613"
+  "last_updated": "2026-01-23T18:07:50.556821"
 }
