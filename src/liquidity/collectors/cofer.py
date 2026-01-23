@@ -30,14 +30,15 @@ logger = logging.getLogger(__name__)
 DBNOMICS_BASE_URL = "https://api.db.nomics.world/v22/series/IMF/COFER"
 
 # COFER series codes for allocated reserves by currency (all in USD millions)
-# W00 = World (all countries)
+# W00 = World (all countries, excluding IO)
+# Quarterly data from IMF COFER dataset via DBnomics
 COFER_SERIES: dict[str, str] = {
     "usd": "Q.W00.RAXGFXARUSD_USD",  # USD reserves
-    "eur": "Q.W00.RAXGFXARDEM_USD",  # EUR reserves (DEM = Deutsche Mark, now EUR)
-    "cny": "Q.W00.RAXGFXARCNY_USD",  # CNY reserves
-    "jpy": "Q.W00.RAXGFXARJPY_USD",  # JPY reserves
-    "gbp": "Q.W00.RAXGFXARGBP_USD",  # GBP reserves
-    "other": "Q.W00.RAXGFXAROT_USD",  # Other currencies
+    "eur": "Q.W00.RAXGFXAREURO_USD",  # EUR reserves (Euro)
+    "cny": "Q.W00.RAXGFXARCNY_USD",  # CNY reserves (Chinese Renminbi)
+    "jpy": "Q.W00.RAXGFXARJPY_USD",  # JPY reserves (Japanese Yen)
+    "gbp": "Q.W00.RAXGFXARGBP_USD",  # GBP reserves (Pounds Sterling)
+    "other": "Q.W00.RAXGFXAROC_USD",  # Other currencies
 }
 
 
