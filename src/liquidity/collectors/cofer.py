@@ -320,7 +320,8 @@ class COFERCollector(BaseCollector[pd.DataFrame]):
         Raises:
             CollectorFetchError: If API request fails or returns no data.
         """
-        url = f"{DBNOMICS_BASE_URL}/{series_code}"
+        # observations=1 is required to get actual data values
+        url = f"{DBNOMICS_BASE_URL}/{series_code}?observations=1"
 
         async def _do_fetch() -> pd.DataFrame:
             async with httpx.AsyncClient(timeout=30.0) as client:

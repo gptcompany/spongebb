@@ -383,71 +383,83 @@ class TICCollector(BaseCollector[pd.DataFrame]):
                 columns=["timestamp", "series_id", "source", "value", "unit"]
             )
 
-        # Find country column and value columns
-        country_col = None
-        for col in df.columns:
-            col_str = str(col).strip().lower()
-            if col_str in ("country", "name", "country/region"):
-                country_col = col
-                break
-            # First column is often country
-            if df.columns.get_loc(col) == 0:  # type: ignore[union-attr]
-                country_col = col
+        # Handle fixed-width parsed data (numeric column names 0, 1, 2...)
+        # vs CSV with named columns
+        columns = list(df.columns)
+        is_numeric_cols = all(isinstance(c, int) for c in columns)
 
-        if country_col is None:
-            country_col = df.columns[0]
-
-        # Find most recent date column (usually last numeric column)
-        date_cols = []
-        for col in df.columns:
-            col_str = str(col)
-            # Look for date-like columns (e.g., "Jan 2024", "2024-01", etc.)
-            if re.search(r"\d{4}", col_str) or re.search(
-                r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)", col_str
-            ):
-                date_cols.append(col)
-
-        if not date_cols:
-            # Use last non-country column
-            date_cols = [c for c in df.columns if c != country_col]
-
-        if not date_cols:
-            logger.warning("No value columns found in TIC data")
-            return pd.DataFrame(
-                columns=["timestamp", "series_id", "source", "value", "unit"]
-            )
-
-        # Use most recent date column
-        value_col = date_cols[-1]
-
-        # Parse the date from column name
-        col_str = str(value_col)
-        timestamp = datetime.now(UTC)
-
-        # Try to parse date from column name
-        date_match = re.search(
-            r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*(\d{4})",
-            col_str,
-        )
-        if date_match:
-            month_str = date_match.group(1)[:3]
-            year_str = date_match.group(2)
-            try:
-                timestamp = datetime.strptime(f"{month_str} {year_str}", "%b %Y")
-                timestamp = timestamp.replace(tzinfo=UTC)
-            except ValueError:
-                pass
+        if is_numeric_cols:
+            # Fixed-width format: column 0 is country, last column is most recent value
+            country_col = 0
+            value_col = columns[-1]
+            timestamp = datetime.now(UTC)
         else:
-            # Try YYYY-MM format
-            date_match = re.search(r"(\d{4})-(\d{2})", col_str)
+            # CSV format with named columns
+            # Find country column
+            country_col = None
+            for col in df.columns:
+                col_str = str(col).strip().lower()
+                if col_str in ("country", "name", "country/region"):
+                    country_col = col
+                    break
+                # First column is often country
+                if df.columns.get_loc(col) == 0:  # type: ignore[union-attr]
+                    country_col = col
+
+            if country_col is None:
+                country_col = df.columns[0]
+
+            # Find most recent date column (usually last numeric column)
+            date_cols = []
+            for col in df.columns:
+                col_str = str(col)
+                # Look for date-like columns (e.g., "Jan 2024", "2024-01", etc.)
+                if re.search(r"\d{4}", col_str) or re.search(
+                    r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)", col_str
+                ):
+                    date_cols.append(col)
+
+            if not date_cols:
+                # Use last non-country column
+                date_cols = [c for c in df.columns if c != country_col]
+
+            if not date_cols:
+                logger.warning("No value columns found in TIC data")
+                return pd.DataFrame(
+                    columns=["timestamp", "series_id", "source", "value", "unit"]
+                )
+
+            # Use most recent date column
+            value_col = date_cols[-1]
+
+            # Parse the date from column name
+            col_str = str(value_col)
+            timestamp = datetime.now(UTC)
+
+            # Try to parse date from column name
+            date_match = re.search(
+                r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*(\d{4})",
+                col_str,
+            )
             if date_match:
+                month_str = date_match.group(1)[:3]
+                year_str = date_match.group(2)
                 try:
-                    timestamp = datetime.strptime(
-                        f"{date_match.group(1)}-{date_match.group(2)}", "%Y-%m"
-                    )
+                    timestamp = datetime.strptime(f"{month_str} {year_str}", "%b %Y")
                     timestamp = timestamp.replace(tzinfo=UTC)
                 except ValueError:
                     pass
+            else:
+                # Try YYYY-MM format
+                date_match = re.search(r"(\d{4})-(\d{2})", col_str)
+                if date_match:
+                    try:
+                        timestamp = datetime.strptime(
+                            f"{date_match.group(1)}-{date_match.group(2)}", "%Y-%m"
+                        )
+                        timestamp = timestamp.replace(tzinfo=UTC)
+                    except ValueError:
+                        pass
 
         # Build result DataFrame
         results = []

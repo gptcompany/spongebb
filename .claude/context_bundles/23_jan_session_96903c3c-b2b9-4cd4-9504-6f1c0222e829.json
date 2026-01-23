@@ -821,7 +821,77 @@
       "timestamp": "2026-01-23T18:04:29.343790",
       "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD?observations=1\" | jq '{num_values: (.series.docs[0].value | length), sample_values: (.series.docs[0].value[-5:] | map(select(. != null))), sample_periods: .series.docs[0].period[-5:]}' 2>/dev/null",
       "description": "Check USD COFER series data content"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:33.104866",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD?observations=1\" | jq '.series.docs[0].value | length' 2>/dev/null",
+      "description": "Count values in USD COFER series"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:04:34.048314",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/unit/test_fed_custody.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:37.659348",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD?observations=1\" | jq '.series.docs[0].value[-10:]' 2>/dev/null",
+      "description": "Check last 10 values in USD COFER series"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T18:04:39.674038",
+      "pattern": "reportCallIssue",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:04:42.427114",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "    def _normalize_major_holders(\n        self, df: pd.DataFrame, top_n: int = 25\n    ) -> pd.DataFr..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:43.244194",
+      "command": "uv run pyright tests/unit/test_calculations.py 2>&1 | tail -10",
+      "description": "Check if other unit tests have similar pyright issues"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:04:44.036797",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/cofer.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:47.917310",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.tic import TICCollector\n\nasync def test():\n    c = TICCollector()\n    df = await c.collect_major_holders()\n    if df.empty:\n        print('No data returned')\n    else:\n        print(f'Records: {len(df)}')\n        print(f'Columns: {df.columns.tolist()}')\n        print()\n        print(df.head(10).to_string())\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Test TICCollector manually"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:48.513022",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD\" | jq '.series.docs[0] | {has_value: (.value != null), has_period_start_day: (.period_start_day != null)}' 2>/dev/null",
+      "description": "Check COFER series without observations parameter"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:52.467455",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD\" | jq '.series.docs[0] | keys' 2>/dev/null",
+      "description": "Check COFER series keys without observations parameter"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:52.675366",
+      "command": "uv run python -c \"from liquidity.collectors import FedCustodyCollector, CUSTODY_SERIES; print('Import OK'); print(f'CUSTODY_SERIES: {CUSTODY_SERIES}')\"",
+      "description": "Final verification - import test"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:04:58.399708",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/cofer.py",
+      "old_string": "        url = f\"{DBNOMICS_BASE_URL}/{series_code}\""
     }
   ],
-  "last_updated": "2026-01-23T18:04:29.343816"
+  "last_updated": "2026-01-23T18:04:58.399737"
 }
