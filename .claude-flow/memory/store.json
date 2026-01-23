@@ -5,19 +5,26 @@
       "value": {
         "status": "in_progress",
         "phase": 5,
-        "started_at": "2026-01-23T00:00:00Z",
+        "started_at": "2026-01-23T17:55:00Z",
         "plans": [
           "05-01",
           "05-02",
           "05-03",
           "05-04",
           "05-05"
-        ]
+        ],
+        "agents": {
+          "05-01_tic": "a9987ad",
+          "05-02_fed_custody": "aeb7e07",
+          "05-03_stress": "a5a2dd8",
+          "05-04_risk_etfs": "a2988f9",
+          "05-05_cofer": "acb60a6"
+        }
       },
       "metadata": {},
-      "storedAt": "2026-01-23T17:55:33.197Z",
+      "storedAt": "2026-01-23T17:57:12.194Z",
       "accessCount": 0,
-      "lastAccessed": "2026-01-23T17:55:33.197Z"
+      "lastAccessed": "2026-01-23T17:57:12.194Z"
     }
   },
   "version": "3.0.0"
