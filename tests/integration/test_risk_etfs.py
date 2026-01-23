@@ -521,6 +521,152 @@ class TestRiskETFCollectorRegistry:
         assert collector_cls is RiskETFCollector
 
 
+class TestRiskAppetiteEdgeCases:
+    """Edge case tests for risk appetite calculation."""
+
+    @pytest.fixture
+    def risk_etf_collector(self) -> RiskETFCollector:
+        """Create Risk ETF collector."""
+        return RiskETFCollector()
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_calculate_risk_appetite_real_data(
+        self, risk_etf_collector: RiskETFCollector
+    ) -> None:
+        """Test calculate_risk_appetite with real data."""
+        result = await risk_etf_collector.calculate_risk_appetite()
+
+        assert "spy_shares" in result
+        assert "tlt_shares" in result
+        assert "spy_tlt_ratio" in result
+        assert "sentiment" in result
+
+        # Verify reasonable values
+        assert result["spy_shares"] > 0, "SPY shares should be positive"
+        assert result["tlt_shares"] > 0, "TLT shares should be positive"
+        assert result["spy_tlt_ratio"] > 0, "Ratio should be positive"
+        assert result["sentiment"] in ["risk_on", "risk_off", "neutral"]
+
+        print(f"\nRisk appetite: {result['sentiment']}")
+        print(f"SPY/TLT ratio: {result['spy_tlt_ratio']:.2f}")
+
+    def test_calculate_risk_appetite_from_df_full(self) -> None:
+        """Test _calculate_risk_appetite_from_df with complete data."""
+        mock_data = pd.DataFrame(
+            {
+                "timestamp": pd.Timestamp("2024-01-01"),
+                "etf": ["SPY", "TLT", "IEF", "HYG", "LQD"],
+                "shares_outstanding": [
+                    900_000_000,
+                    400_000_000,
+                    200_000_000,
+                    300_000_000,
+                    250_000_000,
+                ],
+            }
+        )
+
+        result = RiskETFCollector._calculate_risk_appetite_from_df(mock_data)
+
+        assert result["spy_shares"] == 900_000_000
+        assert result["tlt_shares"] == 400_000_000
+        assert result["spy_tlt_ratio"] == 900_000_000 / 400_000_000
+
+    def test_calculate_risk_appetite_empty_df(self) -> None:
+        """Test _calculate_risk_appetite_from_df with empty DataFrame."""
+        empty_df = pd.DataFrame(columns=["timestamp", "etf", "shares_outstanding"])
+
+        result = RiskETFCollector._calculate_risk_appetite_from_df(empty_df)
+
+        # Empty DataFrame returns None values
+        assert result["spy_shares"] is None
+        assert result["tlt_shares"] is None
+        assert result["spy_tlt_ratio"] is None
+        assert result["sentiment"] == "unknown"
+
+    def test_calculate_risk_appetite_missing_spy(self) -> None:
+        """Test risk appetite when SPY is missing."""
+        mock_data = pd.DataFrame(
+            {
+                "timestamp": pd.Timestamp("2024-01-01"),
+                "etf": ["TLT", "IEF"],
+                "shares_outstanding": [400_000_000, 200_000_000],
+            }
+        )
+
+        result = RiskETFCollector._calculate_risk_appetite_from_df(mock_data)
+
+        # Missing SPY returns None values
+        assert result["spy_shares"] is None
+        assert result["spy_tlt_ratio"] is None
+        assert result["sentiment"] == "unknown"
+
+    def test_calculate_risk_appetite_missing_tlt(self) -> None:
+        """Test risk appetite when TLT is missing."""
+        mock_data = pd.DataFrame(
+            {
+                "timestamp": pd.Timestamp("2024-01-01"),
+                "etf": ["SPY", "IEF"],
+                "shares_outstanding": [900_000_000, 200_000_000],
+            }
+        )
+
+        result = RiskETFCollector._calculate_risk_appetite_from_df(mock_data)
+
+        # Missing TLT returns None values
+        assert result["tlt_shares"] is None
+        assert result["spy_tlt_ratio"] is None
+        assert result["sentiment"] == "unknown"
+
+
+class TestFlowEstimationEdgeCases:
+    """Edge case tests for flow estimation."""
+
+    def test_estimate_daily_flows_empty(self) -> None:
+        """Test flow estimation with empty DataFrame."""
+        empty_df = pd.DataFrame(columns=["timestamp", "etf", "shares_outstanding"])
+
+        result = RiskETFCollector.estimate_daily_flows(empty_df)
+
+        assert result.empty
+
+    def test_estimate_daily_flows_single_timestamp(self) -> None:
+        """Test flow estimation with single timestamp per ETF."""
+        mock_data = pd.DataFrame(
+            {
+                "timestamp": [pd.Timestamp("2024-01-01")] * 2,
+                "etf": ["SPY", "TLT"],
+                "shares_outstanding": [900_000_000, 400_000_000],
+            }
+        )
+
+        result = RiskETFCollector.estimate_daily_flows(mock_data)
+
+        # With only one timestamp per ETF, no diff can be calculated
+        # Result should have NaN for shares_change
+        assert "shares_change" in result.columns
+
+
+class TestRiskETFCollectorInstantiation:
+    """Tests for RiskETFCollector instantiation."""
+
+    def test_collector_instantiation(self) -> None:
+        """Test default instantiation."""
+        collector = RiskETFCollector()
+        assert collector.name == "risk_etfs"
+
+    def test_collector_custom_name(self) -> None:
+        """Test custom name instantiation."""
+        collector = RiskETFCollector(name="custom_risk")
+        assert collector.name == "custom_risk"
+
+    def test_collector_class_attributes(self) -> None:
+        """Test class attributes are accessible."""
+        assert RiskETFCollector.RISK_ETF_TICKERS == RISK_ETF_TICKERS
+        assert RiskETFCollector.RISK_ETF_TYPE == RISK_ETF_TYPE
+
+
 if __name__ == "__main__":
     # Run a quick sanity check
     async def main() -> None:

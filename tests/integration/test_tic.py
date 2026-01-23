@@ -311,6 +311,354 @@ class TestTICCollectorInstantiation:
         assert TICCollector.COUNTRY_CODES == COUNTRY_CODES
 
 
+class TestTICParsingFunctions:
+    """Tests for TIC parsing helper functions."""
+
+    def test_normalize_country(self) -> None:
+        """Test country normalization."""
+        from liquidity.collectors.tic import _normalize_country
+
+        # Test known mappings
+        assert _normalize_country("Japan") == "japan"
+        assert _normalize_country("JAPAN") == "japan"
+        assert _normalize_country("China, Mainland") == "china"
+        assert _normalize_country("United Kingdom") == "uk"
+
+        # Test unknown country generates code
+        assert _normalize_country("Unknown") == "unknown"
+
+    def test_parse_value_numbers(self) -> None:
+        """Test parsing numeric values."""
+        from liquidity.collectors.tic import _parse_value
+
+        assert _parse_value(1000) == 1000.0
+        assert _parse_value(1234.56) == 1234.56
+        assert _parse_value("1234") == 1234.0
+        assert _parse_value("1,234") == 1234.0
+        assert _parse_value("1,234,567.89") == 1234567.89
+
+    def test_parse_value_special_cases(self) -> None:
+        """Test parsing special values."""
+        from liquidity.collectors.tic import _parse_value
+
+        assert _parse_value("n.a.") is None
+        assert _parse_value("N.A.") is None
+        assert _parse_value("*") is None
+        assert _parse_value("**") is None
+        assert _parse_value("") is None
+        assert _parse_value("  ") is None
+        assert _parse_value("abc") is None
+
+    def test_parse_value_nan(self) -> None:
+        """Test parsing NaN returns None."""
+
+        from liquidity.collectors.tic import _parse_value
+
+        assert _parse_value(float("nan")) is None
+        # Also test pandas NA
+        import pandas as pd
+
+        assert _parse_value(pd.NA) is None
+
+
+class TestTICCollectMethod:
+    """Tests for TIC collect dispatch method."""
+
+    @pytest.fixture
+    def tic_collector(self) -> TICCollector:
+        """Create TIC collector."""
+        return TICCollector()
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_collect_major_holders_method(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test collect with 'major_holders' method."""
+        df = await tic_collector.collect(method="major_holders")
+
+        if df.empty:
+            pytest.skip("TIC data unavailable")
+
+        assert set(df.columns) == {"timestamp", "series_id", "source", "value", "unit"}
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_collect_holdings_method(self, tic_collector: TICCollector) -> None:
+        """Test collect with 'holdings' method."""
+        df = await tic_collector.collect(method="holdings")
+
+        # May be empty if endpoint is unavailable
+        assert set(df.columns) == {"timestamp", "series_id", "source", "value", "unit"}
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    @pytest.mark.skipif(
+        not os.environ.get("LIQUIDITY_FRED_API_KEY"),
+        reason="LIQUIDITY_FRED_API_KEY not set",
+    )
+    async def test_collect_aggregate_method(self, tic_collector: TICCollector) -> None:
+        """Test collect with 'aggregate' method."""
+        df = await tic_collector.collect(method="aggregate")
+
+        if df.empty:
+            pytest.skip("FRED TIC data unavailable")
+
+        assert set(df.columns) == {"timestamp", "series_id", "source", "value", "unit"}
+        assert (df["source"] == "fred").all()
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_collect_default_method(self, tic_collector: TICCollector) -> None:
+        """Test collect with unknown method defaults to major_holders."""
+        df = await tic_collector.collect(method="unknown")
+
+        if df.empty:
+            pytest.skip("TIC data unavailable")
+
+        assert set(df.columns) == {"timestamp", "series_id", "source", "value", "unit"}
+
+
+class TestTICTotalHoldings:
+    """Tests for total holdings calculation."""
+
+    @pytest.fixture
+    def tic_collector(self) -> TICCollector:
+        """Create TIC collector."""
+        return TICCollector()
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_get_total_foreign_holdings(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test getting total foreign holdings."""
+        total = await tic_collector.get_total_foreign_holdings()
+
+        if total is None:
+            pytest.skip("Total holdings not available")
+
+        # Total foreign holdings should be > 5 trillion USD (5000 billion)
+        assert total > 5000, f"Total too low: {total:,.1f} billion"
+        print(f"\nTotal foreign holdings: {total:,.1f} billion USD")
+
+
+class TestTICNormalizeMajorHolders:
+    """Tests for _normalize_major_holders internal method."""
+
+    @pytest.fixture
+    def tic_collector(self) -> TICCollector:
+        """Create TIC collector."""
+        return TICCollector()
+
+    def test_normalize_empty_dataframe(self, tic_collector: TICCollector) -> None:
+        """Test normalizing empty DataFrame."""
+        import pandas as pd
+
+        df = pd.DataFrame()
+        result = tic_collector._normalize_major_holders(df)
+
+        assert result.empty
+        expected_cols = {"timestamp", "series_id", "source", "value", "unit"}
+        assert set(result.columns) == expected_cols
+
+    def test_normalize_numeric_columns(self, tic_collector: TICCollector) -> None:
+        """Test normalizing DataFrame with numeric column names."""
+        import pandas as pd
+
+        # Simulate fixed-width parsed output
+        df = pd.DataFrame(
+            {
+                0: ["Japan", "China", "United Kingdom"],
+                1: [1100.0, 800.0, 700.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=3)
+
+        assert not result.empty
+        assert len(result) == 3
+        assert "tic_japan_holdings" in result["series_id"].values
+        assert "tic_china_holdings" in result["series_id"].values
+        assert "tic_uk_holdings" in result["series_id"].values
+        assert (result["source"] == "treasury").all()
+        assert (result["unit"] == "billions_usd").all()
+
+    def test_normalize_csv_with_named_columns(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test normalizing CSV DataFrame with named columns."""
+        import pandas as pd
+
+        df = pd.DataFrame(
+            {
+                "Country": ["Japan", "China, Mainland", "United Kingdom"],
+                "Jan 2025": [1100.0, 800.0, 700.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=3)
+
+        assert not result.empty
+        assert len(result) == 3
+        # Check timestamp was parsed from column name
+        assert result["timestamp"].iloc[0].year == 2025
+        assert result["timestamp"].iloc[0].month == 1
+
+    def test_normalize_excludes_aggregate_rows(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test that aggregate rows are excluded."""
+        import pandas as pd
+
+        df = pd.DataFrame(
+            {
+                "Country": [
+                    "Japan",
+                    "Foreign Official",
+                    "T-Bonds & Notes",
+                    "All Other",
+                    "Grand Total",
+                ],
+                "Jan 2025": [1100.0, 5000.0, 2000.0, 500.0, 8000.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=10)
+
+        # Should only include Japan (individual country) + Grand Total (special case)
+        individual = result[result["series_id"] != "tic_total_holdings"]
+        assert len(individual) == 1
+        assert individual["series_id"].iloc[0] == "tic_japan_holdings"
+
+        # Grand Total should be captured separately
+        assert "tic_total_holdings" in result["series_id"].values
+
+    def test_normalize_handles_nan_values(self, tic_collector: TICCollector) -> None:
+        """Test handling of NaN values."""
+        import pandas as pd
+
+        df = pd.DataFrame(
+            {
+                "Country": ["Japan", "China", "Brazil"],
+                "Jan 2025": [1100.0, float("nan"), 200.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=10)
+
+        # China should be excluded due to NaN
+        assert "tic_china_holdings" not in result["series_id"].values
+        assert "tic_japan_holdings" in result["series_id"].values
+
+    def test_normalize_top_n_limit(self, tic_collector: TICCollector) -> None:
+        """Test top_n limiting."""
+        import pandas as pd
+
+        df = pd.DataFrame(
+            {
+                "Country": ["Japan", "China", "UK", "France", "Germany"],
+                "Jan 2025": [1100.0, 800.0, 700.0, 500.0, 400.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=3)
+
+        # Should only include top 3 by value
+        assert len(result) == 3
+
+    def test_normalize_sorted_by_value(self, tic_collector: TICCollector) -> None:
+        """Test results are sorted by value descending."""
+        import pandas as pd
+
+        df = pd.DataFrame(
+            {
+                "Country": ["France", "Japan", "UK"],
+                "Jan 2025": [500.0, 1100.0, 700.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=10)
+
+        # Should be sorted by value descending
+        values = result["value"].tolist()
+        assert values == sorted(values, reverse=True)
+
+    def test_normalize_parses_yyyy_mm_format(self, tic_collector: TICCollector) -> None:
+        """Test parsing YYYY-MM date format in column name."""
+        import pandas as pd
+
+        df = pd.DataFrame(
+            {
+                "Country": ["Japan"],
+                "2025-03": [1100.0],
+            }
+        )
+
+        result = tic_collector._normalize_major_holders(df, top_n=10)
+
+        assert result["timestamp"].iloc[0].year == 2025
+        assert result["timestamp"].iloc[0].month == 3
+
+
+class TestTICErrorHandling:
+    """Tests for TIC error handling."""
+
+    @pytest.fixture
+    def tic_collector(self) -> TICCollector:
+        """Create TIC collector."""
+        return TICCollector()
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_get_japan_holdings_error_returns_none(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test that errors in get_japan_holdings return None."""
+        # This tests the error path - if the collector fails, should return None
+        from unittest.mock import AsyncMock, patch
+
+        with patch.object(
+            tic_collector, "collect_major_holders", new_callable=AsyncMock
+        ) as mock:
+            mock.side_effect = Exception("API Error")
+            result = await tic_collector.get_japan_holdings()
+
+        assert result is None
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_get_china_holdings_error_returns_none(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test that errors in get_china_holdings return None."""
+        from unittest.mock import AsyncMock, patch
+
+        with patch.object(
+            tic_collector, "collect_major_holders", new_callable=AsyncMock
+        ) as mock:
+            mock.side_effect = Exception("API Error")
+            result = await tic_collector.get_china_holdings()
+
+        assert result is None
+
+    @pytest.mark.integration
+    @pytest.mark.asyncio
+    async def test_get_total_holdings_error_returns_none(
+        self, tic_collector: TICCollector
+    ) -> None:
+        """Test that errors in get_total_foreign_holdings return None."""
+        from unittest.mock import AsyncMock, patch
+
+        with patch.object(
+            tic_collector, "collect_major_holders", new_callable=AsyncMock
+        ) as mock:
+            mock.side_effect = Exception("API Error")
+            result = await tic_collector.get_total_foreign_holdings()
+
+        assert result is None
+
+
 if __name__ == "__main__":
     # Run a quick sanity check
     async def main() -> None:

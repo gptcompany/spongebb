@@ -199,6 +199,108 @@ class TestFedCustodyCollector:
         assert df["timestamp"].isna().sum() == 0, "Should have no NaN timestamps"
         assert df["series_id"].isna().sum() == 0, "Should have no NaN series IDs"
 
+    @pytest.mark.asyncio
+    async def test_yoy_change(self, custody_collector: FedCustodyCollector) -> None:
+        """Test year-over-year change calculation."""
+        df = await custody_collector.get_yoy_change()
+
+        # YoY change needs more history, may be empty or partial
+        if df.empty:
+            pytest.skip("Not enough historical data for YoY calculation")
+
+        expected_columns = {
+            "timestamp",
+            "series_id",
+            "value",
+            "yoy_change",
+            "yoy_change_pct",
+        }
+        assert set(df.columns) == expected_columns
+
+        # Verify YoY values are present
+        assert df["yoy_change"].notna().any(), "Should have some non-NaN YoY changes"
+        assert df["yoy_change_pct"].notna().any(), "Should have some non-NaN YoY %"
+
+        print("\nYoY changes calculated successfully")
+
+    @pytest.mark.asyncio
+    async def test_collect_with_custom_dates(
+        self, custody_collector: FedCustodyCollector
+    ) -> None:
+        """Test collecting with custom date range."""
+        from datetime import UTC, datetime, timedelta
+
+        end_date = datetime.now(UTC)
+        start_date = end_date - timedelta(days=30)
+
+        df = await custody_collector.collect(
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        assert not df.empty, "Should have data for last 30 days"
+        assert set(df.columns) == {"timestamp", "series_id", "source", "value", "unit"}
+
+
+class TestFindDateColumn:
+    """Tests for _find_date_column helper function."""
+
+    def test_find_date_column_with_date(self) -> None:
+        """Test finding 'date' column."""
+        import pandas as pd
+
+        from liquidity.collectors.fed_custody import _find_date_column
+
+        df = pd.DataFrame({"date": [1, 2, 3], "value": [10, 20, 30]})
+        assert _find_date_column(df) == "date"
+
+    def test_find_date_column_with_index(self) -> None:
+        """Test finding 'index' column."""
+        import pandas as pd
+
+        from liquidity.collectors.fed_custody import _find_date_column
+
+        df = pd.DataFrame({"index": [1, 2, 3], "value": [10, 20, 30]})
+        assert _find_date_column(df) == "index"
+
+    def test_find_date_column_with_timestamp(self) -> None:
+        """Test finding 'timestamp' column."""
+        import pandas as pd
+
+        from liquidity.collectors.fed_custody import _find_date_column
+
+        df = pd.DataFrame({"timestamp": [1, 2, 3], "value": [10, 20, 30]})
+        assert _find_date_column(df) == "timestamp"
+
+    def test_find_date_column_from_index_name(self) -> None:
+        """Test finding column from DataFrame index name."""
+        import pandas as pd
+
+        from liquidity.collectors.fed_custody import _find_date_column
+
+        df = pd.DataFrame({"value": [10, 20, 30]})
+        df.index.name = "my_date"
+        assert _find_date_column(df) == "my_date"
+
+    def test_find_date_column_fallback_first(self) -> None:
+        """Test fallback to first column."""
+        import pandas as pd
+
+        from liquidity.collectors.fed_custody import _find_date_column
+
+        df = pd.DataFrame({"foo": [1, 2, 3], "bar": [10, 20, 30]})
+        assert _find_date_column(df) == "foo"
+
+    def test_find_date_column_empty_raises(self) -> None:
+        """Test that empty DataFrame raises ValueError."""
+        import pandas as pd
+
+        from liquidity.collectors.fed_custody import _find_date_column
+
+        df = pd.DataFrame()
+        with pytest.raises(ValueError, match="Could not identify date column"):
+            _find_date_column(df)
+
 
 if __name__ == "__main__":
     # Run a quick sanity check

@@ -480,6 +480,114 @@ class TestThresholdsExport:
             assert STRESS_THRESHOLDS[key]["green"] < STRESS_THRESHOLDS[key]["yellow"]
 
 
+class TestFindDateColumn:
+    """Tests for _find_date_column helper function."""
+
+    def test_find_date_column_with_date(self) -> None:
+        """Test finding 'date' column."""
+        df = pd.DataFrame({"date": [1, 2, 3], "value": [10, 20, 30]})
+        result = StressIndicatorCollector._find_date_column(df)
+        assert result == "date"
+
+    def test_find_date_column_with_index(self) -> None:
+        """Test finding 'index' column."""
+        df = pd.DataFrame({"index": [1, 2, 3], "value": [10, 20, 30]})
+        result = StressIndicatorCollector._find_date_column(df)
+        assert result == "index"
+
+    def test_find_date_column_with_timestamp(self) -> None:
+        """Test finding 'timestamp' column."""
+        df = pd.DataFrame({"timestamp": [1, 2, 3], "value": [10, 20, 30]})
+        result = StressIndicatorCollector._find_date_column(df)
+        assert result == "timestamp"
+
+    def test_find_date_column_from_index_name(self) -> None:
+        """Test finding column from DataFrame index name."""
+        df = pd.DataFrame({"value": [10, 20, 30]})
+        df.index.name = "my_date"
+        result = StressIndicatorCollector._find_date_column(df)
+        assert result == "my_date"
+
+    def test_find_date_column_fallback_first(self) -> None:
+        """Test fallback to first column."""
+        df = pd.DataFrame({"foo": [1, 2, 3], "bar": [10, 20, 30]})
+        result = StressIndicatorCollector._find_date_column(df)
+        assert result == "foo"
+
+    def test_find_date_column_empty_raises(self) -> None:
+        """Test that empty DataFrame raises ValueError."""
+        df = pd.DataFrame()
+        with pytest.raises(ValueError, match="Could not identify date column"):
+            StressIndicatorCollector._find_date_column(df)
+
+
+class TestRegimeEdgeCases:
+    """Edge case tests for regime classification."""
+
+    @pytest.fixture
+    def stress_collector(self) -> StressIndicatorCollector:
+        """Create stress collector."""
+        return StressIndicatorCollector()
+
+    @pytest.mark.integration
+    def test_regime_partial_data(
+        self, stress_collector: StressIndicatorCollector
+    ) -> None:
+        """Test regime classification with partial indicator data."""
+        # Only one indicator present
+        test_data = pd.DataFrame(
+            {
+                "timestamp": [pd.Timestamp("2026-01-22")],
+                "series_id": ["stress_sofr_ois"],
+                "source": ["calculated"],
+                "value": [5.0],  # Below green threshold
+                "unit": ["basis_points"],
+            }
+        )
+
+        regime = stress_collector.get_current_regime(test_data)
+        assert regime == "GREEN"
+
+    @pytest.mark.integration
+    def test_regime_unknown_series_ignored(
+        self, stress_collector: StressIndicatorCollector
+    ) -> None:
+        """Test unknown series IDs are ignored in regime classification."""
+        test_data = pd.DataFrame(
+            {
+                "timestamp": [pd.Timestamp("2026-01-22")] * 2,
+                "series_id": ["stress_sofr_ois", "unknown_indicator"],
+                "source": ["calculated"] * 2,
+                "value": [5.0, 1000.0],  # Unknown has high value but should be ignored
+                "unit": ["basis_points"] * 2,
+            }
+        )
+
+        regime = stress_collector.get_current_regime(test_data)
+        assert regime == "GREEN"
+
+
+class TestStressCollectorInstantiation:
+    """Tests for StressIndicatorCollector instantiation."""
+
+    def test_collector_instantiation(self) -> None:
+        """Test default instantiation."""
+        collector = StressIndicatorCollector()
+        assert collector.name == "stress"
+
+    def test_collector_custom_name(self) -> None:
+        """Test custom name."""
+        collector = StressIndicatorCollector(name="custom_stress")
+        assert collector.name == "custom_stress"
+
+    def test_collector_class_attributes(self) -> None:
+        """Test class attributes."""
+        from liquidity.collectors.stress import STRESS_SERIES_MAP
+
+        assert StressIndicatorCollector.SERIES_MAP == STRESS_SERIES_MAP
+        assert StressIndicatorCollector.THRESHOLDS == STRESS_THRESHOLDS
+
+
 if __name__ == "__main__":
     # Quick sanity check
     async def main() -> None:
