@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary, Neutral, or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** Phase 3 — Overnight Rates & FX (in progress)
+**Current focus:** Phase 3 — Overnight Rates & FX (complete)
 
 ## Current Position
 
-Phase: 3 of 10 (Overnight Rates & FX)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-01-23 — Completed 03-01-PLAN.md (SOFR collector)
+Phase: 3 of 10 (Overnight Rates & FX) - COMPLETE
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-01-23 — Completed 03-03-PLAN.md (FX collectors)
 
-Progress: ████▓░░░░░ 27%
+Progress: █████░░░░░ 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: ~8 min
-- Total execution time: ~1h 10min
+- Total plans completed: 11
+- Average duration: ~7 min
+- Total execution time: ~1h 25min
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: ████▓░░░░░ 27%
 |-------|-------|-------|----------|
 | 1 | 3/3 | 29 min | 9.7 min |
 | 2 | 5/5 | ~35 min | ~7 min |
-| 3 | 1/3 | 8 min | 8 min |
+| 3 | 3/3 | ~21 min | ~7 min |
 
 **Recent Trend:**
-- Phase 3 plans can run in parallel (no dependencies)
-- SOFR collector pattern established for other overnight rates
+- Phase 3 plans ran in parallel (3 concurrent agents)
+- All overnight rate collectors + FX collectors complete
 
 ## Accumulated Context
 
@@ -59,6 +59,11 @@ Recent decisions affecting current work:
 | 02-05 | PBoC FRED fallback | TRESEGCNM052N as proxy (same as Apps Script) |
 | 03-01 | NY Fed Markets API for SOFR | No auth required, real-time data |
 | 03-01 | SOFR 3-tier fallback | NY Fed -> FRED -> baseline (4.35%) |
+| 03-02 | estr.dev for €STR | Simpler than ECB API, clean JSON |
+| 03-02 | FRED for SONIA | BoE API unreliable (returns HTML) |
+| 03-02 | BoC Valet for CORRA | Most reliable CB API, no fallback needed |
+| 03-03 | yfinance for FX data | Free, no provider fees, batch download |
+| 03-03 | ffill for DXY gaps | DXY doesn't trade Sunday, FX pairs do |
 
 ### Pending Todos
 
@@ -74,13 +79,13 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-01-23
-Stopped at: Completed 03-01-PLAN.md (SOFR collector)
-Resume command: `/gsd:execute-plan .planning/phases/03-overnight-rates-fx/03-02-PLAN.md`
+Stopped at: Completed Phase 3 (Overnight Rates & FX)
+Resume command: `/gsd:plan-phase 4`
 
 ### Resume Context
 - Phase 1 Foundation complete: uv project, collectors, QuestDB storage
 - Phase 2 Global CB complete: ECB, BoJ, PBoC, BoE, SNB, BoC collectors
-- Phase 3 in progress: SOFR collector complete (NY Fed primary API)
+- Phase 3 complete: SOFR, €STR, SONIA, CORRA collectors + FX (DXY, major pairs)
 - GitHub: https://github.com/gptprojectmanager/openbb_liquidity
-- Next: 03-02-PLAN.md (€STR, SONIA, CORRA collectors)
-- Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier)
+- Next: Phase 4 (Index Calculation)
+- Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier), overnight rates (multi-tier)
