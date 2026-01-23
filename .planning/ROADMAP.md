@@ -91,11 +91,11 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 05-01: TIC data collector (Treasury CSV + FRED fallback) | wave:1 | effort:M
-- [ ] 05-02: Fed custody collector (WSEFINTL1, WMTSECL1, WFASECL1) | wave:1 | effort:M
-- [ ] 05-03: Stress indicators (SOFR-OIS, percentiles, repo, CP spreads) | wave:1 | effort:M
-- [ ] 05-04: Risk ETF flows (SPY, TLT, HYG, IEF, LQD) | wave:1 | effort:M
-- [ ] 05-05: IMF COFER collector (DBnomics API) | wave:1 | effort:M
+- [x] 05-01: TIC data collector (Treasury CSV + FRED fallback) | wave:1 | effort:M
+- [x] 05-02: Fed custody collector (WSEFINTL1, WMTSECL1, WFASECL1) | wave:1 | effort:M
+- [x] 05-03: Stress indicators (SOFR-OIS, percentiles, repo, CP spreads) | wave:1 | effort:M
+- [x] 05-04: Risk ETF flows (SPY, TLT, HYG, IEF, LQD) | wave:1 | effort:M
+- [x] 05-05: IMF COFER collector (DBnomics API) | wave:1 | effort:M
 
 ### Phase 6: Credit & BIS Data
 **Goal**: Credit market monitoring and BIS Eurodollar system tracking
@@ -173,7 +173,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 2. Global CB Collectors | 5/5 | Complete | 2026-01-22 |
 | 3. Overnight Rates & FX | 3/3 | Complete | 2026-01-23 |
 | 4. Market Indicators | 2/2 | Complete | 2026-01-23 |
-| 5. Capital Flows & Stress | 0/5 | Planned | - |
+| 5. Capital Flows & Stress | 5/5 | Complete | 2026-01-23 |
 | 6. Credit & BIS Data | 0/3 | Not started | - |
 | 7. Liquidity Calculations | 0/4 | Not started | - |
 | 8. Analysis & Correlations | 0/3 | Not started | - |

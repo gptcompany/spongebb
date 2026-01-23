@@ -1114,7 +1114,107 @@
       "timestamp": "2026-01-23T18:12:42.375206",
       "command": "uv run python -c \"\nfrom liquidity.collectors import registry, TICCollector\n\n# Verify registry\nprint('Registry check:')\nprint(f'  \\\"tic\\\" in registry: {\\\"tic\\\" in registry}')\nprint(f'  Collector class: {registry.get(\\\"tic\\\").__name__}')\n\n# Verify class attributes\nprint()\nprint('Class attributes:')\nprint(f'  TIC_URLS keys: {list(TICCollector.TIC_URLS.keys())}')\nprint(f'  FRED_TIC_SERIES keys: {list(TICCollector.FRED_TIC_SERIES.keys())}')\n\"",
       "description": "Final verification"
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T18:13:25.957111",
+      "taskId": "2",
+      "status": "completed"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:13:26.476342",
+      "command": "git status --porcelain | grep -E '\\.(py|ts|js)$' | awk '{print $2}'",
+      "description": "List modified Python files for complexity check"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:13:31.611110",
+      "command": "git status --short",
+      "description": "Check git status for all changes"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-23T18:13:35.540908",
+      "pattern": "src/liquidity/collectors/*.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:13:40.314165",
+      "command": "git status -u",
+      "description": "Check git status including untracked"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:13:45.045177",
+      "command": "git log --oneline -15",
+      "description": "Check recent commits"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:13:51.167537",
+      "command": "for f in src/liquidity/collectors/{tic,fed_custody,stress,risk_etfs,cofer}.py; do\n  if [ -f \"$f\" ]; then\n    lines=$(wc -l < \"$f\")\n    funcs=$(grep -cE '^\\s*(def |async def |class )' \"$f\" || echo 0)\n    echo \"$f: $lines lines, $funcs functions/classes\"\n  fi\ndone",
+      "description": "Check file complexity for new collectors"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:13:58.687255",
+      "command": "for f in src/liquidity/collectors/{fred,etf_flows,sofr}.py; do\n  lines=$(wc -l < \"$f\")\n  funcs=$(grep -cE '^\\s*(def |async def |class )' \"$f\" || echo 0)\n  echo \"$f: $lines lines, $funcs functions/classes\"\ndone",
+      "description": "Check existing collector complexity for comparison"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:14:06.782735",
+      "command": "uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py -v --tb=short 2>&1 | tail -50",
+      "description": "Run all Phase 5 integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:16:20.687091",
+      "command": "uv run pyright src/liquidity/collectors/{tic,fed_custody,stress,risk_etfs,cofer}.py 2>&1 | grep -E \"^[^/]*error\" | head -20",
+      "description": "Check pyright errors in new collectors"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:16:26.244585",
+      "command": "uv run pyright src/liquidity/collectors/{tic,fed_custody,stress,risk_etfs,cofer}.py 2>&1 | tail -30",
+      "description": "Check pyright output summary"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:16:31.800601",
+      "command": "uv run pyright src/liquidity/collectors/tic.py src/liquidity/collectors/fed_custody.py src/liquidity/collectors/stress.py src/liquidity/collectors/risk_etfs.py src/liquidity/collectors/cofer.py 2>&1 | tail -40",
+      "description": "Check pyright errors in new collectors"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:16:47.100458",
+      "command": "uv run pyright src/liquidity/collectors/etf_flows.py 2>&1 | tail -10",
+      "description": "Check if existing etf_flows has same pyright errors"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T18:16:59.460406",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:17:03.987666",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "| 5. Capital Flows & Stress | 0/5 | Planned | - |"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:17:13.486249",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "Plans:\n- [ ] 05-01: TIC data collector (Treasury CSV + FRED fallback) | wave:1 | effort:M\n- [ ] 05-0..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:17:23.837881",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import (\n    TICCollector, FedCustodyCollector, StressIndicatorCollector,\n    RiskETFCollector, COFERCollector, registry\n)\nprint('Imports OK')\nprint('Registry collectors:', sorted(registry.list_collectors()))\n\"",
+      "description": "Verify all Phase 5 collectors import and register"
     }
   ],
-  "last_updated": "2026-01-23T18:12:42.375231"
+  "last_updated": "2026-01-23T18:17:23.837903"
 }
