@@ -18,7 +18,34 @@
       "timestamp": "2026-01-23T17:41:26.455639",
       "url": "https://www.cmegroup.com/articles/2024/understanding-eur-usd-cross-currency-basis-futures.html",
       "prompt": "What are the key details about EUR/USD cross-currency basis futures, measurement, and how to use the..."
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:42:42.524694",
+      "query": "CME EUR basis futures EURXR contract specifications ticker"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:42:42.549182",
+      "query": "calculate cross-currency basis from swap rates example formula step-by-step"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:42:42.560858",
+      "query": "\"cross-currency basis\" historical data 2020 2021 2022 stress periods"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:42:57.726264",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/05-stress-indicators/RESEARCH.md",
+      "content_length": 27166
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T17:43:45.260568",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/05-stress-indicators/TECHNICAL_REFERENCE.md",
+      "content_length": 14926
     }
   ],
-  "last_updated": "2026-01-23T17:41:26.455673"
+  "last_updated": "2026-01-23T17:43:45.260598"
 }
