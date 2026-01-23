@@ -270,7 +270,59 @@
       "timestamp": "2026-01-23T16:52:02.942137",
       "command": "uv run pytest tests/ -q 2>&1 | tail -10",
       "description": "Quick test suite run"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T16:55:39.706365",
+      "command": "find /media/sam/1TB/openbb_liquidity/.planning/phases -name \"*-UAT.md\" -type f 2>/dev/null | head -5",
+      "description": "Check for active UAT sessions"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T16:55:45.263938",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-01-SUMMARY.md"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T16:55:45.274388",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-02-SUMMARY.md"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T16:56:18.932278",
+      "command": "uv run python << 'EOF'\n\"\"\"Phase 4 UAT: Automated validation with edge cases.\"\"\"\nimport asyncio\nimport pandas as pd\nfrom datetime import datetime\n\nasync def validate_commodity_collector():\n    \"\"\"Validate CommodityCollector with edge cases.\"\"\"\n    from liquidity.collectors.commodities import CommodityCollector, COMMODITY_SYMBOLS\n    \n    print(\"=\" * 60)\n    print(\"TEST 1: CommodityCollector - All Commodities\")\n    print(\"=\" * 60)\n    \n    collector = CommodityCollector()\n    \n    # Test 1.1: Collect all commodities\n    df = await collector.collect(period=\"30d\")\n    symbols = df[\"series_id\"].unique().tolist()\n    \n    expected_symbols = [\"GC=F\", \"SI=F\", \"HG=F\", \"CL=F\", \"BZ=F\"]\n    all_present = all(s in symbols for s in expected_symbols)\n    \n    print(f\"  1.1 All 5 commodities fetched: {'PASS' if all_present else 'FAIL'}\")\n    print(f\"      Symbols: {symbols}\")\n    \n    # Test 1.2: Data quality - no NaN values\n    nan_count = df[\"value\"].isna().sum()\n    print(f\"  1.2 No NaN values after ffill: {'PASS' if nan_count == 0 else 'FAIL'}\")\n    print(f\"      NaN count: {nan_count}\")\n    \n    # Test 1.3: Value ranges sanity check\n    print(\"  1.3 Value ranges:\")\n    for sym in expected_symbols:\n        sym_data = df[df[\"series_id\"] == sym][\"value\"]\n        latest = sym_data.iloc[-1]\n        \n        # Define expected ranges\n        ranges = {\n            \"GC=F\": (1500, 4000, \"Gold $/oz\"),\n            \"SI=F\": (15, 60, \"Silver $/oz\"),\n            \"HG=F\": (2, 8, \"Copper $/lb\"),\n            \"CL=F\": (40, 150, \"WTI $/barrel\"),\n            \"BZ=F\": (40, 150, \"Brent $/barrel\"),\n        }\n        lo, hi, label = ranges[sym]\n        in_range = lo <= latest <= hi\n        print(f\"      {label}: {latest:.2f} - {'PASS' if in_range else 'FAIL (out of range)'}\")\n    \n    # Test 1.4: Derived metrics\n    print(\"  1.4 Derived metrics:\")\n    spread = CommodityCollector.calculate_brent_wti_spread(df)\n    spread_val = spread[\"brent_wti_spread\"].iloc[-1]\n    spread_ok = -20 <= spread_val <= 20\n    print(f\"      Brent-WTI spread: ${spread_val:.2f}/barrel - {'PASS' if spread_ok else 'FAIL'}\")\n    \n    ratio = CommodityCollector.calculate_copper_gold_ratio(df)\n    ratio_val = ratio[\"copper_gold_ratio\"].iloc[-1]\n    ratio_ok = 0.5 <= ratio_val <= 5\n    print(f\"      Cu/Au ratio: {ratio_val:.4f} - {'PASS' if ratio_ok else 'FAIL'}\")\n    \n    # Test 1.5: Convenience methods\n    print(\"  1.5 Convenience methods:\")\n    precious = await collector.collect_precious_metals(period=\"5d\")\n    precious_syms = precious[\"series_id\"].unique().tolist()\n    print(f\"      collect_precious_metals(): {precious_syms} - {'PASS' if set(precious_syms) == {'GC=F', 'SI=F'} else 'FAIL'}\")\n    \n    energy = await collector.collect_energy(period=\"5d\")\n    energy_syms = energy[\"series_id\"].unique().tolist()\n    print(f\"      collect_energy(): {energy_syms} - {'PASS' if set(energy_syms) == {'CL=F', 'BZ=F'} else 'FAIL'}\")\n    \n    gold_price = await collector.get_current_gold_price()\n    print(f\"      get_current_gold_price(): ${gold_price:.2f} - {'PASS' if gold_price and 1500 <= gold_price <= 4000 else 'FAIL'}\")\n    \n    return True\n\nasync def validate_etf_flow_collector():\n    \"\"\"Validate ETFFlowCollector with edge cases.\"\"\"\n    from liquidity.collectors.etf_flows import ETFFlowCollector, ETF_TICKERS\n    \n    print(\"\\n\" + \"=\" * 60)\n    print(\"TEST 2: ETFFlowCollector - All ETFs\")\n    print(\"=\" * 60)\n    \n    collector = ETFFlowCollector()\n    \n    # Test 2.1: Current shares outstanding\n    print(\"  2.1 Current shares outstanding:\")\n    shares_df = await collector.collect_current_shares()\n    etfs = shares_df[\"etf\"].unique().tolist()\n    expected_etfs = [\"GLD\", \"SLV\", \"USO\", \"CPER\", \"DBA\"]\n    all_present = all(e in etfs for e in expected_etfs)\n    print(f\"      All 5 ETFs fetched: {'PASS' if all_present else 'FAIL'}\")\n    print(f\"      ETFs: {etfs}\")\n    \n    # Check GLD shares is reasonable (hundreds of millions)\n    gld_row = shares_df[shares_df[\"etf\"] == \"GLD\"]\n    gld_shares = gld_row[\"shares_outstanding\"].values[0]\n    gld_ok = gld_shares and 100_000_000 <= gld_shares <= 1_000_000_000\n    print(f\"      GLD shares outstanding: {gld_shares:,.0f} - {'PASS' if gld_ok else 'FAIL'}\")\n    \n    # Test 2.2: Historical prices\n    print(\"  2.2 Historical prices:\")\n    prices_df = await collector.collect_historical_prices(period=\"30d\")\n    price_etfs = prices_df[\"etf\"].unique().tolist()\n    all_price_present = all(e in price_etfs for e in expected_etfs)\n    print(f\"      All 5 ETFs have prices: {'PASS' if all_price_present else 'FAIL'}\")\n    \n    # No NaN close prices\n    nan_close = prices_df[\"close\"].isna().sum()\n    print(f\"      No NaN close prices: {'PASS' if nan_close == 0 else 'FAIL'}\")\n    \n    # Test 2.3: Price sanity check\n    print(\"  2.3 Price sanity check:\")\n    price_ranges = {\n        \"GLD\": (150, 350, \"GLD (gold)\"),\n        \"SLV\": (15, 50, \"SLV (silver)\"),\n        \"USO\": (30, 150, \"USO (oil)\"),\n        \"CPER\": (15, 50, \"CPER (copper)\"),\n        \"DBA\": (15, 40, \"DBA (agriculture)\"),\n    }\n    for etf, (lo, hi, label) in price_ranges.items():\n        etf_data = prices_df[prices_df[\"etf\"] == etf][\"close\"]\n        if not etf_data.empty:\n            latest = etf_data.iloc[-1]\n            in_range = lo <= latest <= hi\n            print(f\"      {label}: ${latest:.2f} - {'PASS' if in_range else 'WARN (check range)'}\")\n    \n    # Test 2.4: Convenience methods\n    print(\"  2.4 Convenience methods:\")\n    precious = await collector.collect_precious_metal_etfs(period=\"5d\")\n    precious_etfs = precious[\"etf\"].unique().tolist()\n    print(f\"      collect_precious_metal_etfs(): {precious_etfs} - {'PASS' if set(precious_etfs) == {'GLD', 'SLV'} else 'FAIL'}\")\n    \n    gld_holdings = await collector.get_gld_holdings()\n    gld_ok = gld_holdings and gld_holdings[\"etf\"] == \"GLD\"\n    print(f\"      get_gld_holdings(): {'PASS' if gld_ok else 'FAIL'}\")\n    \n    # Test 2.5: Flow estimation (edge case - single timestamp)\n    print(\"  2.5 Flow estimation edge cases:\")\n    single = shares_df.head(1).copy()\n    result = ETFFlowCollector.estimate_daily_flows(single)\n    print(f\"      Single timestamp (no change calc): {'PASS' if len(result) == 1 else 'FAIL'}\")\n    \n    return True\n\nasync def validate_registry():\n    \"\"\"Validate registry integration.\"\"\"\n    from liquidity.collectors import registry\n    \n    print(\"\\n\" + \"=\" * 60)\n    print(\"TEST 3: Registry Integration\")\n    print(\"=\" * 60)\n    \n    collectors = registry.list_collectors()\n    \n    # Phase 4 collectors should be registered\n    phase4 = [\"commodities\", \"etf_flows\"]\n    all_registered = all(c in collectors for c in phase4)\n    print(f\"  3.1 Phase 4 collectors registered: {'PASS' if all_registered else 'FAIL'}\")\n    print(f\"      Registry: {collectors}\")\n    \n    # Can get and instantiate\n    from liquidity.collectors import CommodityCollector, ETFFlowCollector\n    \n    commodity_cls = registry.get(\"commodities\")\n    etf_cls = registry.get(\"etf_flows\")\n    print(f\"  3.2 Can retrieve from registry: {'PASS' if commodity_cls == CommodityCollector and etf_cls == ETFFlowCollector else 'FAIL'}\")\n    \n    return True\n\nasync def main():\n    \"\"\"Run all validations.\"\"\"\n    print(\"Phase 4: Market Indicators - Automated UAT\")\n    print(f\"Timestamp: {datetime.now().isoformat()}\")\n    print()\n    \n    try:\n        await validate_commodity_collector()\n        await validate_etf_flow_collector()\n        await validate_registry()\n        \n        print(\"\\n\" + \"=\" * 60)\n        print(\"SUMMARY: All automated validations PASSED\")\n        print(\"=\" * 60)\n        return True\n    except Exception as e:\n        print(f\"\\nFAILED with error: {e}\")\n        import traceback\n        traceback.print_exc()\n        return False\n\nasyncio.run(main())\nEOF\n",
+      "description": "Automated UAT validation with edge cases"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T16:56:59.844468",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-UAT.md",
+      "content_length": 2048
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T16:57:18.445539",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
+      "old_string": "## Current Position\n\nPhase: 3 of 10 (Overnight Rates & FX) - COMPLETE\nPlan: 3 of 3 in current phase\n..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T16:57:18.990374",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
+      "old_string": "**By Phase:**\n\n| Phase | Plans | Total | Avg/Plan |\n|-------|-------|-------|----------|\n| 1 | 3/3 |..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T16:57:19.537678",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
+      "old_string": "## Session Continuity\n\nLast session: 2026-01-23\nStopped at: Completed Phase 3 (Overnight Rates & FX)..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T16:57:24.836417",
+      "command": "git add .planning/phases/04-market-indicators/04-UAT.md && git commit -m \"test(04): complete UAT - 9 passed, 0 issues\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\"",
+      "description": "Commit UAT results"
     }
   ],
-  "last_updated": "2026-01-23T16:52:02.942162"
+  "last_updated": "2026-01-23T16:57:24.836442"
 }

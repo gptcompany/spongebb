@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 
 ## Current Position
 
-Phase: 3 of 10 (Overnight Rates & FX) - COMPLETE
-Plan: 3 of 3 in current phase
+Phase: 4 of 10 (Market Indicators) - COMPLETE
+Plan: 2 of 2 in current phase
 Status: Phase complete
-Last activity: 2026-01-23 — Completed 03-03-PLAN.md (FX collectors)
+Last activity: 2026-01-23 — Completed Phase 4 (Commodities + ETF Flows)
 
-Progress: █████░░░░░ 33%
+Progress: ██████░░░░ 40%
 
 ## Performance Metrics
 
@@ -30,6 +30,7 @@ Progress: █████░░░░░ 33%
 | 1 | 3/3 | 29 min | 9.7 min |
 | 2 | 5/5 | ~35 min | ~7 min |
 | 3 | 3/3 | ~21 min | ~7 min |
+| 4 | 2/2 | ~10 min | ~5 min |
 
 **Recent Trend:**
 - Phase 3 plans ran in parallel (3 concurrent agents)
@@ -79,13 +80,14 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-01-23
-Stopped at: Completed Phase 3 (Overnight Rates & FX)
-Resume command: `/gsd:plan-phase 4`
+Stopped at: Completed Phase 4 (Market Indicators)
+Resume command: `/gsd:plan-phase 5`
 
 ### Resume Context
 - Phase 1 Foundation complete: uv project, collectors, QuestDB storage
 - Phase 2 Global CB complete: ECB, BoJ, PBoC, BoE, SNB, BoC collectors
 - Phase 3 complete: SOFR, €STR, SONIA, CORRA collectors + FX (DXY, major pairs)
+- Phase 4 complete: CommodityCollector (gold, silver, copper, oil), ETFFlowCollector (GLD, SLV, USO, CPER, DBA)
 - GitHub: https://github.com/gptprojectmanager/openbb_liquidity
-- Next: Phase 4 (Index Calculation)
+- Next: Phase 5 (Capital Flows & Stress)
 - Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier), overnight rates (multi-tier)
