@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary, Neutral, or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** Phase 3 — Overnight Rates & FX (complete)
+**Current focus:** Phase 5 — Capital Flows & Stress (research complete)
 
 ## Current Position
 
-Phase: 4 of 10 (Market Indicators) - COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-01-23 — Completed Phase 4 (Commodities + ETF Flows)
+Phase: 5 of 10 (Capital Flows & Stress) - RESEARCH COMPLETE
+Plan: 0 of 5 in current phase
+Status: Ready for planning
+Last activity: 2026-01-23 — Completed Phase 5 research (TIC, Fed custody, COFER, stress indicators)
 
 Progress: ██████░░░░ 40%
 
@@ -80,7 +80,7 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-01-23
-Stopped at: Completed Phase 4 (Market Indicators)
+Stopped at: Completed Phase 5 research
 Resume command: `/gsd:plan-phase 5`
 
 ### Resume Context
@@ -88,6 +88,7 @@ Resume command: `/gsd:plan-phase 5`
 - Phase 2 Global CB complete: ECB, BoJ, PBoC, BoE, SNB, BoC collectors
 - Phase 3 complete: SOFR, €STR, SONIA, CORRA collectors + FX (DXY, major pairs)
 - Phase 4 complete: CommodityCollector (gold, silver, copper, oil), ETFFlowCollector (GLD, SLV, USO, CPER, DBA)
+- Phase 5 research complete: TIC data, Fed custody, IMF COFER, stress indicators (SOFR-OIS, cross-currency basis, repo)
 - GitHub: https://github.com/gptprojectmanager/openbb_liquidity
-- Next: Phase 5 (Capital Flows & Stress)
+- Next: `/gsd:plan-phase 5` to create execution plans
 - Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier), overnight rates (multi-tier)
