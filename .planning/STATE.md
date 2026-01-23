@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary, Neutral, or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** Phase 3 — Overnight Rates & FX (next)
+**Current focus:** Phase 3 — Overnight Rates & FX (in progress)
 
 ## Current Position
 
-Phase: 2 of 10 (Global CB Collectors) ✓ COMPLETE
-Plan: All 5 plans executed (17/25 tests passed, 8 skipped without API keys)
-Status: Ready for Phase 3 planning
-Last activity: 2026-01-22 — Phase 2 complete, all global CB collectors implemented
+Phase: 3 of 10 (Overnight Rates & FX)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-01-23 — Completed 03-01-PLAN.md (SOFR collector)
 
-Progress: ████░░░░░░ 20%
+Progress: ████▓░░░░░ 27%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: ~8 min
-- Total execution time: ~1 hour
+- Total execution time: ~1h 10min
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: ████░░░░░░ 20%
 |-------|-------|-------|----------|
 | 1 | 3/3 | 29 min | 9.7 min |
 | 2 | 5/5 | ~35 min | ~7 min |
+| 3 | 1/3 | 8 min | 8 min |
 
 **Recent Trend:**
-- Phase 2 plans executed in parallel (5 concurrent agents)
-- Trend: Accelerating via parallelization
+- Phase 3 plans can run in parallel (no dependencies)
+- SOFR collector pattern established for other overnight rates
 
 ## Accumulated Context
 
@@ -56,6 +57,8 @@ Recent decisions affecting current work:
 | 02-03 | BoE multi-tier fallback | Scraping + FRED proxy + cached baseline |
 | 02-04 | SNB CSV direct download | No auth required, semicolon-separated CSV |
 | 02-05 | PBoC FRED fallback | TRESEGCNM052N as proxy (same as Apps Script) |
+| 03-01 | NY Fed Markets API for SOFR | No auth required, real-time data |
+| 03-01 | SOFR 3-tier fallback | NY Fed -> FRED -> baseline (4.35%) |
 
 ### Pending Todos
 
@@ -70,13 +73,14 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-01-22
-Stopped at: Phase 2 complete. All global CB collectors implemented.
-Resume command: `/gsd:plan-phase 3`
+Last session: 2026-01-23
+Stopped at: Completed 03-01-PLAN.md (SOFR collector)
+Resume command: `/gsd:execute-plan .planning/phases/03-overnight-rates-fx/03-02-PLAN.md`
 
 ### Resume Context
 - Phase 1 Foundation complete: uv project, collectors, QuestDB storage
 - Phase 2 Global CB complete: ECB, BoJ, PBoC, BoE, SNB, BoC collectors
+- Phase 3 in progress: SOFR collector complete (NY Fed primary API)
 - GitHub: https://github.com/gptprojectmanager/openbb_liquidity
-- Next: Plan Phase 3 (SOFR, €STR, SONIA, CORRA, FX collectors)
-- Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier)
+- Next: 03-02-PLAN.md (€STR, SONIA, CORRA collectors)
+- Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier)
