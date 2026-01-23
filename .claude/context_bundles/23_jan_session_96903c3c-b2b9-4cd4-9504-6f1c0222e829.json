@@ -1440,7 +1440,44 @@
       "timestamp": "2026-01-23T18:42:43.927997",
       "command": "git add .planning/phases/05-capital-flows-stress/05-UAT.md && git commit -m \"docs(05): mark UAT-001 as fixed\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\"",
       "description": "Commit UAT update"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:47:14.009791",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py -v --tb=short 2>&1 | grep -E \"SKIPPED|PASSED|FAILED\" | grep -i skip",
+      "description": "Find skipped test"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:47:50.079714",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py -v 2>&1 | grep -i \"skip\\|SKIP\"",
+      "description": "Find skipped test reason"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-23T18:50:13.630221",
+      "pattern": "test_collect_treasury_holdings",
+      "path": "tests/integration/test_tic.py",
+      "output_mode": "content"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:50:21.869026",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py --cov=src/liquidity/collectors/tic --cov=src/liquidity/collectors/fed_custody --cov=src/liquidity/collectors/stress --cov=src/liquidity/collectors/risk_etfs --cov=src/liquidity/collectors/cofer --cov-report=term-missing 2>&1 | tail -30",
+      "description": "Check Phase 5 coverage"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:53:08.050406",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py --cov=src/liquidity/collectors/tic --cov=src/liquidity/collectors/fed_custody --cov=src/liquidity/collectors/stress --cov=src/liquidity/collectors/risk_etfs --cov=src/liquidity/collectors/cofer --cov-report=term 2>&1 | grep -E \"^(Name|src/|TOTAL)\"",
+      "description": "Get coverage percentages"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:55:56.703241",
+      "command": "LIQUIDITY_FRED_API_KEY=f768fba23c4cf57dcc1f97f7644c3379 uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py --cov=src/liquidity/collectors --cov-report=term-missing --cov-fail-under=0 -q 2>&1 | grep -A50 \"^Name\\|^TOTAL\\|coverage\"",
+      "description": "Get coverage report"
     }
   ],
-  "last_updated": "2026-01-23T18:42:43.928022"
+  "last_updated": "2026-01-23T18:55:56.703267"
 }
