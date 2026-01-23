@@ -265,7 +265,7 @@ class TICCollector(BaseCollector[pd.DataFrame]):
         Returns:
             Raw DataFrame from CSV.
         """
-        url = TIC_URLS["mfh"]
+        url = TIC_URLS["mfh_csv"]
         logger.debug("Fetching TIC CSV from: %s", url)
 
         with httpx.Client(timeout=30.0, follow_redirects=True) as client:
@@ -274,7 +274,6 @@ class TICCollector(BaseCollector[pd.DataFrame]):
 
         # Parse CSV - Treasury CSVs often have header rows to skip
         content = response.text
-        # Find where data starts (look for country names)
         lines = content.split("\n")
 
         # Find header row (contains "Country" or date patterns)
@@ -293,12 +292,12 @@ class TICCollector(BaseCollector[pd.DataFrame]):
         return df
 
     def _fetch_mfh_txt(self) -> pd.DataFrame:
-        """Fetch major holders from TXT endpoint (fallback).
+        """Fetch major holders from TXT endpoint.
 
         Returns:
             Raw DataFrame from TXT.
         """
-        url = TIC_URLS["mfh_txt"]
+        url = TIC_URLS["mfh"]
         logger.debug("Fetching TIC TXT from: %s", url)
 
         with httpx.Client(timeout=30.0, follow_redirects=True) as client:
@@ -306,29 +305,64 @@ class TICCollector(BaseCollector[pd.DataFrame]):
             response.raise_for_status()
 
         content = response.text
-
-        # Parse fixed-width text format
-        # The MFH TXT file has specific column positions
         lines = content.split("\n")
 
-        # Find data section
-        data_lines = []
-        in_data = False
-        for line in lines:
-            # Skip header lines
-            if any(x in line.upper() for x in ["MAJOR FOREIGN", "HOLDINGS OF"]):
+        # Find the data section - look for column headers with months/years
+        data_start = 0
+        date_header_line = None
+        for i, line in enumerate(lines):
+            # Look for the line that contains month headers (e.g., "Jan  Feb  Mar")
+            if re.search(
+                r"\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b", line
+            ):
+                date_header_line = i
+                # Data typically starts 2-3 lines after the date header
                 continue
-            # Data starts after header
-            if re.match(r"^\s*[A-Za-z]", line) and len(line.strip()) > 0:
-                in_data = True
-            if in_data and line.strip():
-                data_lines.append(line)
+            # Look for country data lines (start with country name)
+            if date_header_line and i > date_header_line:
+                if re.match(r"^\s*[A-Za-z]", line) and not any(
+                    x in line.upper()
+                    for x in ["MAJOR", "HOLDINGS", "TREASURY", "BILLION"]
+                ):
+                    data_start = i
+                    break
+
+        if data_start == 0:
+            # Try alternative parsing - look for "Japan" as first country
+            for i, line in enumerate(lines):
+                if "Japan" in line or "JAPAN" in line:
+                    data_start = i
+                    break
+
+        if data_start == 0:
+            logger.warning("Could not find data start in TIC TXT")
+            return pd.DataFrame()
+
+        # Extract data lines (until we hit footer or empty lines)
+        data_lines = []
+        for line in lines[data_start:]:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            # Stop at footer
+            if any(
+                x in stripped.lower() for x in ["note:", "source:", "/1", "/2", "/3"]
+            ):
+                continue
+            if "Department" in stripped or "Federal Reserve" in stripped:
+                break
+            data_lines.append(line)
 
         if not data_lines:
             return pd.DataFrame()
 
-        # Parse as fixed-width
-        df = pd.read_fwf(io.StringIO("\n".join(data_lines)))
+        # Parse as fixed-width format
+        # The MFH.txt has country names followed by numeric columns
+        df = pd.read_fwf(
+            io.StringIO("\n".join(data_lines)),
+            header=None,
+            widths=None,  # Auto-detect column widths
+        )
 
         return df
 
