@@ -158,7 +158,24 @@
       "operation": "read",
       "timestamp": "2026-01-23T17:39:53.879514",
       "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T17:40:14.647056",
+      "url": "https://data.imf.org/en/datasets/IMF.STA:COFER",
+      "prompt": "API endpoint, SDMX URL, data access method, authentication"
+    },
+    {
+      "operation": "webfetch",
+      "timestamp": "2026-01-23T17:40:14.657271",
+      "url": "https://db.nomics.world/IMF/COFER",
+      "prompt": "Data structure, available series, API URL pattern for COFER"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:40:14.691300",
+      "query": "IMF SDMX REST API endpoint https://sdmxcentral.imf.org codeflist authentication"
     }
   ],
-  "last_updated": "2026-01-23T17:39:53.879548"
+  "last_updated": "2026-01-23T17:40:14.691320"
 }
