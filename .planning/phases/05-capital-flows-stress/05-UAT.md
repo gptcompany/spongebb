@@ -74,5 +74,5 @@ skipped: 2
 
 ## Issues for /gsd:plan-fix
 
-- UAT-001: RiskETFCollector.calculate_risk_appetite() requires shares_df parameter (minor) - Test 6
-  root_cause: Method designed to take output of collect_current_shares() as input, not fetch data itself
+- ~~UAT-001: RiskETFCollector.calculate_risk_appetite() requires shares_df parameter (minor) - Test 6~~
+  **FIXED**: Method now auto-fetches SPY/TLT if no DataFrame provided (commit 98ebbf5)
