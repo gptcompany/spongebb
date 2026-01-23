@@ -1060,7 +1060,61 @@
       "timestamp": "2026-01-23T18:08:09.832405",
       "taskId": "3",
       "status": "completed"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:08:44.545606",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.tic import TICCollector\n\nasync def test():\n    c = TICCollector()\n    df = await c.collect_major_holders()\n    if df.empty:\n        print('No data returned')\n    else:\n        print(f'Records: {len(df)}')\n        # Show all series_ids\n        for _, row in df.iterrows():\n            print(f'{row[\\\"series_id\\\"]}: {row[\\\"value\\\"]:,.1f}')\n\nasyncio.run(test())\n\" 2>&1 | head -40",
+      "description": "Debug TIC output"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:09:14.069699",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.tic import TICCollector\n\nasync def test():\n    c = TICCollector()\n    df = await c.collect_major_holders()\n    if df.empty:\n        print('No data returned')\n    else:\n        print(f'Records: {len(df)}')\n        # Show all series_ids\n        for idx, row in df.iterrows():\n            print(f'{row[\\\"series_id\\\"]}: {row[\\\"value\\\"]:,.1f}')\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Debug TIC output"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T18:09:47.644225",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/tic.py",
+      "old_string": "        # Patterns to exclude (aggregate rows, not individual countries)\n        exclude_patterns = ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:09:52.989508",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.tic import TICCollector\n\nasync def test():\n    c = TICCollector()\n    df = await c.collect_major_holders()\n    if df.empty:\n        print('No data returned')\n    else:\n        print(f'Records: {len(df)}')\n        # Show first 10\n        for idx, row in df.head(10).iterrows():\n            print(f'{row[\\\"series_id\\\"]}: {row[\\\"value\\\"]:,.1f}')\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Test TIC after fix"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:10:21.697252",
+      "command": "uv run pytest tests/integration/test_tic.py -v --tb=short 2>&1 | head -80",
+      "description": "Run TIC integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:12:02.616140",
+      "command": "uv run python -c \"from liquidity.collectors import TICCollector; print('TICCollector import OK')\"",
+      "description": "Verify TICCollector import"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:12:18.065507",
+      "command": "uv run pyright src/liquidity/collectors/tic.py 2>&1 | tail -20",
+      "description": "Run pyright type check"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:12:29.954892",
+      "command": "uv run pyright src/liquidity/collectors/fred.py 2>&1 | tail -10",
+      "description": "Verify FRED collector has same pyright pattern"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:12:42.375206",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import registry, TICCollector\n\n# Verify registry\nprint('Registry check:')\nprint(f'  \\\"tic\\\" in registry: {\\\"tic\\\" in registry}')\nprint(f'  Collector class: {registry.get(\\\"tic\\\").__name__}')\n\n# Verify class attributes\nprint()\nprint('Class attributes:')\nprint(f'  TIC_URLS keys: {list(TICCollector.TIC_URLS.keys())}')\nprint(f'  FRED_TIC_SERIES keys: {list(TICCollector.FRED_TIC_SERIES.keys())}')\n\"",
+      "description": "Final verification"
     }
   ],
-  "last_updated": "2026-01-23T18:08:09.832437"
+  "last_updated": "2026-01-23T18:12:42.375231"
 }

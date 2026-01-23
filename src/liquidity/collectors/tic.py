@@ -467,11 +467,13 @@ class TICCollector(BaseCollector[pd.DataFrame]):
             "grand total",
             "foreign official",
             "foreign private",
-            "for official",  # Handles "For. Official" parsed as "For Official"
-            "forofficial",  # Handles concatenated version
+            "for. official",  # Handles "For. Official" row
+            "for official",  # Without period
+            "forofficial",  # Concatenated version
             "t-bonds",
             "tbonds",
             "t bonds",
+            "t-bonds & notes",
             "treasury bills",
             "country",
             "region",
