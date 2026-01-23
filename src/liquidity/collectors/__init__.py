@@ -15,6 +15,12 @@ from liquidity.collectors.boc import BOCCollector
 from liquidity.collectors.boe import BOECollector
 from liquidity.collectors.fred import SERIES_MAP, FredCollector
 from liquidity.collectors.fx import FX_SYMBOLS, FXCollector
+from liquidity.collectors.overnight_rates import (
+    CORRACollector,
+    ESTRCollector,
+    SONIACollector,
+    calculate_rate_differentials,
+)
 from liquidity.collectors.pboc import PBOCCollector
 from liquidity.collectors.registry import CollectorRegistry, registry
 from liquidity.collectors.snb import SNBCollector
@@ -51,4 +57,9 @@ __all__ = [
     # FX (Phase 3)
     "FXCollector",
     "FX_SYMBOLS",
+    # Overnight Rates (Phase 3)
+    "ESTRCollector",
+    "SONIACollector",
+    "CORRACollector",
+    "calculate_rate_differentials",
 ]
