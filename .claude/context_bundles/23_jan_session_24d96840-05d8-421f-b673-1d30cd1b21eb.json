@@ -1,374 +1,164 @@
 {
   "session_id": "24d96840-05d8-421f-b673-1d30cd1b21eb",
-  "created_at": "2026-01-23T16:40:08.396297",
+  "created_at": "2026-01-23T17:39:14.420867",
   "operations": [
     {
-      "operation": "glob",
-      "timestamp": "2026-01-23T16:40:08.396325",
-      "pattern": ".planning/phases/04*/**/*.md",
-      "path": "/media/sam/1TB/openbb_liquidity"
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:14.420892",
+      "query": "US Treasury TIC Treasury International Capital data API official",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__serena__list_memories",
+      "timestamp": "2026-01-23T17:39:14.659894"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:39:15.241395",
+      "command": "find /media/sam/1TB/openbb_liquidity -name \"*COFER*\" -o -name \"*reserves*\" -o -name \"*sdmx*\" 2>/dev/null | head -20"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:15.496389",
+      "query": "FRED WFCDA custody holdings foreign central banks series",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:16.345616",
+      "query": "Treasury Department TIC data download format CSV JSON",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:16.916591",
+      "query": "Federal Reserve H.4.1 custody securities foreign official accounts weekly",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:17.342882",
+      "query": "FRED TIC Treasury International Capital series IDs",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:18.024851",
+      "query": "NY Federal Reserve custody holdings data API documentation",
+      "limit": 5
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:39:21.653347",
+      "query": "IMF COFER API SDMX endpoint currency composition official foreign exchange reserves"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:39:21.668456",
+      "query": "DBnomics IMF COFER de-dollarization FX reserves data"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:21.900331",
+      "url": "https://home.treasury.gov/data/treasury-international-capital-tic-system"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:21.914096",
+      "url": "https://fred.stlouisfed.org/series/WSEFINTL1"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:23.994733",
+      "url": "https://fiscaldata.treasury.gov/api-documentation/"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:39:27.231857",
+      "query": "\"cross-currency basis\" calculation formula CCBS spread -50bps stress threshold"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:39:27.246506",
+      "query": "FRED economic data USD funding stress swap rates OIS basis"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-23T17:39:27.267321",
+      "query": "ECB SDW cross-currency basis euro dollar swap rates data"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:27.432273",
+      "url": "https://fred.stlouisfed.org/series/WSEFINT1"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:27.945835",
+      "url": "https://home.treasury.gov/data/treasury-international-capital-tic-system/tic-press-releases-by-topic"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:33.639703",
+      "url": "https://fred.stlouisfed.org/tags/series?t=custody+holdings"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:34.527609",
+      "query": "FRED series foreign holdings treasuries BOGZ1FL263061130Q BIPFX",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_search",
+      "timestamp": "2026-01-23T17:39:35.153200",
+      "query": "Python pandas fetch TIC data treasury international capital API library",
+      "limit": 5
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:38.118906",
+      "url": "https://www.federalreserve.gov/releases/h41/current/"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:39.044056",
+      "url": "https://fred.stlouisfed.org/series/BOGZ1FL263061130Q"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:42.647395",
+      "url": "https://home.treasury.gov/data/treasury-international-capital-tic-system-home-page/tic-forms-instruc..."
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:43.571309",
+      "url": "https://fred.stlouisfed.org/series/WMTSECL1"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:46.711206",
+      "url": "https://fred.stlouisfed.org/series/WFASECL1"
+    },
+    {
+      "operation": "mcp__firecrawl-mcp__firecrawl_scrape",
+      "timestamp": "2026-01-23T17:39:47.143600",
+      "url": "https://www.federalreserve.gov/releases/h41/about.htm"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T17:39:51.056453",
+      "command": "find /media/sam/1TB/openbb_liquidity/src -type f -name \"*.py\" | head -20"
     },
     {
       "operation": "read",
-      "timestamp": "2026-01-23T16:40:08.410536",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md"
+      "timestamp": "2026-01-23T17:39:53.860758",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/sofr.py"
     },
     {
       "operation": "read",
-      "timestamp": "2026-01-23T16:40:13.011943",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-CONTEXT.md"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:40:13.023242",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-01-PLAN.md"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:40:17.496520",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fx.py"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:40:17.509533",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/base.py"
-    },
-    {
-      "operation": "glob",
-      "timestamp": "2026-01-23T16:40:22.801886",
-      "pattern": "tests/test_*.py",
-      "path": "/media/sam/1TB/openbb_liquidity"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:40:22.833048",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/registry.py"
-    },
-    {
-      "operation": "glob",
-      "timestamp": "2026-01-23T16:40:25.919940",
-      "pattern": "tests/**/*.py",
-      "path": "/media/sam/1TB/openbb_liquidity"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:40:29.054974",
-      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fx_collector.py"
-    },
-    {
-      "operation": "taskcreate",
-      "timestamp": "2026-01-23T16:40:38.109193",
-      "subject": "Execute Plan 04-01: CommodityCollector",
-      "description": "Create commodity spot price collector for gold, silver, copper, WTI, and Brent crude following FX co...",
-      "activeForm": "Implementing CommodityCollector"
-    },
-    {
-      "operation": "taskcreate",
-      "timestamp": "2026-01-23T16:40:38.119497",
-      "subject": "Execute Plan 04-02: ETFFlowCollector",
-      "description": "Create ETF flows collector to track shares outstanding for commodity ETFs (GLD, SLV, USO, CPER, DBA)...",
-      "activeForm": "Implementing ETFFlowCollector"
-    },
-    {
-      "operation": "taskupdate",
-      "timestamp": "2026-01-23T16:40:42.175806",
-      "taskId": "1",
-      "status": "in_progress"
-    },
-    {
-      "operation": "taskupdate",
-      "timestamp": "2026-01-23T16:40:42.203209",
-      "taskId": "2",
-      "status": "in_progress"
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:42:10.559902",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/commodities.py",
-      "content_length": 12411
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:42:21.036730",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/etf_flows.py",
-      "content_length": 14579
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:42:29.481560",
-      "command": "uv run python -c \"from liquidity.collectors.commodities import CommodityCollector; print('CommodityCollector import OK')\"",
-      "description": "Verify CommodityCollector imports"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:44:05.364777",
-      "command": "uv run python -c \"from liquidity.collectors.etf_flows import ETFFlowCollector; print('ETFFlowCollector import OK')\"",
-      "description": "Verify ETFFlowCollector imports"
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:45:42.270151",
-      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_commodities.py",
-      "content_length": 12899
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:45:43.412870",
-      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_etf_flows.py",
-      "content_length": 11347
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:45:48.771264",
-      "command": "uv run pytest tests/integration/test_commodities.py -v --tb=short 2>&1 | head -100",
-      "description": "Run commodity collector tests"
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:46:34.154420",
-      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_commodities.py",
-      "old_string": "    @pytest.mark.asyncio\n    async def test_output_format(self, commodity_collector: CommodityCollec..."
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:46:35.140005",
-      "command": "uv run pytest tests/integration/test_etf_flows.py -v --tb=short 2>&1 | head -100",
-      "description": "Run ETF flows collector tests"
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:47:17.722239",
-      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_etf_flows.py",
-      "old_string": "    @pytest.mark.asyncio\n    async def test_historical_prices_output_format(\n        self, etf_colle..."
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:47:22.961503",
-      "command": "uv run pytest tests/integration/test_commodities.py tests/integration/test_etf_flows.py -v --tb=short 2>&1 | tail -40",
-      "description": "Run both collector test suites"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:48:05.864455",
-      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.commodities import CommodityCollector\n\nasync def smoke_test():\n    collector = CommodityCollector()\n    df = await collector.collect(period='5d')\n    print(f'OK: {len(df)} rows')\n    print(f'Symbols: {list(df.series_id.unique())}')\n    \n    # Test derived metrics\n    spread = collector.calculate_brent_wti_spread(df)\n    print(f'Brent-WTI spread: \\${spread[\\\"brent_wti_spread\\\"].iloc[-1]:.2f}/barrel')\n    \n    ratio = collector.calculate_copper_gold_ratio(df)\n    print(f'Cu/Au ratio: {ratio[\\\"copper_gold_ratio\\\"].iloc[-1]:.4f}')\n\nasyncio.run(smoke_test())\n\"",
-      "description": "Smoke test CommodityCollector with real data"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:48:22.655013",
-      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.etf_flows import ETFFlowCollector\n\nasync def smoke_test():\n    collector = ETFFlowCollector()\n    \n    # Test shares outstanding\n    shares_df = await collector.collect_current_shares()\n    print(f'Shares data: {len(shares_df)} ETFs')\n    gld_row = shares_df[shares_df.etf == 'GLD']\n    if not gld_row.empty and gld_row.shares_outstanding.values[0]:\n        print(f'GLD shares: {gld_row.shares_outstanding.values[0]:,.0f}')\n    \n    # Test historical prices\n    prices_df = await collector.collect_historical_prices(period='5d')\n    print(f'Price history: {len(prices_df)} rows')\n    print(f'ETFs: {list(prices_df.etf.unique())}')\n\nasyncio.run(smoke_test())\n\"",
-      "description": "Smoke test ETFFlowCollector with real data"
-    },
-    {
-      "operation": "taskupdate",
-      "timestamp": "2026-01-23T16:48:47.363310",
-      "taskId": "1",
-      "status": "completed"
-    },
-    {
-      "operation": "taskupdate",
-      "timestamp": "2026-01-23T16:48:47.371477",
-      "taskId": "2",
-      "status": "completed"
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:49:11.365013",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-01-SUMMARY.md",
-      "content_length": 1795
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:49:11.743248",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-02-SUMMARY.md",
-      "content_length": 2147
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:49:22.047199",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
-      "old_string": "Plans:\n- [ ] 04-01: Gold & Silver collectors (spot, ETF flows)\n- [ ] 04-02: Copper, Oil collectors"
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:49:22.502198",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
-      "old_string": "| 3. Overnight Rates & FX | 3/3 | Complete | 2026-01-23 |\n| 4. Market Indicators | 0/2 | Not started..."
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:49:25.952323",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md"
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:49:31.266172",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
-      "old_string": "- [x] **Phase 1: Foundation & Core Data** - Project setup, FRED API, Fed balance sheet collectors\n- ..."
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:49:35.861795",
-      "command": "uv run pytest tests/ -v --tb=short 2>&1 | tail -50",
-      "description": "Run full test suite"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:50:29.965847",
-      "command": "wc -l /media/sam/1TB/openbb_liquidity/src/liquidity/collectors/commodities.py /media/sam/1TB/openbb_liquidity/src/liquidity/collectors/etf_flows.py",
-      "description": "Check file line counts"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:50:34.869150",
-      "command": "grep -cE '^\\s*(def |async def |class )' /media/sam/1TB/openbb_liquidity/src/liquidity/collectors/commodities.py /media/sam/1TB/openbb_liquidity/src/liquidity/collectors/etf_flows.py",
-      "description": "Count functions/classes in files"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:50:42.137400",
-      "command": "uv run pyright src/liquidity/collectors/commodities.py src/liquidity/collectors/etf_flows.py 2>&1 | head -30",
-      "description": "Check Pyright errors"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:50:53.666799",
-      "command": "uv run pyright src/liquidity/collectors/fx.py 2>&1 | head -20",
-      "description": "Check FX collector Pyright errors for comparison"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:51:05.920568",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:51:17.178137",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
-      "old_string": "from liquidity.collectors.base import (\n    BaseCollector,\n    CollectorCircuitOpenError,\n    Collec..."
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:51:17.901573",
-      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
-      "old_string": "    # Overnight Rates (Phase 3)\n    \"ESTRCollector\",\n    \"SONIACollector\",\n    \"CORRACollector\",\n   ..."
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:51:23.137242",
-      "command": "uv run python -c \"from liquidity.collectors import CommodityCollector, ETFFlowCollector, COMMODITY_SYMBOLS, ETF_TICKERS; print('All imports OK'); print('Commodities:', list(COMMODITY_SYMBOLS.keys())); print('ETFs:', list(ETF_TICKERS.keys()))\"",
-      "description": "Verify imports from collectors package"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:51:42.430289",
-      "command": "uv run python -c \"from liquidity.collectors import registry; print('Registered collectors:', registry.list_collectors())\"",
-      "description": "Verify registry has all collectors"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:52:02.942137",
-      "command": "uv run pytest tests/ -q 2>&1 | tail -10",
-      "description": "Quick test suite run"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:55:39.706365",
-      "command": "find /media/sam/1TB/openbb_liquidity/.planning/phases -name \"*-UAT.md\" -type f 2>/dev/null | head -5",
-      "description": "Check for active UAT sessions"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:55:45.263938",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-01-SUMMARY.md"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T16:55:45.274388",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-02-SUMMARY.md"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:56:18.932278",
-      "command": "uv run python << 'EOF'\n\"\"\"Phase 4 UAT: Automated validation with edge cases.\"\"\"\nimport asyncio\nimport pandas as pd\nfrom datetime import datetime\n\nasync def validate_commodity_collector():\n    \"\"\"Validate CommodityCollector with edge cases.\"\"\"\n    from liquidity.collectors.commodities import CommodityCollector, COMMODITY_SYMBOLS\n    \n    print(\"=\" * 60)\n    print(\"TEST 1: CommodityCollector - All Commodities\")\n    print(\"=\" * 60)\n    \n    collector = CommodityCollector()\n    \n    # Test 1.1: Collect all commodities\n    df = await collector.collect(period=\"30d\")\n    symbols = df[\"series_id\"].unique().tolist()\n    \n    expected_symbols = [\"GC=F\", \"SI=F\", \"HG=F\", \"CL=F\", \"BZ=F\"]\n    all_present = all(s in symbols for s in expected_symbols)\n    \n    print(f\"  1.1 All 5 commodities fetched: {'PASS' if all_present else 'FAIL'}\")\n    print(f\"      Symbols: {symbols}\")\n    \n    # Test 1.2: Data quality - no NaN values\n    nan_count = df[\"value\"].isna().sum()\n    print(f\"  1.2 No NaN values after ffill: {'PASS' if nan_count == 0 else 'FAIL'}\")\n    print(f\"      NaN count: {nan_count}\")\n    \n    # Test 1.3: Value ranges sanity check\n    print(\"  1.3 Value ranges:\")\n    for sym in expected_symbols:\n        sym_data = df[df[\"series_id\"] == sym][\"value\"]\n        latest = sym_data.iloc[-1]\n        \n        # Define expected ranges\n        ranges = {\n            \"GC=F\": (1500, 4000, \"Gold $/oz\"),\n            \"SI=F\": (15, 60, \"Silver $/oz\"),\n            \"HG=F\": (2, 8, \"Copper $/lb\"),\n            \"CL=F\": (40, 150, \"WTI $/barrel\"),\n            \"BZ=F\": (40, 150, \"Brent $/barrel\"),\n        }\n        lo, hi, label = ranges[sym]\n        in_range = lo <= latest <= hi\n        print(f\"      {label}: {latest:.2f} - {'PASS' if in_range else 'FAIL (out of range)'}\")\n    \n    # Test 1.4: Derived metrics\n    print(\"  1.4 Derived metrics:\")\n    spread = CommodityCollector.calculate_brent_wti_spread(df)\n    spread_val = spread[\"brent_wti_spread\"].iloc[-1]\n    spread_ok = -20 <= spread_val <= 20\n    print(f\"      Brent-WTI spread: ${spread_val:.2f}/barrel - {'PASS' if spread_ok else 'FAIL'}\")\n    \n    ratio = CommodityCollector.calculate_copper_gold_ratio(df)\n    ratio_val = ratio[\"copper_gold_ratio\"].iloc[-1]\n    ratio_ok = 0.5 <= ratio_val <= 5\n    print(f\"      Cu/Au ratio: {ratio_val:.4f} - {'PASS' if ratio_ok else 'FAIL'}\")\n    \n    # Test 1.5: Convenience methods\n    print(\"  1.5 Convenience methods:\")\n    precious = await collector.collect_precious_metals(period=\"5d\")\n    precious_syms = precious[\"series_id\"].unique().tolist()\n    print(f\"      collect_precious_metals(): {precious_syms} - {'PASS' if set(precious_syms) == {'GC=F', 'SI=F'} else 'FAIL'}\")\n    \n    energy = await collector.collect_energy(period=\"5d\")\n    energy_syms = energy[\"series_id\"].unique().tolist()\n    print(f\"      collect_energy(): {energy_syms} - {'PASS' if set(energy_syms) == {'CL=F', 'BZ=F'} else 'FAIL'}\")\n    \n    gold_price = await collector.get_current_gold_price()\n    print(f\"      get_current_gold_price(): ${gold_price:.2f} - {'PASS' if gold_price and 1500 <= gold_price <= 4000 else 'FAIL'}\")\n    \n    return True\n\nasync def validate_etf_flow_collector():\n    \"\"\"Validate ETFFlowCollector with edge cases.\"\"\"\n    from liquidity.collectors.etf_flows import ETFFlowCollector, ETF_TICKERS\n    \n    print(\"\\n\" + \"=\" * 60)\n    print(\"TEST 2: ETFFlowCollector - All ETFs\")\n    print(\"=\" * 60)\n    \n    collector = ETFFlowCollector()\n    \n    # Test 2.1: Current shares outstanding\n    print(\"  2.1 Current shares outstanding:\")\n    shares_df = await collector.collect_current_shares()\n    etfs = shares_df[\"etf\"].unique().tolist()\n    expected_etfs = [\"GLD\", \"SLV\", \"USO\", \"CPER\", \"DBA\"]\n    all_present = all(e in etfs for e in expected_etfs)\n    print(f\"      All 5 ETFs fetched: {'PASS' if all_present else 'FAIL'}\")\n    print(f\"      ETFs: {etfs}\")\n    \n    # Check GLD shares is reasonable (hundreds of millions)\n    gld_row = shares_df[shares_df[\"etf\"] == \"GLD\"]\n    gld_shares = gld_row[\"shares_outstanding\"].values[0]\n    gld_ok = gld_shares and 100_000_000 <= gld_shares <= 1_000_000_000\n    print(f\"      GLD shares outstanding: {gld_shares:,.0f} - {'PASS' if gld_ok else 'FAIL'}\")\n    \n    # Test 2.2: Historical prices\n    print(\"  2.2 Historical prices:\")\n    prices_df = await collector.collect_historical_prices(period=\"30d\")\n    price_etfs = prices_df[\"etf\"].unique().tolist()\n    all_price_present = all(e in price_etfs for e in expected_etfs)\n    print(f\"      All 5 ETFs have prices: {'PASS' if all_price_present else 'FAIL'}\")\n    \n    # No NaN close prices\n    nan_close = prices_df[\"close\"].isna().sum()\n    print(f\"      No NaN close prices: {'PASS' if nan_close == 0 else 'FAIL'}\")\n    \n    # Test 2.3: Price sanity check\n    print(\"  2.3 Price sanity check:\")\n    price_ranges = {\n        \"GLD\": (150, 350, \"GLD (gold)\"),\n        \"SLV\": (15, 50, \"SLV (silver)\"),\n        \"USO\": (30, 150, \"USO (oil)\"),\n        \"CPER\": (15, 50, \"CPER (copper)\"),\n        \"DBA\": (15, 40, \"DBA (agriculture)\"),\n    }\n    for etf, (lo, hi, label) in price_ranges.items():\n        etf_data = prices_df[prices_df[\"etf\"] == etf][\"close\"]\n        if not etf_data.empty:\n            latest = etf_data.iloc[-1]\n            in_range = lo <= latest <= hi\n            print(f\"      {label}: ${latest:.2f} - {'PASS' if in_range else 'WARN (check range)'}\")\n    \n    # Test 2.4: Convenience methods\n    print(\"  2.4 Convenience methods:\")\n    precious = await collector.collect_precious_metal_etfs(period=\"5d\")\n    precious_etfs = precious[\"etf\"].unique().tolist()\n    print(f\"      collect_precious_metal_etfs(): {precious_etfs} - {'PASS' if set(precious_etfs) == {'GLD', 'SLV'} else 'FAIL'}\")\n    \n    gld_holdings = await collector.get_gld_holdings()\n    gld_ok = gld_holdings and gld_holdings[\"etf\"] == \"GLD\"\n    print(f\"      get_gld_holdings(): {'PASS' if gld_ok else 'FAIL'}\")\n    \n    # Test 2.5: Flow estimation (edge case - single timestamp)\n    print(\"  2.5 Flow estimation edge cases:\")\n    single = shares_df.head(1).copy()\n    result = ETFFlowCollector.estimate_daily_flows(single)\n    print(f\"      Single timestamp (no change calc): {'PASS' if len(result) == 1 else 'FAIL'}\")\n    \n    return True\n\nasync def validate_registry():\n    \"\"\"Validate registry integration.\"\"\"\n    from liquidity.collectors import registry\n    \n    print(\"\\n\" + \"=\" * 60)\n    print(\"TEST 3: Registry Integration\")\n    print(\"=\" * 60)\n    \n    collectors = registry.list_collectors()\n    \n    # Phase 4 collectors should be registered\n    phase4 = [\"commodities\", \"etf_flows\"]\n    all_registered = all(c in collectors for c in phase4)\n    print(f\"  3.1 Phase 4 collectors registered: {'PASS' if all_registered else 'FAIL'}\")\n    print(f\"      Registry: {collectors}\")\n    \n    # Can get and instantiate\n    from liquidity.collectors import CommodityCollector, ETFFlowCollector\n    \n    commodity_cls = registry.get(\"commodities\")\n    etf_cls = registry.get(\"etf_flows\")\n    print(f\"  3.2 Can retrieve from registry: {'PASS' if commodity_cls == CommodityCollector and etf_cls == ETFFlowCollector else 'FAIL'}\")\n    \n    return True\n\nasync def main():\n    \"\"\"Run all validations.\"\"\"\n    print(\"Phase 4: Market Indicators - Automated UAT\")\n    print(f\"Timestamp: {datetime.now().isoformat()}\")\n    print()\n    \n    try:\n        await validate_commodity_collector()\n        await validate_etf_flow_collector()\n        await validate_registry()\n        \n        print(\"\\n\" + \"=\" * 60)\n        print(\"SUMMARY: All automated validations PASSED\")\n        print(\"=\" * 60)\n        return True\n    except Exception as e:\n        print(f\"\\nFAILED with error: {e}\")\n        import traceback\n        traceback.print_exc()\n        return False\n\nasyncio.run(main())\nEOF\n",
-      "description": "Automated UAT validation with edge cases"
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T16:56:59.844468",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/04-market-indicators/04-UAT.md",
-      "content_length": 2048
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:57:18.445539",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
-      "old_string": "## Current Position\n\nPhase: 3 of 10 (Overnight Rates & FX) - COMPLETE\nPlan: 3 of 3 in current phase\n..."
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:57:18.990374",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
-      "old_string": "**By Phase:**\n\n| Phase | Plans | Total | Avg/Plan |\n|-------|-------|-------|----------|\n| 1 | 3/3 |..."
-    },
-    {
-      "operation": "edit",
-      "timestamp": "2026-01-23T16:57:19.537678",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
-      "old_string": "## Session Continuity\n\nLast session: 2026-01-23\nStopped at: Completed Phase 3 (Overnight Rates & FX)..."
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T16:57:24.836417",
-      "command": "git add .planning/phases/04-market-indicators/04-UAT.md && git commit -m \"test(04): complete UAT - 9 passed, 0 issues\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\"",
-      "description": "Commit UAT results"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T17:15:56.764018",
-      "command": "grep -A 10 \"Phase 5:\" /media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
-      "description": "Validate Phase 5 in roadmap"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T17:16:01.356531",
-      "command": "ls /media/sam/1TB/openbb_liquidity/.planning/phases/05-*/*-CONTEXT.md 2>/dev/null || echo \"No context exists\"",
-      "description": "Check if CONTEXT.md already exists for Phase 5"
-    },
-    {
-      "operation": "askuserquestion",
-      "timestamp": "2026-01-23T17:16:10.623843"
-    },
-    {
-      "operation": "askuserquestion",
-      "timestamp": "2026-01-23T17:25:17.907152"
-    },
-    {
-      "operation": "askuserquestion",
-      "timestamp": "2026-01-23T17:25:45.810541"
-    },
-    {
-      "operation": "askuserquestion",
-      "timestamp": "2026-01-23T17:36:59.224586"
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T17:37:14.037364",
-      "command": "mkdir -p /media/sam/1TB/openbb_liquidity/.planning/phases/05-capital-flows-stress",
-      "description": "Create phase 5 directory"
-    },
-    {
-      "operation": "write",
-      "timestamp": "2026-01-23T17:37:14.670175",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/05-capital-flows-stress/05-CONTEXT.md",
-      "content_length": 1750
-    },
-    {
-      "operation": "bash",
-      "timestamp": "2026-01-23T17:37:21.158294",
-      "command": "git add .planning/phases/05-capital-flows-stress/05-CONTEXT.md && git commit -m \"$(cat <<'EOF'\ndocs(05): capture phase context\n\nPhase 5: Capital Flows & Stress\n- Vision and goals documented\n- Essential requirements identified\n- Scope boundaries defined\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
-      "description": "Commit phase context"
+      "timestamp": "2026-01-23T17:39:53.879514",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
     }
   ],
-  "last_updated": "2026-01-23T17:37:21.158316"
+  "last_updated": "2026-01-23T17:39:53.879548"
 }
