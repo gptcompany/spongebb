@@ -1091,6 +1091,7 @@ dependencies = [
     { name = "redis", extra = ["hiredis"] },
     { name = "setuptools" },
     { name = "tenacity" },
+    { name = "yfinance" },
 ]
 
 [package.optional-dependencies]
@@ -1134,6 +1135,7 @@ requires-dist = [
     { name = "setuptools", specifier = ">=70.0.0" },
     { name = "tenacity", specifier = ">=9.0.0" },
     { name = "types-redis", marker = "extra == 'dev'", specifier = ">=4.6.0" },
+    { name = "yfinance", specifier = ">=0.2.66" },
 ]
 provides-extras = ["dev"]
 
