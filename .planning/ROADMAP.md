@@ -66,8 +66,8 @@ Plans:
 
 Plans:
 - [x] 03-01: SOFR collector (NY Fed + FRED fallback) | priority:high | effort:M
-- [ ] 03-02: €STR, SONIA, CORRA collectors + rate differentials | priority:high | effort:M
-- [ ] 03-03: FX collectors (DXY, major pairs via yfinance) | priority:high | effort:M
+- [x] 03-02: €STR, SONIA, CORRA collectors + rate differentials | priority:high | effort:M
+- [x] 03-03: FX collectors (DXY, major pairs via yfinance) | priority:high | effort:M
 
 Note: FX-05 (IMF COFER) moved to Phase 5 - quarterly data fits better with Capital Flows.
 
@@ -171,7 +171,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 |-------|----------------|--------|-----------|
 | 1. Foundation & Core Data | 3/3 | Complete | 2026-01-21 |
 | 2. Global CB Collectors | 5/5 | Complete | 2026-01-22 |
-| 3. Overnight Rates & FX | 1/3 | In progress | - |
+| 3. Overnight Rates & FX | 3/3 | Complete | 2026-01-23 |
 | 4. Market Indicators | 0/2 | Not started | - |
 | 5. Capital Flows & Stress | 0/4 | Not started | - |
 | 6. Credit & BIS Data | 0/3 | Not started | - |
