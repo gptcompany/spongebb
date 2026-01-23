@@ -1,0 +1,24 @@
+{
+  "entries": {
+    "gsd:openbb_liquidity:5": {
+      "key": "gsd:openbb_liquidity:5",
+      "value": {
+        "status": "in_progress",
+        "phase": 5,
+        "started_at": "2026-01-23T00:00:00Z",
+        "plans": [
+          "05-01",
+          "05-02",
+          "05-03",
+          "05-04",
+          "05-05"
+        ]
+      },
+      "metadata": {},
+      "storedAt": "2026-01-23T17:55:33.197Z",
+      "accessCount": 0,
+      "lastAccessed": "2026-01-23T17:55:33.197Z"
+    }
+  },
+  "version": "3.0.0"
+}
