@@ -1,51 +1,646 @@
 {
   "session_id": "7469db59-e47e-426a-9456-3b7c0900db77",
-  "created_at": "2026-01-23T12:04:04.189304",
+  "created_at": "2026-01-23T13:58:06.800111",
   "operations": [
     {
       "operation": "glob",
-      "timestamp": "2026-01-23T12:04:04.189336",
-      "pattern": ".planning/**/*.md"
+      "timestamp": "2026-01-23T13:58:06.800140",
+      "pattern": "tests/integration/test_*_collector.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T13:58:06.846064",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:08.924485",
+      "command": "uv run python -c \"import yfinance; print('yfinance already installed:', yfinance.__version__)\" 2>&1 || echo \"yfinance NOT installed\"",
+      "description": "Check if yfinance is already installed"
     },
     {
       "operation": "glob",
-      "timestamp": "2026-01-23T12:04:04.201802",
-      "pattern": ".planning/**/PLAN*.md"
+      "timestamp": "2026-01-23T13:58:09.447663",
+      "pattern": "**/test*overnight*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:09.466648",
+      "command": "ls -la /media/sam/1TB/openbb_liquidity/tests/integration/ 2>/dev/null || echo \"Directory does not exist\"",
+      "description": "List existing integration tests"
     },
     {
       "operation": "read",
-      "timestamp": "2026-01-23T12:04:08.340181",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T12:04:08.347107",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md"
+      "timestamp": "2026-01-23T13:58:15.010280",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fred_collector.py"
     },
     {
       "operation": "glob",
-      "timestamp": "2026-01-23T12:08:36.226675",
-      "pattern": ".planning/phases/03-*/*CONTEXT*"
+      "timestamp": "2026-01-23T13:58:16.513156",
+      "pattern": "tests/integration/*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
     },
     {
       "operation": "read",
-      "timestamp": "2026-01-23T12:08:39.108245",
-      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/03-CONTEXT.md"
-    },
-    {
-      "operation": "askuserquestion",
-      "timestamp": "2026-01-23T12:08:44.179066"
-    },
-    {
-      "operation": "read",
-      "timestamp": "2026-01-23T12:09:23.367074",
+      "timestamp": "2026-01-23T13:58:16.519096",
       "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/03-RESEARCH.md"
     },
     {
+      "operation": "glob",
+      "timestamp": "2026-01-23T13:58:16.811130",
+      "pattern": "**/*sofr*",
+      "path": "/media/sam/1TB/openbb_liquidity/src"
+    },
+    {
       "operation": "read",
-      "timestamp": "2026-01-23T12:09:29.755889",
+      "timestamp": "2026-01-23T13:58:16.862052",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_global_cb_collectors.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:22.524425",
+      "command": "date -u +\"%Y-%m-%dT%H:%M:%SZ\"",
+      "description": "Record execution start time"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:24.026380",
+      "command": "ls -la /media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/ 2>/dev/null",
+      "description": "List phase 03 directory files"
+    },
+    {
+      "operation": "taskcreate",
+      "timestamp": "2026-01-23T13:58:26.511118",
+      "subject": "Create SOFR collector with NY Fed primary and FRED fallback",
+      "description": "Create SOFRCollector extending BaseCollector[pd.DataFrame] with:\n- Tier 1: NY Fed Markets API (https...",
+      "activeForm": "Creating SOFR collector with multi-tier fallback"
+    },
+    {
+      "operation": "taskcreate",
+      "timestamp": "2026-01-23T13:58:26.528026",
+      "subject": "Add integration tests for SOFR collector",
+      "description": "Create tests/integration/test_sofr_collector.py with:\n1. test_sofr_collector_nyfed_api - Test NY Fed...",
+      "activeForm": "Adding integration tests for SOFR collector"
+    },
+    {
+      "operation": "taskcreate",
+      "timestamp": "2026-01-23T13:58:26.542471",
+      "subject": "Register and export SOFR collector",
+      "description": "Add SOFRCollector to __init__.py exports and verify registry registration",
+      "activeForm": "Registering and exporting SOFR collector"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:28.413123",
+      "command": "grep -q \"yfinance\" /media/sam/1TB/openbb_liquidity/pyproject.toml && echo \"yfinance already in pyproject.toml\" || echo \"yfinance NOT in pyproject.toml\"",
+      "description": "Check if yfinance is in pyproject.toml dependencies"
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T13:58:30.184958",
+      "taskId": "1",
+      "status": "in_progress"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T13:58:30.408542",
       "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/03-01-PLAN.md"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:32.493729",
+      "command": "uv add yfinance",
+      "description": "Add yfinance dependency to project"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:37.044433",
+      "command": "date -u +\"%Y-%m-%dT%H:%M:%SZ\" && date +%s",
+      "description": "Record plan start time"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:40.006160",
+      "command": "uv run python -c \"import yfinance; print('yfinance version:', yfinance.__version__)\"",
+      "description": "Verify yfinance is working"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:45.201848",
+      "command": "grep \"yfinance\" /media/sam/1TB/openbb_liquidity/pyproject.toml",
+      "description": "Verify yfinance is in pyproject.toml"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:58:50.876679",
+      "command": "git add pyproject.toml uv.lock && git commit -m \"$(cat <<'EOF'\nchore(03-03): add yfinance dependency\n\n- Add yfinance>=0.2.66 for FX data collection\n- Required for DXY and major currency pair data\n\nEOF\n)\"",
+      "description": "Commit Task 1 - yfinance dependency"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T13:58:55.652312",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T13:58:58.847509",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/sofr.py",
+      "content_length": 7296
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:59:03.962175",
+      "command": "uv run python -c \"from liquidity.collectors.sofr import SOFRCollector; print('Import OK'); print(f'SOFRCollector: {SOFRCollector}')\"",
+      "description": "Verify SOFRCollector import works"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:59:30.008498",
+      "command": "git add src/liquidity/collectors/sofr.py && git commit -m \"$(cat <<'EOF'\nfeat(03-01): create SOFR collector with multi-tier fallback\n\n- Tier 1: NY Fed Markets API (primary, no auth required)\n- Tier 2: FRED via OpenBB (fallback)\n- Tier 3: Cached baseline (4.35%, Jan 2026)\n\nStandard output columns: timestamp, series_id, source, value, unit\nRegistered in collector registry as \"sofr\"\nEOF\n)\"",
+      "description": "Commit Task 1: SOFR collector"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T13:59:31.713167",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/overnight_rates.py",
+      "content_length": 17971
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T13:59:33.998548",
+      "taskId": "1",
+      "status": "completed"
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T13:59:34.007119",
+      "taskId": "2",
+      "status": "in_progress"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:59:38.058535",
+      "command": "uv run python -c \"from liquidity.collectors.overnight_rates import ESTRCollector, SONIACollector, CORRACollector; print('Imports OK')\"",
+      "description": "Verify Task 1 imports"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T13:59:42.006534",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fx.py",
+      "content_length": 12210
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T13:59:47.032053",
+      "command": "uv run python -c \"from liquidity.collectors.fx import FXCollector; print('Import OK')\"",
+      "description": "Verify FXCollector can be imported"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:00:01.380216",
+      "command": "git add src/liquidity/collectors/overnight_rates.py && git commit -m \"$(cat <<'EOF'\nfeat(03-02): create unified overnight rates collector module\n\n- ESTRCollector with estr.dev primary + FRED fallback + cached baseline\n- SONIACollector with FRED primary + cached baseline\n- CORRACollector with BoC Valet primary + cached baseline\n- calculate_rate_differentials utility function for carry trade signals\n- All collectors registered in registry\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
+      "description": "Commit Task 1"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T14:00:03.816495",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_sofr_collector.py",
+      "content_length": 8425
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:00:08.650932",
+      "command": "uv run pytest tests/integration/test_sofr_collector.py -v --tb=short 2>&1 | head -80",
+      "description": "Run SOFR collector integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:00:10.032844",
+      "command": "git add src/liquidity/collectors/fx.py && git commit -m \"$(cat <<'EOF'\nfeat(03-03): create FX collector for DXY and major pairs\n\n- Add FXCollector extending BaseCollector\n- Support DXY via Yahoo Finance (DX-Y.NYB)\n- Support major pairs: EURUSD, USDJPY, GBPUSD, USDCHF, USDCAD, USDCNY, AUDUSD\n- FRED fallback for DXY (DTWEXBGS - Broad Dollar Index)\n- Single yf.download() call for all symbols (avoids rate limiting)\n- Weekend gap handling with ffill() for DXY\n- Methods: collect_dxy(), collect_pairs(), collect_all(), get_current_dxy()\n\nEOF\n)\"",
+      "description": "Commit Task 2 - FX collector"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:00:15.707966",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fred_collector.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:00:41.525774",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_sofr_collector.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:00:46.221879",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_sofr_collector.py",
+      "old_string": "                assert \"stale\" in df.columns\n                assert df[\"stale\"].iloc[0] is True"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:00:51.012075",
+      "command": "uv run pytest tests/integration/test_sofr_collector.py -v --tb=short 2>&1 | head -50",
+      "description": "Re-run SOFR collector integration tests"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T14:00:53.748521",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_fx_collector.py",
+      "content_length": 10167
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T14:00:54.618557",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py",
+      "content_length": 15973
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:00:59.559144",
+      "command": "uv run pytest tests/integration/test_fx_collector.py -v --tb=short 2>&1 | head -100",
+      "description": "Run FX collector integration tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:00:59.850510",
+      "command": "uv run pytest tests/integration/test_overnight_rates.py -v --tb=short 2>&1 | head -150",
+      "description": "Run integration tests for overnight rates"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:01:20.038338",
+      "command": "git add tests/integration/test_sofr_collector.py && git commit -m \"$(cat <<'EOF'\ntest(03-01): add integration tests for SOFR collector\n\n- TestSOFRCollectorNYFed: Tests NY Fed API (Tier 1, no auth)\n- TestSOFRCollectorFallback: Tests FRED fallback and cached baseline\n- TestSOFRCollectorRegistry: Tests collector registration\n- TestSOFRDataValidation: Tests output format validation\n\n10 tests pass, 1 skipped (FRED fallback requires API key)\nEOF\n)\"",
+      "description": "Commit Task 2: SOFR collector integration tests"
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T14:01:24.961654",
+      "taskId": "2",
+      "status": "completed"
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T14:01:24.975588",
+      "taskId": "3",
+      "status": "in_progress"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:30.953972",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:31.270036",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:01:33.152784",
+      "command": "git add tests/integration/test_fx_collector.py && git commit -m \"$(cat <<'EOF'\ntest(03-03): add integration tests for FX collector\n\n- Test DXY fetch via Yahoo Finance\n- Test major FX pairs fetch (EUR/USD, USD/JPY, GBP/USD, etc.)\n- Test DXY weekend gap handling with ffill\n- Test FRED fallback for DXY (skipped without API key)\n- Test batch download (single yf.download for multiple symbols)\n- Test collector registration in registry\n\n8 tests passed, 1 skipped (FRED API key not set)\n\nEOF\n)\"",
+      "description": "Commit Task 3 - FX collector integration tests"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:35.734447",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py",
+      "old_string": "        assert df[\"stale\"].iloc[0] is True\n\n        print(f\"\\nESTR (baseline): {df['value'].iloc[0]:..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:36.585727",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.boe import BOECollector\nfrom liquidity.collectors.fred import SERIES_MAP, ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:38.193057",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:40.477503",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:41.406017",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # BoE\n    \"BOECollector\",\n    # PBoC\n    \"PBOCCollector\",\n]"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:45.586383",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py",
+      "old_string": "        assert df[\"stale\"].iloc[0] is True\n\n        print(f\"\\nSONIA (baseline): {df['value'].iloc[0]..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:01:46.587404",
+      "command": "uv run python -c \"from liquidity.collectors import SOFRCollector, registry; print(f'Import OK'); print(f'Registry: {registry.get(\\\"sofr\\\")}')\"",
+      "description": "Verify SOFRCollector export and registry"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:48.989882",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:49.813605",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:54.050418",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py",
+      "old_string": "        assert df[\"stale\"].iloc[0] is True\n\n        print(f\"\\nCORRA (baseline): {df['value'].iloc[0]..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:54.416858",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.fred import SERIES_MAP, FredCollector\nfrom liquidity.collectors.pboc impor..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:01:59.212522",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:01:59.733708",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # PBoC\n    \"PBOCCollector\",\n    # SOFR (Phase 3)\n    \"SOFRCollector\",\n]"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:04.920374",
+      "command": "uv run python -c \"from liquidity.collectors import FXCollector, registry; print(registry.get('fx'))\"",
+      "description": "Verify FXCollector export and registration"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:02:06.066692",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py",
+      "old_string": "            # Verify types\n            assert pd.api.types.is_datetime64_any_dtype(df[\"timestamp\"])\n..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:06.500059",
+      "command": "git add src/liquidity/collectors/__init__.py && git commit -m \"$(cat <<'EOF'\nfeat(03-01): export SOFRCollector from collectors package\n\n- Added SOFRCollector import\n- Added SOFRCollector to __all__ exports\n- Verified registry.get(\"sofr\") returns collector class\nEOF\n)\"",
+      "description": "Commit Task 3: Export SOFR collector"
+    },
+    {
+      "operation": "taskupdate",
+      "timestamp": "2026-01-23T14:02:10.483710",
+      "taskId": "3",
+      "status": "completed"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:11.206063",
+      "command": "uv run pytest tests/integration/test_overnight_rates.py -v --tb=short 2>&1 | tail -50",
+      "description": "Re-run tests after fixes"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:18.861227",
+      "command": "uv run python -c \"from liquidity.collectors.sofr import SOFRCollector; print('Import check: OK')\"",
+      "description": "Final verification: import check"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:25.355543",
+      "command": "git add src/liquidity/collectors/__init__.py && git commit -m \"$(cat <<'EOF'\nfeat(03-03): export FX collector from package\n\n- Add FXCollector import to collectors __init__.py\n- Export FX_SYMBOLS mapping for external use\n- Collector registered as 'fx' in registry\n\nEOF\n)\"",
+      "description": "Commit Task 4 - export FX collector"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:30.424205",
+      "command": "git diff src/liquidity/collectors/__init__.py",
+      "description": "Check diff for __init__.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:33.944018",
+      "command": "uv run pytest tests/integration/test_sofr_collector.py -v --tb=short 2>&1 | grep -E \"(PASSED|FAILED|SKIPPED|ERROR|test_)\"",
+      "description": "Final verification: run all tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:34.921711",
+      "command": "git status src/liquidity/collectors/__init__.py",
+      "description": "Check status of __init__.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:39.307751",
+      "command": "git log --oneline -5",
+      "description": "Check recent commits"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:44.584805",
+      "command": "git show 5e2953a --stat",
+      "description": "Check what was in the SOFR export commit"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:44.859810",
+      "command": "git add tests/integration/test_overnight_rates.py && git commit -m \"$(cat <<'EOF'\ntest(03-02): add integration tests for overnight rate collectors\n\n- ESTRCollector tests: estr.dev API, FRED fallback, cached baseline\n- SONIACollector tests: FRED primary, cached baseline, fallback chain\n- CORRACollector tests: BoC Valet API, cached baseline\n- Rate differential calculation tests with sample data\n- Data quality tests for output format validation\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
+      "description": "Commit Task 2"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:02:50.237833",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:50.342019",
+      "command": "grep -n \"FXCollector\" /media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "description": "Check if FXCollector is in __init__.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:54.877192",
+      "command": "git status --short",
+      "description": "Check git status"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:02:56.528723",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "from liquidity.collectors.fx import FX_SYMBOLS, FXCollector\nfrom liquidity.collectors.pboc import PB..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:58.601436",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.collectors.sofr import SOFRCollector\n\nasync def main():\n    collector = SOFRCollector()\n    df = await collector._collect_via_nyfed(days=3)\n    print(f'NY Fed API returns valid data: {len(df)} rows')\n    print(f'Latest SOFR: {df[\\\"value\\\"].iloc[-1]:.2f}%')\n    print(f'Source: {df[\\\"source\\\"].iloc[0]}')\n    return df\n\nasyncio.run(main())\n\"",
+      "description": "Final verification: NY Fed API returns valid data"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:02:59.646287",
+      "command": "git diff HEAD src/liquidity/collectors/__init__.py",
+      "description": "Check diff from HEAD for __init__.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:03:01.835974",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py",
+      "old_string": "    # FX (Phase 3)\n    \"FXCollector\",\n    \"FX_SYMBOLS\",\n]"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:04.678282",
+      "command": "git show HEAD:src/liquidity/collectors/__init__.py | grep \"FXCollector\"",
+      "description": "Check if FXCollector is in committed version"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:07.691024",
+      "command": "uv run python -c \"from liquidity.collectors import ESTRCollector, SONIACollector, CORRACollector, registry; print([registry.get(n) for n in ['estr', 'sonia', 'corra']])\"",
+      "description": "Verify Task 3 imports and registry"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:09.745741",
+      "command": "uv run python -c \"from liquidity.collectors import FXCollector, FX_SYMBOLS, registry; print('FXCollector:', registry.get('fx')); print('FX_SYMBOLS:', list(FX_SYMBOLS.keys()))\"",
+      "description": "Verify FXCollector export and symbols"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:21.068194",
+      "command": "ls -la .planning/phases/03-overnight-rates-fx/",
+      "description": "Check phase directory contents"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:03:25.555459",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:28.644866",
+      "command": "git add src/liquidity/collectors/__init__.py && git commit -m \"$(cat <<'EOF'\nfeat(03-02): export overnight rate collectors from package\n\n- Add ESTRCollector, SONIACollector, CORRACollector exports\n- Add calculate_rate_differentials utility function export\n- All collectors verified as registered in registry\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
+      "description": "Commit Task 3"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:31.996281",
+      "command": "uv run pytest tests/integration/test_fx_collector.py -v --tb=short 2>&1 | tail -20",
+      "description": "Run final verification of FX collector tests"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:34.079242",
+      "command": "uv run python -c \"from liquidity.collectors.overnight_rates import calculate_rate_differentials; print('Function OK')\"",
+      "description": "Verify Task 4 - rate differential function"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T14:03:48.856595",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/03-overnight-rates-fx/03-01-SUMMARY.md",
+      "content_length": 2978
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-23T14:03:52.764187",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:54.932776",
+      "command": "uv run python -c \"from liquidity.collectors.overnight_rates import *\" && echo \"Import * OK\"",
+      "description": "Verify star import works"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:03:59.410442",
+      "command": "date -u +\"%Y-%m-%dT%H:%M:%SZ\"",
+      "description": "Record execution end time"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:04.532939",
+      "command": "git log --oneline --grep=\"03-03\" | tac",
+      "description": "Get all commits from this plan"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T14:04:06.688637",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/STATE.md",
+      "content_length": 3286
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:10.890879",
+      "command": "git log --oneline --all | grep -i \"FX\" | head -5",
+      "description": "Check FX-related commits"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:04:14.264281",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "Plans:\n- [ ] 03-01: SOFR collector (NY Fed + FRED fallback) | priority:high | effort:M\n- [ ] 03-02: ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:14.428489",
+      "command": "uv run pytest tests/integration/test_overnight_rates.py -v 2>&1 | tail -5",
+      "description": "Final test verification"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-23T14:04:19.797359",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "| 3. Overnight Rates & FX | 0/3 | Not started | - |"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:20.697287",
+      "command": "git show HEAD:src/liquidity/collectors/__init__.py | head -60",
+      "description": "Check committed __init__.py content"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:26.253695",
+      "command": "git log --oneline --all | head -15",
+      "description": "Check recent commits"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:26.606526",
+      "command": "git add .planning/phases/03-overnight-rates-fx/03-01-SUMMARY.md .planning/STATE.md .planning/ROADMAP.md && git commit -m \"$(cat <<'EOF'\ndocs(03-01): complete SOFR collector plan\n\nTasks completed: 3/3\n- Task 1: SOFR collector with NY Fed primary and FRED fallback\n- Task 2: Integration tests for SOFR collector (11 tests)\n- Task 3: Register and export SOFR collector\n\nSUMMARY: .planning/phases/03-overnight-rates-fx/03-01-SUMMARY.md\nEOF\n)\"",
+      "description": "Commit plan metadata (SUMMARY, STATE, ROADMAP)"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:30.805484",
+      "command": "git log --oneline | head -15",
+      "description": "Check recent commits"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:32.730577",
+      "command": "git log --oneline -5",
+      "description": "Get recent commit hashes"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:38.258883",
+      "command": "git log --oneline --all | grep \"03-01\" | head -5",
+      "description": "Get 03-01 specific commits"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T14:04:44.416923",
+      "command": "date -u +\"%Y-%m-%dT%H:%M:%SZ\" && date +%s",
+      "description": "Record plan end time"
     }
   ],
-  "last_updated": "2026-01-23T12:09:29.755918"
+  "last_updated": "2026-01-23T14:04:44.416950"
 }
