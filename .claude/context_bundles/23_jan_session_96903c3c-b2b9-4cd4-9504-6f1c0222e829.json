@@ -815,7 +815,13 @@
       "timestamp": "2026-01-23T18:04:25.057389",
       "command": "uv run pytest tests/integration/test_stress.py::TestRegistryIntegration::test_instantiation_from_registry -v 2>&1 | tail -15",
       "description": "Verify registry instantiation test runs"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:04:29.343790",
+      "command": "curl -s \"https://api.db.nomics.world/v22/series/IMF/COFER/Q.W00.RAXGFXARUSD_USD?observations=1\" | jq '{num_values: (.series.docs[0].value | length), sample_values: (.series.docs[0].value[-5:] | map(select(. != null))), sample_periods: .series.docs[0].period[-5:]}' 2>/dev/null",
+      "description": "Check USD COFER series data content"
     }
   ],
-  "last_updated": "2026-01-23T18:04:25.057417"
+  "last_updated": "2026-01-23T18:04:29.343816"
 }
