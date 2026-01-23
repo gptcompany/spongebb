@@ -18,8 +18,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Core Data** - Project setup, FRED API, Fed balance sheet collectors
 - [x] **Phase 2: Global CB Collectors** - ECB, BoJ, PBoC, BoE, SNB, BoC balance sheet collectors
-- [ ] **Phase 3: Overnight Rates & FX** - SOFR, €STR, SONIA, CORRA + FX pair collectors
-- [ ] **Phase 4: Market Indicators** - Bonds, volatility (MOVE, VIX), commodities
+- [x] **Phase 3: Overnight Rates & FX** - SOFR, €STR, SONIA, CORRA + FX pair collectors
+- [x] **Phase 4: Market Indicators** - Commodities (gold, silver, copper, oil) + ETF flows
 - [ ] **Phase 5: Capital Flows & Stress** - TIC data, ETF flows, stress indicators
 - [ ] **Phase 6: Credit & BIS Data** - Credit markets, BIS Eurodollar/international banking
 - [ ] **Phase 7: Liquidity Calculations** - Net Liquidity, Global Liquidity, Stealth QE Score
@@ -79,8 +79,8 @@ Note: FX-05 (IMF COFER) moved to Phase 5 - quarterly data fits better with Capit
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Gold & Silver collectors (spot, ETF flows)
-- [ ] 04-02: Copper, Oil collectors
+- [x] 04-01: Commodity collector (gold, silver, copper, WTI, Brent)
+- [x] 04-02: ETF flows collector (GLD, SLV, USO, CPER, DBA)
 
 ### Phase 5: Capital Flows & Stress
 **Goal**: Capital flow tracking and funding market stress indicators
@@ -172,7 +172,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 1. Foundation & Core Data | 3/3 | Complete | 2026-01-21 |
 | 2. Global CB Collectors | 5/5 | Complete | 2026-01-22 |
 | 3. Overnight Rates & FX | 3/3 | Complete | 2026-01-23 |
-| 4. Market Indicators | 0/2 | Not started | - |
+| 4. Market Indicators | 2/2 | Complete | 2026-01-23 |
 | 5. Capital Flows & Stress | 0/4 | Not started | - |
 | 6. Credit & BIS Data | 0/3 | Not started | - |
 | 7. Liquidity Calculations | 0/4 | Not started | - |

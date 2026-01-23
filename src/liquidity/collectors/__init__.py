@@ -13,6 +13,16 @@ from liquidity.collectors.base import (
 from liquidity.collectors.boc import SERIES_MAP as BOC_SERIES_MAP
 from liquidity.collectors.boc import BOCCollector
 from liquidity.collectors.boe import BOECollector
+from liquidity.collectors.commodities import (
+    COMMODITY_SYMBOLS,
+    UNIT_MAP as COMMODITY_UNIT_MAP,
+    CommodityCollector,
+)
+from liquidity.collectors.etf_flows import (
+    ETF_TICKERS,
+    ETF_UNDERLYING,
+    ETFFlowCollector,
+)
 from liquidity.collectors.fred import SERIES_MAP, FredCollector
 from liquidity.collectors.fx import FX_SYMBOLS, FXCollector
 from liquidity.collectors.overnight_rates import (
@@ -62,4 +72,12 @@ __all__ = [
     "SONIACollector",
     "CORRACollector",
     "calculate_rate_differentials",
+    # Commodities (Phase 4)
+    "CommodityCollector",
+    "COMMODITY_SYMBOLS",
+    "COMMODITY_UNIT_MAP",
+    # ETF Flows (Phase 4)
+    "ETFFlowCollector",
+    "ETF_TICKERS",
+    "ETF_UNDERLYING",
 ]
