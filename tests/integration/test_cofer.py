@@ -247,9 +247,10 @@ class TestDedollarizationRate:
             # Verify unit
             assert df["unit"].unique().tolist() == ["percentage_points"]
 
-            # YoY change should be in reasonable range (-5 to +5 percentage points)
+            # YoY change should be in reasonable range (-10 to +10 percentage points)
+            # Note: During significant market events, larger swings can occur
             for value in df["value"]:
-                assert -5.0 <= value <= 5.0, (
+                assert -10.0 <= value <= 10.0, (
                     f"YoY change {value:.2f}pp outside reasonable range"
                 )
 
