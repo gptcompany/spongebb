@@ -267,10 +267,8 @@ class TestRiskETFCollectorIntegration:
         self, risk_etf_collector: RiskETFCollector
     ) -> None:
         """Test SPY/TLT risk appetite calculation."""
-        # Use real data
-        df = await risk_etf_collector.collect_current_shares(etfs=["SPY", "TLT"])
-
-        result = RiskETFCollector.calculate_risk_appetite(df)
+        # Use real data - now method can fetch automatically
+        result = await risk_etf_collector.calculate_risk_appetite()
 
         # Verify structure
         assert "spy_shares" in result
@@ -432,7 +430,7 @@ class TestRiskAppetiteCalculation:
 
     def test_risk_appetite_empty_df(self) -> None:
         """Test risk appetite with empty DataFrame."""
-        result = RiskETFCollector.calculate_risk_appetite(pd.DataFrame())
+        result = RiskETFCollector._calculate_risk_appetite_from_df(pd.DataFrame())
 
         assert result["spy_shares"] is None
         assert result["tlt_shares"] is None
@@ -448,7 +446,7 @@ class TestRiskAppetiteCalculation:
             }
         )
 
-        result = RiskETFCollector.calculate_risk_appetite(df)
+        result = RiskETFCollector._calculate_risk_appetite_from_df(df)
         assert result["sentiment"] == "unknown"
 
     def test_risk_appetite_missing_tlt(self) -> None:
@@ -460,7 +458,7 @@ class TestRiskAppetiteCalculation:
             }
         )
 
-        result = RiskETFCollector.calculate_risk_appetite(df)
+        result = RiskETFCollector._calculate_risk_appetite_from_df(df)
         assert result["sentiment"] == "unknown"
 
     def test_risk_appetite_risk_on(self) -> None:
@@ -472,7 +470,7 @@ class TestRiskAppetiteCalculation:
             }
         )
 
-        result = RiskETFCollector.calculate_risk_appetite(df)
+        result = RiskETFCollector._calculate_risk_appetite_from_df(df)
 
         assert result["spy_tlt_ratio"] is not None
         assert result["spy_tlt_ratio"] > 10.0
@@ -487,7 +485,7 @@ class TestRiskAppetiteCalculation:
             }
         )
 
-        result = RiskETFCollector.calculate_risk_appetite(df)
+        result = RiskETFCollector._calculate_risk_appetite_from_df(df)
 
         assert result["spy_tlt_ratio"] is not None
         assert result["spy_tlt_ratio"] < 6.0
@@ -502,7 +500,7 @@ class TestRiskAppetiteCalculation:
             }
         )
 
-        result = RiskETFCollector.calculate_risk_appetite(df)
+        result = RiskETFCollector._calculate_risk_appetite_from_df(df)
 
         assert result["spy_tlt_ratio"] is not None
         assert 6.0 <= result["spy_tlt_ratio"] <= 10.0
@@ -533,7 +531,7 @@ if __name__ == "__main__":
         print(shares_df.to_string())
 
         print("\n\nRisk Appetite Calculation...")
-        risk_appetite = RiskETFCollector.calculate_risk_appetite(shares_df)
+        risk_appetite = RiskETFCollector._calculate_risk_appetite_from_df(shares_df)
         print(f"SPY shares: {risk_appetite['spy_shares']:,.0f}")
         print(f"TLT shares: {risk_appetite['tlt_shares']:,.0f}")
         print(f"SPY/TLT ratio: {risk_appetite['spy_tlt_ratio']:.2f}")

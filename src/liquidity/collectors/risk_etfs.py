@@ -444,15 +444,17 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
 
         return df
 
-    @staticmethod
-    def calculate_risk_appetite(shares_df: pd.DataFrame) -> dict[str, Any]:
+    async def calculate_risk_appetite(
+        self, shares_df: pd.DataFrame | None = None
+    ) -> dict[str, Any]:
         """Calculate risk appetite ratio from SPY and TLT flows.
 
         Risk appetite is measured by comparing equity flows (SPY) vs
         treasury flows (TLT). Higher ratio = more risk-on sentiment.
 
         Args:
-            shares_df: DataFrame with shares_outstanding for SPY and TLT.
+            shares_df: Optional DataFrame with shares_outstanding for SPY and TLT.
+                       If not provided, fetches current shares automatically.
 
         Returns:
             Dict with risk appetite metrics:
@@ -460,6 +462,22 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
             - tlt_shares: TLT shares outstanding
             - spy_tlt_ratio: SPY shares / TLT shares
             - sentiment: "risk_on", "risk_off", or "neutral"
+        """
+        # Fetch shares data if not provided
+        if shares_df is None:
+            shares_df = await self.collect_current_shares(etfs=["SPY", "TLT"])
+
+        return self._calculate_risk_appetite_from_df(shares_df)
+
+    @staticmethod
+    def _calculate_risk_appetite_from_df(shares_df: pd.DataFrame) -> dict[str, Any]:
+        """Calculate risk appetite from a DataFrame (static helper).
+
+        Args:
+            shares_df: DataFrame with shares_outstanding for SPY and TLT.
+
+        Returns:
+            Dict with risk appetite metrics.
         """
         result: dict[str, Any] = {
             "spy_shares": None,
