@@ -1231,7 +1231,79 @@
       "timestamp": "2026-01-23T18:22:55.046565",
       "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/05-capital-flows-stress/05-UAT.md",
       "content_length": 2873
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:27:37.282650",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import TICCollector\nimport asyncio\n\nc = TICCollector()\ndf = asyncio.run(c.collect_major_holders())\nprint('Columns:', list(df.columns))\nprint('Shape:', df.shape)\nprint('Top 3 holders:')\nprint(df.head(3).to_string())\n\" 2>&1",
+      "description": "Test 1: TIC Collector"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:28:02.958402",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import FedCustodyCollector\nimport asyncio\n\nc = FedCustodyCollector()\ndf = asyncio.run(c.collect_all())\nprint('Columns:', list(df.columns))\nprint('Shape:', df.shape)\nprint('Sample:')\nprint(df.head(3).to_string())\n\" 2>&1",
+      "description": "Test 2: Fed Custody Collector"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:28:19.691599",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import StressIndicatorCollector\nimport asyncio\n\nc = StressIndicatorCollector()\ndf = asyncio.run(c.collect_sofr_ois_spread())\nprint('SOFR-OIS Spread:')\nprint('Columns:', list(df.columns))\nprint('Latest values:')\nprint(df.tail(3).to_string())\n\" 2>&1",
+      "description": "Test 3: Stress Indicators - SOFR-OIS"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:28:35.994329",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import StressIndicatorCollector\nimport asyncio\n\nc = StressIndicatorCollector()\nregime = asyncio.run(c.get_current_regime())\nprint('Current Regime:', regime)\n\" 2>&1",
+      "description": "Test 4: Stress Regime Classification"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:28:52.256286",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import RiskETFCollector\nimport asyncio\n\nc = RiskETFCollector()\ndf = asyncio.run(c.collect_current_shares())\nprint('Risk ETF Shares:')\nprint('Columns:', list(df.columns))\nprint(df.to_string())\n\" 2>&1",
+      "description": "Test 5: Risk ETF Shares"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:29:12.663416",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import RiskETFCollector\nimport asyncio\n\nc = RiskETFCollector()\nratio = asyncio.run(c.calculate_risk_appetite())\nprint('Risk Appetite Ratio (SPY/TLT):', ratio)\n\" 2>&1",
+      "description": "Test 6: Risk Appetite Ratio"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:29:44.554409",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import COFERCollector\nimport asyncio\n\nc = COFERCollector()\ndf = asyncio.run(c.collect_reserves_by_currency())\nprint('COFER Reserves:')\nprint('Columns:', list(df.columns))\nprint('Data:')\nprint(df.to_string())\n\" 2>&1",
+      "description": "Test 7: COFER Reserves"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:30:03.542104",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import COFERCollector\nimport asyncio\n\nc = COFERCollector()\nrate = asyncio.run(c.calculate_dedollarization_rate())\nprint('De-dollarization Rate:')\nprint(rate.to_string())\n\" 2>&1",
+      "description": "Test 8: COFER De-dollarization"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:30:19.641566",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import registry\ncollectors = sorted(registry.list_collectors())\nprint('Registered collectors:', collectors)\nphase5 = ['tic', 'fed_custody', 'stress', 'risk_etfs', 'cofer']\nmissing = [c for c in phase5 if c not in collectors]\nprint('Phase 5 collectors present:', all(c in collectors for c in phase5))\nif missing:\n    print('Missing:', missing)\n\" 2>&1",
+      "description": "Test 9: Registry Integration"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:30:36.591369",
+      "command": "uv run pytest tests/integration/test_tic.py tests/integration/test_fed_custody.py tests/integration/test_stress.py tests/integration/test_risk_etfs.py tests/integration/test_cofer.py --tb=no -q 2>&1 | tail -10",
+      "description": "Test 10: Integration Tests Summary"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-23T18:33:15.471099",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/05-capital-flows-stress/05-UAT.md",
+      "content_length": 3425
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-23T18:33:23.153261",
+      "command": "git add .planning/phases/05-capital-flows-stress/05-UAT.md .planning/ROADMAP.md && git commit -m \"$(cat <<'EOF'\ntest(05): complete UAT - 7 passed, 1 issue, 2 skipped\n\nPhase 5 Capital Flows & Stress validation complete:\n- TIC, Risk ETFs, COFER collectors verified working\n- Fed Custody, Stress skipped (require FRED API key)\n- Minor issue: calculate_risk_appetite() API expects shares_df param\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\"",
+      "description": "Commit UAT results"
     }
   ],
-  "last_updated": "2026-01-23T18:22:55.046595"
+  "last_updated": "2026-01-23T18:33:23.153283"
 }
