@@ -491,7 +491,31 @@
       "timestamp": "2026-01-24T09:40:12.364355",
       "command": "df -h /media/sam/1TB | tail -1 | awk '{print \"Final: \"$5\" used, \"$4\" available\"}'",
       "description": "Final disk space check"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:43:29.568379",
+      "command": "cd /media/sam/1TB && du -h --max-depth=1 2>/dev/null | sort -hr | head -20",
+      "description": "Find largest top-level directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:43:57.401423",
+      "command": "cd /media/sam/1TB/brk-data && du -h --max-depth=1 2>/dev/null | sort -hr | head -10",
+      "description": "Breakdown of brk-data"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:43:57.421035",
+      "command": "cd /media/sam/1TB/timeshift && du -h --max-depth=1 2>/dev/null | sort -hr | head -10",
+      "description": "Breakdown of timeshift"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:44:18.984928",
+      "command": "cd /media/sam/1TB/venvs && du -h --max-depth=2 2>/dev/null | sort -hr | head -15",
+      "description": "Breakdown of venvs"
     }
   ],
-  "last_updated": "2026-01-24T09:40:12.364384"
+  "last_updated": "2026-01-24T09:44:18.984948"
 }
