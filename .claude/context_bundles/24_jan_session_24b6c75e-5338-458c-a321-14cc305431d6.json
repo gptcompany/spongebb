@@ -322,7 +322,25 @@
       "timestamp": "2026-01-24T09:29:04.313257",
       "command": "cd /media/sam/1TB && find . -type d -name \".ruff_cache\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"ruff cache cleaned\"",
       "description": "Delete ruff cache directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:29:20.367527",
+      "command": "cd /media/sam/1TB && find . -type f -name \"*.pyc\" 2>/dev/null | xargs rm -f 2>/dev/null; echo \"stray .pyc files cleaned\"",
+      "description": "Delete stray .pyc files"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:29:42.399007",
+      "command": "df -h /media/sam/1TB | tail -1 | awk '{print \"Current usage: \"$5\" (\"$4\" available)\"}'",
+      "description": "Check disk space after first cleanup wave"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:29:49.575730",
+      "command": "cd /media/sam/1TB && find . -type d -name \".coverage\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; find . -type f -name \".coverage\" 2>/dev/null | xargs rm -f 2>/dev/null; echo \"coverage data cleaned\"",
+      "description": "Delete coverage data"
     }
   ],
-  "last_updated": "2026-01-24T09:29:04.313282"
+  "last_updated": "2026-01-24T09:29:49.575750"
 }
