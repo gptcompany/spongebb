@@ -1073,7 +1073,75 @@
       "timestamp": "2026-01-24T10:01:34.358082",
       "command": "uv run python -c \"\nimport asyncio\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.calculators import NetLiquidityCalculator\n\nasync def test():\n    calc = NetLiquidityCalculator()\n    result = await calc.get_current()\n    print(f'Net Liquidity: {result.net_liquidity:.2f} (should be ~6000-7000 billion)')\n    print(f'WALCL: {result.walcl:.2f}')\n    print(f'TGA: {result.tga:.2f}')\n    print(f'RRP: {result.rrp:.2f}')\n\nasyncio.run(test())\n\" 2>&1",
       "description": "Check Net Liquidity values to understand the units"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:01:59.947783",
+      "command": "uv run python -c \"\nimport asyncio\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.collectors import FredCollector\n\nasync def test():\n    collector = FredCollector()\n    df = await collector.collect(['WALCL', 'WLRRAL', 'WDTGAL'])\n    print('Raw FRED data:')\n    print(df.tail(10))\n    print('\\\\nUnits:')\n    print(df.groupby('series_id')['unit'].first())\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Check raw FRED data to understand units"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:02:27.290265",
+      "command": "uv run pytest tests/unit/test_net_liquidity.py -v 2>&1 | head -50",
+      "description": "Run net liquidity tests to check if this is a known issue"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T10:02:31.860736",
+      "pattern": "/media/sam/1TB/openbb_liquidity/tests/**/test_*liquidity*.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:02:38.982761",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:02:44.435390",
+      "command": "uv run python -c \"\n# Check actual FRED series documentation\nfrom openbb import obb\nresult = obb.economy.fred_series(symbol='WDTGAL', limit=1, provider='fred')\nprint('WDTGAL (TGA):')\nprint(result.to_df())\nprint()\nresult = obb.economy.fred_series(symbol='WLRRAL', limit=1, provider='fred')\nprint('WLRRAL (RRP):')\nprint(result.to_df())\n\" 2>&1",
+      "description": "Check FRED series documentation for units"
+    },
+    {
+      "operation": "websearch",
+      "timestamp": "2026-01-24T10:03:01.842665",
+      "query": "FRED WDTGAL WLRRAL units millions billions Treasury General Account"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:03:29.516435",
+      "command": "uv run python -c \"\nimport asyncio\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.collectors import FredCollector\n\nasync def test():\n    collector = FredCollector()\n    \n    # Check ECB\n    df = await collector.collect_ecb_assets()\n    if not df.empty:\n        latest = df.iloc[-1]\n        print(f'ECB: {latest[\\\"value\\\"]:.0f} {latest[\\\"unit\\\"]}')\n        print(f'  -> In billions EUR: {latest[\\\"value\\\"]/1000:.1f}')\n    \n    # Check BoJ\n    df = await collector.collect_boj_assets()\n    if not df.empty:\n        latest = df.iloc[-1]\n        print(f'BoJ: {latest[\\\"value\\\"]:.0f} {latest[\\\"unit\\\"]}')\n        print(f'  -> In 100 million JPY units, so: {latest[\\\"value\\\"]} * 100M = {latest[\\\"value\\\"]/10:.0f}B JPY')\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Check ECB and BoJ values"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:03:52.333689",
+      "command": "uv run ruff check src/liquidity/calculators/ && uv run ruff format --check src/liquidity/calculators/",
+      "description": "Run ruff check and format verification on calculators module"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:03:56.452281",
+      "command": "uv run ruff format src/liquidity/calculators/global_liquidity.py",
+      "description": "Format global_liquidity.py with ruff"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:04:00.976245",
+      "command": "uv run ruff check src/liquidity/calculators/global_liquidity.py && uv run ruff format --check src/liquidity/calculators/global_liquidity.py",
+      "description": "Final verification of linting and formatting"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:04:08.426953",
+      "command": "uv run python -c \"\nfrom liquidity.calculators import (\n    GlobalLiquidityCalculator,\n    GlobalLiquidityResult,\n    NetLiquidityCalculator,\n    NetLiquidityResult,\n    Sentiment,\n    StealthQECalculator,\n    StealthQEResult,\n    StealthQEStatus,\n)\nprint('All imports successful!')\nprint(f'GlobalLiquidityCalculator: {GlobalLiquidityCalculator}')\nprint(f'GlobalLiquidityResult fields: {[f.name for f in GlobalLiquidityResult.__dataclass_fields__.values()]}')\n\"",
+      "description": "Verify all imports work correctly"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:04:30.038095",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py"
     }
   ],
-  "last_updated": "2026-01-24T10:01:34.358103"
+  "last_updated": "2026-01-24T10:04:30.038125"
 }
