@@ -1141,7 +1141,127 @@
       "operation": "read",
       "timestamp": "2026-01-24T10:04:30.038095",
       "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:05:02.295347",
+      "command": "ruff check src/liquidity/calculators/ && echo \"Ruff OK\"",
+      "description": "Check ruff on all calculators"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:05:02.975713",
+      "command": "PYTHONDONTWRITEBYTECODE=1 uv run python -c \"\nfrom liquidity.calculators import (\n    NetLiquidityCalculator,\n    GlobalLiquidityCalculator, \n    StealthQECalculator,\n    NetLiquidityResult,\n    GlobalLiquidityResult,\n    StealthQEResult,\n)\nprint('All imports OK')\nprint(f'Net: {NetLiquidityCalculator}')\nprint(f'Global: {GlobalLiquidityCalculator}')\nprint(f'Stealth: {StealthQECalculator}')\n\"",
+      "description": "Verify all calculator imports"
+    },
+    {
+      "operation": "task",
+      "timestamp": "2026-01-24T10:05:37.881185",
+      "subagent_type": "general-purpose",
+      "prompt": "Implement Plan 07-04: Double-Entry Validation & Coverage Verification for the openbb_liquidity proje..."
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T10:05:44.354427",
+      "pattern": "src/liquidity/calculators/*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:05:44.448675",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/07-liquidity-calculations/07-04-PLAN.md"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:05:44.457678",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:05:49.071674",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:05:49.077937",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:05:55.265824",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/stealth_qe.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-24T10:07:01.228251",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/validation.py",
+      "content_length": 16927
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T10:07:13.880708",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py",
+      "old_string": "\"\"\"Liquidity calculators for Global Liquidity Monitor.\n\nThis module provides calculators for liquidi..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:07:18.976403",
+      "command": "uv run ruff check src/liquidity/calculators/",
+      "description": "Run ruff linting on calculators module"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:07:34.339781",
+      "command": "uv run python -c \"\nfrom liquidity.calculators import LiquidityValidator, ValidationResult, CheckResult\nfrom datetime import datetime, timedelta, UTC\n\n# Create validator\nvalidator = LiquidityValidator()\nprint(f'Validator: {validator}')\n\n# Test Net Liquidity validation\ncheck = validator.validate_net_liquidity(\n    walcl=7500.0,\n    tga=800.0,\n    rrp=500.0,\n    reported_net_liq=6200.0,\n)\nprint(f'\\nNet Liquidity check:')\nprint(f'  Name: {check.name}')\nprint(f'  Passed: {check.passed}')\nprint(f'  Expected: {check.expected}')\nprint(f'  Actual: {check.actual}')\nprint(f'  Tolerance: {check.tolerance}')\nprint(f'  Message: {check.message}')\n\n# Test with intentional mismatch\ncheck_fail = validator.validate_net_liquidity(\n    walcl=7500.0,\n    tga=800.0,\n    rrp=500.0,\n    reported_net_liq=7000.0,  # Wrong value\n)\nprint(f'\\nNet Liquidity check (expected fail):')\nprint(f'  Passed: {check_fail.passed}')\nprint(f'  Message: {check_fail.message}')\n\n# Test Global sum validation\ncomponents = {'fed': 6200, 'ecb': 8000, 'boj': 4000, 'pboc': 5000}\ncheck_sum = validator.validate_global_sum(\n    components=components,\n    reported_total=23200.0,\n)\nprint(f'\\nGlobal sum check:')\nprint(f'  Passed: {check_sum.passed}')\nprint(f'  Message: {check_sum.message}')\n\n# Test Coverage validation\ncheck_cov = validator.validate_coverage(tier1_total=30000.0)\nprint(f'\\nCoverage check:')\nprint(f'  Passed: {check_cov.passed}')\nprint(f'  Actual coverage: {check_cov.actual}%')\nprint(f'  Message: {check_cov.message}')\n\n# Test Freshness validation\ntimestamps = {\n    'WALCL': datetime.now(UTC) - timedelta(days=3),\n    'TGA': datetime.now(UTC) - timedelta(hours=12),\n    'RRP': datetime.now(UTC) - timedelta(days=5),  # Should fail\n}\nfreshness_checks = validator.validate_freshness(timestamps)\nprint(f'\\nFreshness checks:')\nfor fc in freshness_checks:\n    print(f'  {fc.name}: {\\\"PASS\\\" if fc.passed else \\\"FAIL\\\"}')\n\nprint('\\nAll imports and tests successful!')\n\"\n",
+      "description": "Verify validator imports and basic functionality"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:08:02.356143",
+      "command": "uv run python -c \"\nimport asyncio\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.calculators import LiquidityValidator, ValidationResult\n\nasync def test_validate_all():\n    validator = LiquidityValidator()\n    \n    # Test with all data\n    net_liq_data = {\n        'walcl': 7500.0,\n        'tga': 800.0,\n        'rrp': 500.0,\n        'net_liquidity': 6200.0,\n    }\n    \n    global_liq_data = {\n        'fed': 6200.0,\n        'ecb': 8000.0,\n        'boj': 4000.0,\n        'pboc': 5000.0,\n        'total': 23200.0,\n    }\n    \n    series_timestamps = {\n        'WALCL': datetime.now(UTC) - timedelta(days=3),\n        'TGA': datetime.now(UTC) - timedelta(hours=12),\n        'RRP': datetime.now(UTC) - timedelta(hours=18),\n    }\n    \n    result = await validator.validate_all(\n        net_liq_data=net_liq_data,\n        global_liq_data=global_liq_data,\n        series_timestamps=series_timestamps,\n    )\n    \n    print(f'Validation Result:')\n    print(f'  Timestamp: {result.timestamp}')\n    print(f'  Passed: {result.passed}')\n    print(f'  Failed: {result.failed}')\n    print(f'  Warnings: {result.warnings}')\n    print(f'  Coverage: {result.coverage_pct:.1f}%')\n    print(f'  All Passed: {result.all_passed}')\n    print(f'  Number of checks: {len(result.checks)}')\n    \n    print(f'\\nIndividual checks:')\n    for check in result.checks:\n        status = 'PASS' if check.passed else 'FAIL'\n        print(f'  [{status}] {check.name}')\n    \n    return result\n\nresult = asyncio.run(test_validate_all())\nprint(f'\\nValidation complete!')\n\"\n",
+      "description": "Test async validate_all method"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:08:33.439462",
+      "command": "uv run python -c \"\nimport asyncio\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.calculators import LiquidityValidator\n\nasync def test_with_realistic_data():\n    validator = LiquidityValidator()\n    \n    # More realistic values (approximating real CB data)\n    # Fed ~7T, ECB ~9T, BoJ ~5T, PBoC ~6T = ~27T (77% of 35T)\n    # Or with higher estimate: Fed ~7T, ECB ~10T, BoJ ~6T, PBoC ~8T = ~31T (89% of 35T)\n    \n    net_liq_data = {\n        'walcl': 7500.0,   # Fed total assets in billions\n        'tga': 800.0,      # TGA in billions\n        'rrp': 500.0,      # RRP in billions\n        'net_liquidity': 6200.0,  # WALCL - TGA - RRP\n    }\n    \n    # Realistic global CB data (in billions USD)\n    global_liq_data = {\n        'fed': 6200.0,     # Net Liquidity (not total assets)\n        'ecb': 10000.0,    # ECB assets in USD\n        'boj': 6000.0,     # BoJ assets in USD\n        'pboc': 8000.0,    # PBoC assets in USD\n        'total': 30200.0,  # Sum of above\n    }\n    \n    series_timestamps = {\n        'WALCL': datetime.now(UTC) - timedelta(days=3),\n        'TGA': datetime.now(UTC) - timedelta(hours=12),\n        'RRP': datetime.now(UTC) - timedelta(hours=18),\n        'ECB': datetime.now(UTC) - timedelta(days=5),\n    }\n    \n    result = await validator.validate_all(\n        net_liq_data=net_liq_data,\n        global_liq_data=global_liq_data,\n        series_timestamps=series_timestamps,\n    )\n    \n    print(f'Validation with realistic data:')\n    print(f'  Passed: {result.passed}/{len(result.checks)}')\n    print(f'  Coverage: {result.coverage_pct:.1f}%')\n    print(f'  All Passed: {result.all_passed}')\n    \n    for check in result.checks:\n        status = 'PASS' if check.passed else 'FAIL'\n        print(f'  [{status}] {check.name}')\n    \n    return result\n\nasyncio.run(test_with_realistic_data())\n\"\n",
+      "description": "Test with realistic CB data values"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:08:57.256262",
+      "command": "uv run pytest tests/unit/test_calculators.py -v 2>&1 | head -100",
+      "description": "Run existing calculator tests to verify no regressions"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T10:09:02.921057",
+      "pattern": "tests/**/*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:09:06.681455",
+      "command": "uv run pytest tests/unit/test_calculations.py -v 2>&1 | head -50",
+      "description": "Run unit calculation tests"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:09:32.879456",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/validation.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:09:38.408837",
+      "command": "uv run ruff format src/liquidity/calculators/validation.py && uv run ruff check src/liquidity/calculators/validation.py",
+      "description": "Format and lint validation.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:09:47.363094",
+      "command": "uv run python -c \"\n# Final comprehensive test\nfrom liquidity.calculators import (\n    LiquidityValidator,\n    ValidationResult,\n    CheckResult,\n    NetLiquidityCalculator,\n    GlobalLiquidityCalculator,\n)\n\nprint('Import test: PASS')\nprint(f'  - LiquidityValidator: {LiquidityValidator}')\nprint(f'  - ValidationResult: {ValidationResult}')\nprint(f'  - CheckResult: {CheckResult}')\n\n# Verify class attributes\nvalidator = LiquidityValidator()\nprint(f'\\nValidator attributes:')\nprint(f'  - GLOBAL_CB_ESTIMATE: \\${validator.GLOBAL_CB_ESTIMATE}B')\nprint(f'  - MAX_AGE keys: {list(validator.MAX_AGE.keys())}')\nprint(f'  - DEFAULT_TOLERANCE: {validator.DEFAULT_TOLERANCE}')\n\n# Verify methods exist\nprint(f'\\nValidator methods:')\nprint(f'  - validate_all: {hasattr(validator, \\\"validate_all\\\")}')\nprint(f'  - validate_net_liquidity: {hasattr(validator, \\\"validate_net_liquidity\\\")}')\nprint(f'  - validate_global_sum: {hasattr(validator, \\\"validate_global_sum\\\")}')\nprint(f'  - validate_coverage: {hasattr(validator, \\\"validate_coverage\\\")}')\nprint(f'  - validate_freshness: {hasattr(validator, \\\"validate_freshness\\\")}')\n\nprint(f'\\nAll verification checks: PASS')\n\"\n",
+      "description": "Final comprehensive verification"
     }
   ],
-  "last_updated": "2026-01-24T10:04:30.038125"
+  "last_updated": "2026-01-24T10:09:47.363123"
 }
