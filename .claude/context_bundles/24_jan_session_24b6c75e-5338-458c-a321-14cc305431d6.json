@@ -310,7 +310,19 @@
       "timestamp": "2026-01-24T09:28:04.541107",
       "command": "cd /media/sam/1TB && find . -type d -name \".mypy_cache\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"mypy cache cleaned\"",
       "description": "Delete mypy cache directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:28:26.555319",
+      "command": "cd /media/sam/1TB && find . -type d -name \"__pycache__\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"All __pycache__ cleaned\"",
+      "description": "Delete all remaining __pycache__ directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:29:04.313257",
+      "command": "cd /media/sam/1TB && find . -type d -name \".ruff_cache\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"ruff cache cleaned\"",
+      "description": "Delete ruff cache directories"
     }
   ],
-  "last_updated": "2026-01-24T09:28:04.541128"
+  "last_updated": "2026-01-24T09:29:04.313282"
 }
