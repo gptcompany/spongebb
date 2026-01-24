@@ -261,6 +261,191 @@ async def calculate_funding_stress_spread() -> pd.DataFrame:
 
 </code_examples>
 
+<deep_dive>
+## Deep Dive Research
+
+### 1. BIS SDMX API - Detailed Usage
+
+**sdmx1 Library Pattern:**
+```python
+import sdmx
+
+# Initialize BIS client
+bis = sdmx.Client("BIS")
+
+# List all available dataflows
+flows = bis.dataflow()
+print(flows.dataflow)  # Shows WS_LBS_D_PUB, WS_CBS_PUB, WS_GLI, etc.
+
+# Query with dimension filters
+key = {
+    "FREQ": "Q",           # Quarterly
+    "L_MEASURE": "S",      # Stocks (not flows)
+    "L_POSITION": "C",     # Claims (not liabilities)
+    "L_CURR_TYPE": "USD",  # USD denominated
+}
+params = {"startPeriod": "2020"}
+
+data_msg = bis.data("WS_LBS_D_PUB", key=key, params=params)
+df = sdmx.to_pandas(data_msg.data[0])
+```
+
+**BIS LBS Dimension Codes (WS_LBS_D_PUB):**
+| Dimension | Description | Key Values |
+|-----------|-------------|------------|
+| FREQ | Frequency | Q (quarterly) |
+| L_MEASURE | Measure | S (stocks), F (flows) |
+| L_POSITION | Position | C (claims), L (liabilities) |
+| L_INSTR | Instruments | A (all), D (deposits), L (loans) |
+| L_CURR_TYPE | Currency | USD, EUR, JPY, GBP, CHF, ALL |
+| L_PARENT_CTY | Parent country | 5J (all), US, GB, DE, JP, etc. |
+| L_REP_CTY | Reporting country | ISO 3166-1 codes |
+| L_CP_COUNTRY | Counterparty country | ISO 3166-1 codes |
+| L_CP_SECTOR | Counterparty sector | A (all), B (banks), N (non-banks) |
+
+**Eurodollar/Offshore USD Query:**
+```python
+# USD claims by non-US banks on non-US residents = offshore USD
+key = {
+    "FREQ": "Q",
+    "L_MEASURE": "S",
+    "L_POSITION": "C",
+    "L_CURR_TYPE": "USD",
+    "L_PARENT_CTY": "5J",     # All parent countries
+    "L_CP_COUNTRY": "5J",     # All counterparties
+}
+# Filter out US positions in post-processing
+```
+
+**Recent BIS Statistics (Q2 2025):**
+- USD cross-border claims: **$19+ trillion**
+- Cross-border bank credit growth: **10% YoY**
+- Dollar credit to non-US borrowers: **6% YoY growth**
+- LBS captures **~95% of cross-border banking activity**
+
+### 2. SLOOS - Complete Series Reference
+
+**FRED has 639 SLOOS-tagged series.** Key categories:
+
+**C&I Loan Standards:**
+| Series | Description |
+|--------|-------------|
+| DRTSCILM | C&I to large/middle-market firms (main indicator) |
+| DRTSCIS | C&I to small firms |
+| SUBLPDCILSLGNQ | Large banks, C&I to large firms |
+| SUBLPDCISSLGNQ | Large banks, C&I to small firms |
+
+**Commercial Real Estate:**
+| Series | Description |
+|--------|-------------|
+| DRTSROM | CRE loans (general) |
+| DRTSCORM | Construction & land development |
+| SUBLPDNCRELGNQ | Large banks, nonfarm nonresidential |
+| SUBLPDMFLGNQ | Large banks, multifamily |
+
+**Consumer Loans:**
+| Series | Description |
+|--------|-------------|
+| DRTSCLCC | Credit card loans |
+| STDSAUTO | Auto loans |
+| STDSL | Consumer installment loans |
+
+**Demand Indicators (complement to standards):**
+| Series | Description |
+|--------|-------------|
+| DRSDCILM | Demand for C&I from large firms |
+| DRSDCIS | Demand for C&I from small firms |
+
+**Interpretation Guide:**
+- **Positive values** = Net tightening (more banks tightening than easing)
+- **Negative values** = Net easing
+- **Range**: Typically -30% to +70%
+- **Crisis peaks**: 70%+ (2008 GFC, 2020 COVID)
+- **Expansion troughs**: -20% to -30%
+- **Lag**: Leading indicator - tightening precedes recessions by 6-12 months
+
+### 3. Corporate Bond Issuance - TRACE Alternative
+
+**FINRA TRACE via Finnhub API:**
+```python
+import finnhub
+
+# Initialize client (API key from finnhub.io dashboard)
+client = finnhub.Client(api_key="YOUR_API_KEY")
+
+# Get bond tick data (requires premium plan for TRACE)
+# Endpoint: /api/v1/bond/tick
+# Response: BondTickData with p (price), v (volume), t (timestamp), y (yield)
+```
+
+**Finnhub Limitations:**
+- Free tier: 60 calls/minute, limited historical data
+- TRACE bond data: **Requires premium subscription**
+- Rate limit exceeded: Returns HTTP 429
+
+**Alternative: FRED Credit Spreads as Issuance Proxy**
+
+Credit spreads widen when issuance slows (less supply = less stress). Use:
+- **BAMLH0A0HYM2**: HY OAS (already in codebase)
+- **BAMLC0A0CM**: IG OAS (already in codebase)
+- Spread compression = healthy issuance conditions
+- Spread widening = issuance slowdown / stress
+
+**SIFMA Data (Excel only):**
+- Monthly/quarterly issuance by IG/HY
+- No API - manual download from sifma.org
+- Recommend: Skip direct issuance, use spreads as proxy
+
+### 4. Funding Stress Metrics - Post-LIBOR World
+
+**LIBOR Transition Timeline:**
+- GBP, EUR, CHF, JPY LIBOR: Ceased **end-2021**
+- USD LIBOR: Ceased **June 2023**
+- TED spread (TEDRATE on FRED): **DISCONTINUED**
+
+**New RFR-Based Spreads:**
+
+| Currency Pair | Old Basis | New Basis |
+|---------------|-----------|-----------|
+| EUR/USD | EURIBOR-OIS vs LIBOR-OIS | €STR vs SOFR |
+| USD/JPY | LIBOR-OIS vs TIBOR-OIS | SOFR vs TONA |
+| GBP/USD | LIBOR-OIS vs LIBOR-OIS | SONIA vs SOFR |
+
+**Cross-Currency Basis Swap (CCBS) Data Sources:**
+- **CME Group**: EUR/USD CCBS futures ([cmegroup.com](https://www.cmegroup.com/markets/interest-rates/stirs/eur-xccy.html))
+- **Bloomberg Terminal**: Real-time CCBS (expensive)
+- **FRED**: No direct CCBS series available
+
+**SOFR-Based Stress Indicators (available on FRED):**
+```python
+# Calculate SOFR - Fed Funds spread
+SERIES = {
+    "sofr": "SOFR",       # Secured Overnight Financing Rate
+    "effr": "DFF",        # Fed Funds Effective Rate
+    "iorb": "IORB",       # Interest on Reserve Balances
+}
+
+# SOFR - EFFR spread: Should be ~0-5 bps normally
+# > 10 bps = funding stress signal
+# SOFR < EFFR = unusual (repo cheaper than unsecured)
+```
+
+**Term SOFR for Forward-Looking Stress:**
+```python
+# CME Term SOFR (via Chatham Financial or CME)
+# Not on FRED - requires market data subscription
+# Provides 1M, 3M, 6M, 12M forward rates
+# Term SOFR - SOFR = term premium (stress when elevated)
+```
+
+**Cross-Currency Basis Interpretation:**
+- **Negative basis** (EUR, JPY, GBP vs USD): USD funding premium
+- **More negative** = Greater stress (USD shortage)
+- Historical range: 0 to -100 bps
+- Crisis levels: < -50 bps (2008, 2020)
+
+</deep_dive>
+
 <sota_updates>
 ## State of the Art (2025-2026)
 
@@ -285,20 +470,28 @@ async def calculate_funding_stress_spread() -> pd.DataFrame:
 <open_questions>
 ## Open Questions
 
-1. **Corporate Bond Issuance Volume**
-   - What we know: SIFMA publishes issuance data, available as Excel downloads
-   - What's unclear: No API or FRED series for real-time issuance pace
-   - Recommendation: Use credit spread changes as proxy for issuance conditions; skip direct issuance volume
+1. **Corporate Bond Issuance Volume** ✅ RESOLVED
+   - **Resolution**: Use FRED credit spreads (BAMLH0A0HYM2, BAMLC0A0CM) as proxy
+   - Finnhub TRACE API exists but requires premium subscription
+   - SIFMA Excel downloads possible for manual quarterly reconciliation
 
-2. **BIS Data Granularity**
-   - What we know: LBS has country-level breakdowns, ~200 counterparty countries
-   - What's unclear: Optimal filtering for "Eurodollar size" metric Hayes references
-   - Recommendation: Start with total USD cross-border claims, refine based on usage
+2. **BIS Data Granularity** ✅ RESOLVED
+   - **Resolution**: Use WS_LBS_D_PUB with dimension filters:
+     - L_CURR_TYPE=USD for dollar-denominated
+     - L_POSITION=C for claims
+     - Filter out L_REP_CTY=US for offshore-only
+   - Total USD cross-border claims ~$19 trillion (Q2 2025)
 
-3. **SLOOS Release Lag**
-   - What we know: Quarterly survey, results published ~6 weeks after quarter end
-   - What's unclear: Best way to handle gap between survey date and publish date
-   - Recommendation: Use survey reference quarter, not publication date, as timestamp
+3. **SLOOS Release Lag** ✅ RESOLVED
+   - **Resolution**: Use FRED series which timestamp by survey reference quarter
+   - FRED handles publication lag internally
+   - ~639 series available covering all loan categories
+
+4. **Cross-Currency Basis Data** 🔶 PARTIALLY RESOLVED
+   - What we know: FRED has no direct CCBS series
+   - CME offers EUR/USD CCBS futures data
+   - Bloomberg/Refinitiv have CCBS but expensive
+   - **Workaround**: Use SOFR-EFFR spread as USD funding stress proxy
 
 </open_questions>
 
@@ -308,17 +501,27 @@ async def calculate_funding_stress_spread() -> pd.DataFrame:
 ### Primary (HIGH confidence)
 - [FRED BAMLH0A0HYM2](https://fred.stlouisfed.org/series/BAMLH0A0HYM2) - HY OAS index
 - [FRED DRTSCILM](https://fred.stlouisfed.org/series/DRTSCILM) - SLOOS C&I tightening
-- [FRED DCPF3M/DCPN3M](https://fred.stlouisfed.org/series/DCPF3M) - Commercial paper rates
+- [FRED DRTSCIS](https://fred.stlouisfed.org/series/DRTSCIS) - SLOOS C&I small firms
+- [FRED DCPF3M](https://fred.stlouisfed.org/series/DCPF3M) - AA Financial CP rates
+- [FRED DCPN3M](https://fred.stlouisfed.org/series/DCPN3M) - AA Nonfinancial CP rates
+- [FRED SLOOS Release](https://fred.stlouisfed.org/release?rid=191) - All 639 SLOOS series
 - [BIS Bulk Downloads](https://data.bis.org/bulkdownload) - LBS/CBS CSV files
-- [BIS Stats API](https://stats.bis.org/api-doc/v1/) - SDMX API documentation
-- [sdmx1 readthedocs](https://sdmx1.readthedocs.io/en/latest/sources.html) - BIS source docs
+- [BIS Stats API v2](https://stats.bis.org/api-doc/v2/) - SDMX API documentation
+- [BIS LBS Overview](https://data.bis.org/topics/LBS) - Locational Banking Statistics
+- [BIS GLI](https://data.bis.org/topics/GLI) - Global Liquidity Indicators
+- [sdmx1 docs](https://sdmx1.readthedocs.io/en/latest/sources.html) - BIS source docs
 
 ### Secondary (MEDIUM confidence)
-- [SIFMA Corporate Bond Stats](https://www.sifma.org/research/statistics/us-corporate-bonds-statistics) - Issuance data (Excel only)
 - [Fed SLOOS page](https://www.federalreserve.gov/data/sloos.htm) - Survey methodology
+- [BIS Q2 2025 Release](https://www.bis.org/statistics/rppb2510.htm) - International banking stats
+- [CME EUR/USD CCBS](https://www.cmegroup.com/markets/interest-rates/stirs/eur-xccy.html) - Cross-currency basis futures
+- [Clarus RFR CCBS](https://www.clarusft.com/cross-currency-swap-conventions-in-an-rfr-world/) - Post-LIBOR conventions
+- [SIFMA Corporate Bond Stats](https://www.sifma.org/research/statistics/us-corporate-bonds-statistics) - Issuance data (Excel only)
+- [Finnhub TRACE API](https://finnhub.io/docs/api/bond-tick) - Bond tick data (premium)
 
 ### Tertiary (LOW confidence - needs validation)
-- SOFR-FF spread as funding stress proxy (community pattern, not official metric)
+- SOFR-EFFR spread as funding stress proxy (community pattern, post-LIBOR)
+- CME Term SOFR for forward-looking stress (requires subscription)
 
 </sources>
 
