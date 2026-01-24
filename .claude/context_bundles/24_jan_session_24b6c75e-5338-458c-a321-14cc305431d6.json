@@ -352,7 +352,25 @@
       "timestamp": "2026-01-24T09:30:38.566119",
       "command": "cd /media/sam/1TB && find . -type d -name \".hypothesis\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"hypothesis cache cleaned\"",
       "description": "Delete hypothesis cache"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:31:00.406111",
+      "command": "cd /media/sam/1TB && for repo in openbb_liquidity nautilus_dev N8N_dev UTXOracle; do\n  if [ -d \"$repo/.git\" ]; then\n    echo \"GC: $repo\"\n    (cd \"$repo\" && git gc --aggressive --prune=now 2>/dev/null)\n  fi\ndone\necho \"Git GC done\"",
+      "description": "Run git gc on major repositories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:06.279997",
+      "command": "cd /media/sam/1TB && find . -name \"*.log\" -type f -mtime +7 2>/dev/null | head -50 | xargs rm -f 2>/dev/null; echo \"old logs cleaned\"",
+      "description": "Delete log files older than 7 days"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:09.481563",
+      "command": "cd /media/sam/1TB && find . -type d -name \".tox\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"tox cache cleaned\"",
+      "description": "Delete tox cache"
     }
   ],
-  "last_updated": "2026-01-24T09:30:38.566140"
+  "last_updated": "2026-01-24T09:34:09.481588"
 }
