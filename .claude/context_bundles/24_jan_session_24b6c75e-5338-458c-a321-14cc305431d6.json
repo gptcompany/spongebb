@@ -346,7 +346,13 @@
       "timestamp": "2026-01-24T09:30:22.005802",
       "command": "cd /media/sam/1TB && find . -type d -name \"htmlcov\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"htmlcov directories cleaned\"",
       "description": "Delete HTML coverage reports"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:30:38.566119",
+      "command": "cd /media/sam/1TB && find . -type d -name \".hypothesis\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"hypothesis cache cleaned\"",
+      "description": "Delete hypothesis cache"
     }
   ],
-  "last_updated": "2026-01-24T09:30:22.005824"
+  "last_updated": "2026-01-24T09:30:38.566140"
 }
