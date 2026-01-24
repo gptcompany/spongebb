@@ -29,19 +29,25 @@
     "gsd:openbb_liquidity:6": {
       "key": "gsd:openbb_liquidity:6",
       "value": {
-        "status": "in_progress",
+        "status": "completed",
         "phase": 6,
-        "started_at": "2026-01-24T00:00:00Z",
+        "started_at": "2026-01-24T09:07:00Z",
+        "completed_at": "2026-01-24T09:30:00Z",
         "plans": [
           "06-01",
           "06-02",
           "06-03"
-        ]
+        ],
+        "results": {
+          "06-01": "CreditCollector created with SLOOS and CP methods",
+          "06-02": "BISCollector created with bulk CSV download and caching",
+          "06-03": "Collectors registered and exports added"
+        }
       },
       "metadata": {},
-      "storedAt": "2026-01-24T09:07:32.922Z",
+      "storedAt": "2026-01-24T09:24:11.427Z",
       "accessCount": 0,
-      "lastAccessed": "2026-01-24T09:07:32.922Z"
+      "lastAccessed": "2026-01-24T09:24:11.427Z"
     }
   },
   "version": "3.0.0"

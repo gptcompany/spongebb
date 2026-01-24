@@ -20,8 +20,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Global CB Collectors** - ECB, BoJ, PBoC, BoE, SNB, BoC balance sheet collectors
 - [x] **Phase 3: Overnight Rates & FX** - SOFR, €STR, SONIA, CORRA + FX pair collectors
 - [x] **Phase 4: Market Indicators** - Commodities (gold, silver, copper, oil) + ETF flows
-- [ ] **Phase 5: Capital Flows & Stress** - TIC data, ETF flows, stress indicators
-- [ ] **Phase 6: Credit & BIS Data** - Credit markets, BIS Eurodollar/international banking
+- [x] **Phase 5: Capital Flows & Stress** - TIC data, ETF flows, stress indicators
+- [x] **Phase 6: Credit & BIS Data** - Credit markets, BIS Eurodollar/international banking
 - [ ] **Phase 7: Liquidity Calculations** - Net Liquidity, Global Liquidity, Stealth QE Score
 - [ ] **Phase 8: Analysis & Correlations** - Regime classifier, correlation engine
 - [ ] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
@@ -106,9 +106,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 06-01: Credit market collectors (issuance, HY OAS, CP rates)
-- [ ] 06-02: SLOOS collector
-- [ ] 06-03: BIS collectors (International Banking Statistics, Locational Banking)
+- [x] 06-01: Credit market collectors (SLOOS survey, CP rates)
+- [x] 06-02: BIS collectors (International Banking Statistics via bulk CSV)
+- [x] 06-03: Registration and integration tests
 
 ### Phase 7: Liquidity Calculations
 **Goal**: Core liquidity index calculations and Stealth QE score
@@ -174,7 +174,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 3. Overnight Rates & FX | 3/3 | Complete | 2026-01-23 |
 | 4. Market Indicators | 2/2 | Complete | 2026-01-23 |
 | 5. Capital Flows & Stress | 5/5 | Complete | 2026-01-23 |
-| 6. Credit & BIS Data | 0/3 | Not started | - |
+| 6. Credit & BIS Data | 3/3 | Complete | 2026-01-24 |
 | 7. Liquidity Calculations | 0/4 | Not started | - |
 | 8. Analysis & Correlations | 0/3 | Not started | - |
 | 9. Calendar & API | 0/4 | Not started | - |

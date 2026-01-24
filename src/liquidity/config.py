@@ -5,6 +5,7 @@ or from .env file for local development.
 """
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 from pydantic import Field, SecretStr
@@ -125,7 +126,7 @@ class Settings(BaseSettings):
         return f"http://{self.questdb_host}:{self.questdb_http_port}"
 
     @property
-    def cache_dir(self) -> "Path":
+    def cache_dir(self) -> Path:
         """Get cache directory for bulk downloads.
 
         Returns:

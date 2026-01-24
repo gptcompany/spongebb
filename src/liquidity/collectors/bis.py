@@ -175,14 +175,11 @@ class BISCollector(BaseCollector[pd.DataFrame]):
         logger.info("Downloading BIS %s bulk data...", dataset)
         url = f"{self.BIS_BULK_URL}/{self.DATASETS[dataset]}"
 
-        async def _fetch() -> bytes:
+        try:
             async with httpx.AsyncClient(timeout=self.DOWNLOAD_TIMEOUT) as client:
                 response = await client.get(url)
                 response.raise_for_status()
-                return response.content
-
-        try:
-            content = await self.fetch_with_retry(_fetch)
+                content = response.content
         except Exception as e:
             logger.error("BIS %s download failed: %s", dataset, e)
             raise CollectorFetchError(f"BIS {dataset} download failed: {e}") from e

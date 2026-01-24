@@ -62,7 +62,249 @@
       "timestamp": "2026-01-24T09:19:50.702163",
       "command": "rm -rf .mypy_cache .pytest_cache .ruff_cache __pycache__ **/__pycache__ 2>/dev/null; find . -type d -name \"__pycache__\" -exec rm -rf {} + 2>/dev/null; find . -type f -name \"*.pyc\" -delete 2>/dev/null; df -h /media/sam/1TB",
       "description": "Clean up Python cache files to free disk space"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:19:54.474520",
+      "command": "cd /media/sam/1TB && du -sh */ | sort -hr | head -20",
+      "description": "Check directory sizes to identify large folders"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:20:22.536223",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py",
+      "old_string": "from functools import lru_cache\nfrom typing import Any\n\nfrom pydantic import Field, SecretStr"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:20:26.289388",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py",
+      "old_string": "    @property\n    def cache_dir(self) -> \"Path\":"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:20:31.828194",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/credit.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:20:31.843556",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:20:38.551947",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py",
+      "old_string": "import logging\nimport zipfile\nfrom datetime import UTC, datetime\nfrom io import BytesIO\nfrom pathlib..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:20:54.889200",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py",
+      "old_string": "    async def _download_and_cache(self, dataset: str) -> Path:\n        \"\"\"Download bulk CSV if not c..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:21:00.237303",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/credit.py",
+      "old_string": "import asyncio\nimport logging\nfrom datetime import UTC, datetime, timedelta\nfrom typing import Any, ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:21:05.313875",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:21:11.985430",
+      "command": "uv run python -c \"from liquidity.collectors.credit import CreditCollector; print('CreditCollector import OK')\" 2>&1",
+      "description": "Verify CreditCollector import"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:21:31.854637",
+      "command": "uv run python -c \"from liquidity.collectors.bis import BISCollector; print('BISCollector import OK')\" 2>&1",
+      "description": "Verify BISCollector import"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:21:36.113485",
+      "command": "find .venv -name \"*.pyc\" -delete 2>/dev/null; find .venv -type d -name \"__pycache__\" -exec rm -rf {} + 2>/dev/null; echo \"Cleaned venv cache\"",
+      "description": "Clean venv bytecode cache"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:21:40.786051",
+      "command": "uv run python -c \"from liquidity.collectors.bis import BISCollector; print('BISCollector import OK')\" 2>&1",
+      "description": "Verify BISCollector import after cache cleanup"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:22:04.402912",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:22:09.917218",
+      "command": "uv run python -c \"\nfrom liquidity.collectors import CreditCollector, BISCollector, registry\n\n# Check imports\nprint('CreditCollector:', CreditCollector)\nprint('BISCollector:', BISCollector)\n\n# Check registry\nprint('Registry has credit:', registry.get('credit') is not None)\nprint('Registry has bis:', registry.get('bis') is not None)\nprint('Registry collectors:', list(registry._collectors.keys()))\n\"",
+      "description": "Verify collectors are registered"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:22:14.942108",
+      "command": "rm -rf .venv/lib/python3.11/site-packages/httpx/__pycache__/*.pyc 2>/dev/null\nfind .venv -name \"*.pyc\" -type f -delete 2>/dev/null\necho \"Cleaned pyc files\"",
+      "description": "Force remove corrupted cache files"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:22:19.387185",
+      "command": "PYTHONDONTWRITEBYTECODE=1 uv run python -c \"\nfrom liquidity.collectors import CreditCollector, BISCollector, registry\n\n# Check imports\nprint('CreditCollector:', CreditCollector)\nprint('BISCollector:', BISCollector)\n\n# Check registry\nprint('Registry has credit:', registry.get('credit') is not None)\nprint('Registry has bis:', registry.get('bis') is not None)\nprint('Registry collectors:', sorted(registry._collectors.keys()))\n\"",
+      "description": "Verify collectors with bytecode disabled"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:22:42.065296",
+      "command": "uv run ruff check src/liquidity/collectors/credit.py src/liquidity/collectors/bis.py --fix 2>&1",
+      "description": "Run ruff linter on new collectors"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:22:48.017455",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/credit.py",
+      "old_string": "import asyncio\nimport logging\nfrom datetime import UTC, datetime, timedelta\nfrom typing import Any, ..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:22:51.263235",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:22:55.509433",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py",
+      "old_string": "import logging\nimport zipfile\nfrom datetime import UTC, datetime\nfrom io import BytesIO\nfrom pathlib..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:22:58.975526",
+      "command": "uv run ruff check src/liquidity/collectors/credit.py src/liquidity/collectors/bis.py 2>&1",
+      "description": "Check ruff passes after fixes"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:23:04.697294",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/credit.py",
+      "old_string": "from datetime import datetime, timedelta, timezone\nfrom typing import Any, Literal\n\nimport pandas as..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:23:09.889229",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/bis.py",
+      "old_string": "from datetime import datetime, timezone\nfrom io import BytesIO\nfrom pathlib import Path\nfrom typing ..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:23:13.303662",
+      "command": "uv run ruff check src/liquidity/collectors/credit.py src/liquidity/collectors/bis.py 2>&1",
+      "description": "Final ruff check"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:23:19.159780",
+      "command": "PYTHONDONTWRITEBYTECODE=1 uv run python -c \"\nfrom liquidity.collectors import CreditCollector, BISCollector, registry\nprint('Both collectors import successfully!')\nprint('Credit registered:', 'credit' in registry._collectors)\nprint('BIS registered:', 'bis' in registry._collectors)\n\"",
+      "description": "Final import verification"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:23:47.285741",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:23:51.417413",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "- [ ] **Phase 5: Capital Flows & Stress** - TIC data, ETF flows, stress indicators\n- [ ] **Phase 6: ..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:23:56.463812",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "| 5. Capital Flows & Stress | 5/5 | Complete | 2026-01-23 |\n| 6. Credit & BIS Data | 0/3 | Not start..."
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:24:02.662103",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/ROADMAP.md",
+      "old_string": "Plans:\n- [ ] 06-01: Credit market collectors (issuance, HY OAS, CP rates)\n- [ ] 06-02: SLOOS collect..."
+    },
+    {
+      "operation": "mcp__claude-flow__memory_store",
+      "timestamp": "2026-01-24T09:24:08.513874",
+      "key": "gsd:openbb_liquidity:6"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:24:15.478869",
+      "pattern": "tests/**/*credit*.py"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:24:15.492898",
+      "pattern": "tests/**/*bis*.py"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:24:19.398901",
+      "pattern": "tests/integration/*.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-24T09:24:38.689784",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/integration/test_credit_bis.py",
+      "content_length": 3786
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-24T09:24:52.327245",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/06-credit-bis-data/06-03-SUMMARY.md",
+      "content_length": 2208
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:24:56.649233",
+      "command": "PYTHONDONTWRITEBYTECODE=1 uv run pytest tests/integration/test_credit_bis.py --collect-only 2>&1 | head -30",
+      "description": "Verify integration tests can be collected"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:25:27.228923",
+      "command": "df -h /media/sam/1TB && echo \"---\" && git -C /media/sam/1TB/openbb_liquidity status --short",
+      "description": "Check disk space and git status"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:26:19.751070",
+      "command": "cd /media/sam/1TB && echo \"=== Safe cleanup candidates ===\" && echo \"\" && \\\necho \"1. Python caches:\" && find . -type d -name \"__pycache__\" 2>/dev/null | wc -l && echo \"   directories\" && \\\necho \"\" && \\\necho \"2. Pytest/mypy/ruff caches:\" && du -sh ./*/.pytest_cache ./*/.mypy_cache ./*/.ruff_cache 2>/dev/null | head -10 && \\\necho \"\" && \\\necho \"3. .git objects (can be pruned):\" && for d in */; do if [ -d \"$d/.git\" ]; then size=$(du -sh \"$d/.git\" 2>/dev/null | cut -f1); echo \"   $d: $size\"; fi; done | head -15 && \\\necho \"\" && \\\necho \"4. Old log files:\" && find . -name \"*.log\" -type f -mtime +7 2>/dev/null | head -10 && \\\necho \"\" && \\\necho \"5. Temporary files:\" && find . -name \"*.tmp\" -o -name \"*.temp\" -o -name \"*~\" 2>/dev/null | head -10",
+      "description": "Identify safe cleanup candidates"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:27:40.369452",
+      "command": "df -h /media/sam/1TB | tail -1 | awk '{print \"Current usage: \"$5\" (\"$4\" available)\"}'",
+      "description": "Check current disk space before cleanup"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:27:47.221925",
+      "command": "cd /media/sam/1TB && find . -type d -name \"__pycache__\" 2>/dev/null | head -100 | xargs -I {} rm -rf {} 2>/dev/null; echo \"Batch 1 done\"",
+      "description": "Delete first batch of __pycache__ directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:27:48.043929",
+      "command": "cd /media/sam/1TB && find . -type d -name \".pytest_cache\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"pytest cache cleaned\"",
+      "description": "Delete pytest cache directories"
     }
   ],
-  "last_updated": "2026-01-24T09:19:50.702186"
+  "last_updated": "2026-01-24T09:27:48.043961"
 }
