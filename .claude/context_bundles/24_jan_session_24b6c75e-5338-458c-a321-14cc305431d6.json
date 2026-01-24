@@ -370,7 +370,13 @@
       "timestamp": "2026-01-24T09:34:09.481563",
       "command": "cd /media/sam/1TB && find . -type d -name \".tox\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"tox cache cleaned\"",
       "description": "Delete tox cache"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:25.920801",
+      "command": "cd /media/sam/1TB && find . -type d -name \"*.egg-info\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"egg-info cleaned\"",
+      "description": "Delete egg-info directories"
     }
   ],
-  "last_updated": "2026-01-24T09:34:09.481588"
+  "last_updated": "2026-01-24T09:34:25.920829"
 }
