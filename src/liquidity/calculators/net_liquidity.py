@@ -283,8 +283,15 @@ class NetLiquidityCalculator:
         # Classify sentiment
         sentiment = self.get_sentiment(weekly_delta)
 
+        # Convert timestamp, handling potential NaT
+        ts_pydatetime = latest_ts.to_pydatetime()
+        if pd.isna(ts_pydatetime):
+            ts_pydatetime = datetime.now(UTC)
+        else:
+            ts_pydatetime = ts_pydatetime.replace(tzinfo=UTC)
+
         result = NetLiquidityResult(
-            timestamp=latest_ts.to_pydatetime().replace(tzinfo=UTC),
+            timestamp=ts_pydatetime,
             net_liquidity=float(latest["net_liquidity"]),
             walcl=float(latest["walcl"]),
             tga=float(latest["tga"]),

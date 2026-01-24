@@ -732,7 +732,348 @@
       "operation": "read",
       "timestamp": "2026-01-24T09:54:38.942386",
       "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:55:00.134943",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:55:10.195545",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py",
+      "old_string": "        result = NetLiquidityResult(\n            timestamp=latest_ts.to_pydatetime().replace(tzinfo=..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:55:16.261364",
+      "command": "ruff check src/liquidity/calculators/ && echo \"Ruff OK\"",
+      "description": "Check ruff linting"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:55:16.756475",
+      "command": "PYTHONDONTWRITEBYTECODE=1 uv run python -c \"from liquidity.calculators import NetLiquidityCalculator, NetLiquidityResult, Sentiment; print('Import OK'); print(f'Calculator: {NetLiquidityCalculator}')\"",
+      "description": "Verify imports work"
+    },
+    {
+      "operation": "task",
+      "timestamp": "2026-01-24T09:56:08.850794",
+      "subagent_type": "general-purpose",
+      "prompt": "Implement Plan 07-02: Global Liquidity Index for the openbb_liquidity project.\n\n**Location**: `/medi..."
+    },
+    {
+      "operation": "task",
+      "timestamp": "2026-01-24T09:56:08.864170",
+      "subagent_type": "general-purpose",
+      "prompt": "Implement Plan 07-03: Stealth QE Score for the openbb_liquidity project.\n\n**Location**: `/media/sam/..."
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:13.866707",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/07-liquidity-calculations/07-03-PLAN.md"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:13.872853",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:13.884889",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:19.681722",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/reference/appscript_v3.4.1.md"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:19.696072",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:22.612989",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/phases/07-liquidity-calculations/07-02-PLAN.md"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:22.619254",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/net_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:22.631652",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-24T09:56:26.563549",
+      "pattern": "Stealth|stealth|QE_SCORE|qe_score",
+      "path": "/media/sam/1TB/openbb_liquidity/.planning/reference",
+      "output_mode": "content"
+    },
+    {
+      "operation": "grep",
+      "timestamp": "2026-01-24T09:56:26.574189",
+      "pattern": "RRP_VELOCITY|TGA_SPENDING|FED_CHANGE",
+      "path": "/media/sam/1TB/openbb_liquidity/.planning/reference",
+      "output_mode": "content"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:28.647454",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fx.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:28.665283",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/pboc.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:31.796923",
+      "file_path": "/media/sam/1TB/openbb_liquidity/.planning/reference/appscript_v3.4.1.md"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:56:33.934885",
+      "pattern": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/*.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:36.847731",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:38.696025",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/boe.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:38.709890",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/snb.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:38.716564",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/boc.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:44.841098",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/fred.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:44.852075",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:56:49.376935",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-24T09:58:03.776689",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/stealth_qe.py",
+      "content_length": 25293
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:58:13.394444",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py",
+      "old_string": "\"\"\"Liquidity calculators for Global Liquidity Monitor.\n\nThis module provides calculators for liquidi..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:58:17.422341",
+      "command": "uv run ruff check src/liquidity/calculators/",
+      "description": "Run ruff linter on calculators module"
+    },
+    {
+      "operation": "write",
+      "timestamp": "2026-01-24T09:58:22.778318",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py",
+      "content_length": 24750
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:58:24.781864",
+      "command": "uv run python -c \"\nfrom liquidity.calculators import StealthQECalculator, StealthQEResult, StealthQEStatus\nfrom liquidity.calculators.stealth_qe import SCORE_CONFIG\n\nprint('Imports successful!')\nprint(f'StealthQECalculator: {StealthQECalculator}')\nprint(f'StealthQEResult: {StealthQEResult}')\nprint(f'StealthQEStatus: {StealthQEStatus}')\nprint(f'SCORE_CONFIG: {SCORE_CONFIG}')\nprint()\n\n# Test status classification\nprint('Status tests:')\nfor score, expected in [(5, 'MINIMAL'), (15, 'LOW'), (40, 'MODERATE'), (60, 'ACTIVE'), (85, 'VERY_ACTIVE')]:\n    status = StealthQECalculator.get_status(score)\n    print(f'  Score {score}: {status.value} (expected: {expected}) - {\"PASS\" if status.value == expected else \"FAIL\"}')\"",
+      "description": "Verify imports and test status classification"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:58:36.655589",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:58:48.135375",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py",
+      "old_string": "\"\"\"Liquidity calculators for Global Liquidity Monitor.\n\nThis module provides calculators for liquidi..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:58:52.167255",
+      "command": "uv run python -c \"\nfrom liquidity.calculators import StealthQECalculator, StealthQEResult, StealthQEStatus\nfrom liquidity.calculators.stealth_qe import SCORE_CONFIG\n\nprint('Imports successful!')\nprint(f'StealthQECalculator: {StealthQECalculator}')\nprint(f'StealthQEResult: {StealthQEResult}')\nprint(f'StealthQEStatus: {StealthQEStatus}')\nprint(f'SCORE_CONFIG: {SCORE_CONFIG}')\nprint()\n\n# Test status classification\nprint('Status tests:')\nfor score, expected in [(5, 'MINIMAL'), (15, 'LOW'), (40, 'MODERATE'), (60, 'ACTIVE'), (85, 'VERY_ACTIVE')]:\n    status = StealthQECalculator.get_status(score)\n    result = 'PASS' if status.value == expected else 'FAIL'\n    print(f'  Score {score}: {status.value} (expected: {expected}) - {result}')\n\"",
+      "description": "Verify imports and test status classification"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:58:52.845426",
+      "command": "uv run ruff check src/liquidity/calculators/global_liquidity.py",
+      "description": "Run ruff linter on global_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:58:57.931452",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T09:59:07.145980",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py",
+      "old_string": "        # Merge all dataframes on timestamp\n        result = None\n        for name, df in dfs.items(..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:59:11.695480",
+      "command": "uv run ruff check src/liquidity/calculators/global_liquidity.py",
+      "description": "Re-run ruff linter check"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:59:18.135375",
+      "command": "uv run python -c \"from liquidity.calculators import GlobalLiquidityCalculator, GlobalLiquidityResult; print('Import successful'); print(f'GlobalLiquidityCalculator: {GlobalLiquidityCalculator}'); print(f'GlobalLiquidityResult: {GlobalLiquidityResult}')\"",
+      "description": "Verify import of GlobalLiquidityCalculator works"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:59:27.123137",
+      "command": "uv run python -c \"\nfrom liquidity.calculators.stealth_qe import StealthQECalculator, SCORE_CONFIG\n\ncalc = StealthQECalculator()\n\n# Test component calculations matching Apps Script logic\nprint('Component calculation tests:')\nprint()\n\n# Test 1: RRP velocity -10% (should give 50% component)\nrrp_v, tga_s, fed_c = -10.0, 0.0, 0.0\ncomp_rrp, comp_tga, comp_fed = calc._calculate_components(rrp_v, tga_s, fed_c)\nexpected_rrp = abs(-10) / 20 * 100  # = 50\nprint(f'RRP velocity -10%: comp_rrp={comp_rrp:.1f} (expected: {expected_rrp:.1f})')\n\n# Test 2: TGA spending 100B (should give 50% component)  \nrrp_v, tga_s, fed_c = 0.0, 100.0, 0.0\ncomp_rrp, comp_tga, comp_fed = calc._calculate_components(rrp_v, tga_s, fed_c)\nexpected_tga = 100 / 200 * 100  # = 50\nprint(f'TGA spending \\$100B: comp_tga={comp_tga:.1f} (expected: {expected_tga:.1f})')\n\n# Test 3: Fed change +50B (should give 50% component)\nrrp_v, tga_s, fed_c = 0.0, 0.0, 50.0\ncomp_rrp, comp_tga, comp_fed = calc._calculate_components(rrp_v, tga_s, fed_c)\nexpected_fed = 50 / 100 * 100  # = 50\nprint(f'Fed change +\\$50B: comp_fed={comp_fed:.1f} (expected: {expected_fed:.1f})')\n\n# Test 4: Combined score\n# RRP velocity -20%, TGA spending 200B, Fed change +100B\n# All at max, should give 100, 100, 100 components\nrrp_v, tga_s, fed_c = -20.0, 200.0, 100.0\ncomp_rrp, comp_tga, comp_fed = calc._calculate_components(rrp_v, tga_s, fed_c)\nscore = comp_rrp * 0.4 + comp_tga * 0.4 + comp_fed * 0.2\nprint()\nprint(f'Max scenario: RRP=-20%, TGA=\\$200B, FED=+\\$100B')\nprint(f'  comp_rrp={comp_rrp:.1f}, comp_tga={comp_tga:.1f}, comp_fed={comp_fed:.1f}')\nprint(f'  score = {comp_rrp:.0f}*0.4 + {comp_tga:.0f}*0.4 + {comp_fed:.0f}*0.2 = {score:.1f} (expected: 100.0)')\n\n# Test 5: Negative/zero values should give 0\nrrp_v, tga_s, fed_c = 10.0, -50.0, -20.0  # All non-bullish\ncomp_rrp, comp_tga, comp_fed = calc._calculate_components(rrp_v, tga_s, fed_c)\nprint()\nprint(f'Non-bullish: RRP=+10%, TGA=-\\$50B, FED=-\\$20B')\nprint(f'  comp_rrp={comp_rrp:.1f}, comp_tga={comp_tga:.1f}, comp_fed={comp_fed:.1f} (all should be 0)')\n\n# Test 6: Clamping at 100\nrrp_v, tga_s, fed_c = -50.0, 500.0, 300.0  # All above max\ncomp_rrp, comp_tga, comp_fed = calc._calculate_components(rrp_v, tga_s, fed_c)\nprint()\nprint(f'Above max: RRP=-50%, TGA=\\$500B, FED=+\\$300B')\nprint(f'  comp_rrp={comp_rrp:.1f}, comp_tga={comp_tga:.1f}, comp_fed={comp_fed:.1f} (all should be 100)')\n\"",
+      "description": "Test component calculations match Apps Script formula"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:59:40.593697",
+      "command": "uv run ruff check src/liquidity/calculators/",
+      "description": "Run ruff on entire calculators module"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:59:46.000574",
+      "command": "uv run python -c \"\nimport asyncio\nfrom liquidity.calculators import GlobalLiquidityCalculator\n\nasync def test():\n    calc = GlobalLiquidityCalculator()\n    print(f'Calculator repr: {calc}')\n    print('GlobalLiquidityCalculator initialized successfully')\n    \nasyncio.run(test())\n\"",
+      "description": "Test GlobalLiquidityCalculator initialization"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:59:50.651580",
+      "pattern": "tests/**/*test*stealth*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:59:50.659105",
+      "pattern": "tests/**/*test*net_liquidity*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "glob",
+      "timestamp": "2026-01-24T09:59:55.748726",
+      "pattern": "tests/**/*.py",
+      "path": "/media/sam/1TB/openbb_liquidity"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:59:59.200981",
+      "file_path": "/media/sam/1TB/openbb_liquidity/tests/unit/test_calculations.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:00:04.453835",
+      "command": "uv run pytest tests/unit/test_calculations.py -v 2>&1 | head -60",
+      "description": "Run existing unit tests to verify nothing is broken"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:00:07.909905",
+      "command": "uv run mypy src/liquidity/calculators/global_liquidity.py --ignore-missing-imports 2>&1 | head -30",
+      "description": "Run mypy type checking on global_liquidity.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:00:31.821060",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/__init__.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:00:36.967902",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/collectors/boc.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:00:39.094284",
+      "command": "uv run python -c \"\nfrom liquidity.calculators import (\n    NetLiquidityCalculator,\n    NetLiquidityResult,\n    Sentiment,\n    GlobalLiquidityCalculator,\n    GlobalLiquidityResult,\n    StealthQECalculator,\n    StealthQEResult,\n    StealthQEStatus,\n)\n\nprint('All imports successful!')\nprint()\nprint('Calculators available:')\nprint(f'  - NetLiquidityCalculator: {NetLiquidityCalculator}')\nprint(f'  - GlobalLiquidityCalculator: {GlobalLiquidityCalculator}')\nprint(f'  - StealthQECalculator: {StealthQECalculator}')\n\"",
+      "description": "Verify all calculator imports work"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:00:41.774147",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py"
+    },
+    {
+      "operation": "edit",
+      "timestamp": "2026-01-24T10:00:47.656798",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/global_liquidity.py",
+      "old_string": "        if tier >= 2:\n            tasks.extend(\n                [\n                    self._boe.coll..."
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:00:52.336356",
+      "command": "uv run mypy src/liquidity/calculators/global_liquidity.py --ignore-missing-imports 2>&1 | head -20",
+      "description": "Re-run mypy type checking"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:01:02.231392",
+      "command": "uv run ruff check src/liquidity/calculators/ --show-source",
+      "description": "Final ruff check on calculators module with source output"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:01:05.521077",
+      "command": "uv run ruff check src/liquidity/calculators/",
+      "description": "Final ruff check on calculators module"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:01:07.705609",
+      "command": "uv run python -c \"\nimport asyncio\nimport logging\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.calculators import GlobalLiquidityCalculator, GlobalLiquidityResult\n\nlogging.basicConfig(level=logging.WARNING)\n\nasync def test():\n    calc = GlobalLiquidityCalculator()\n    \n    # Test with a very recent date range to minimize data fetch\n    end_date = datetime.now(UTC)\n    start_date = end_date - timedelta(days=30)\n    \n    print('Testing GlobalLiquidityCalculator...')\n    print(f'Date range: {start_date.date()} to {end_date.date()}')\n    \n    try:\n        # Try to get current (this will make actual API calls)\n        result = await calc.get_current(tier=1)\n        print(f'\\\\nTier 1 Global Liquidity Result:')\n        print(f'  Timestamp: {result.timestamp}')\n        print(f'  Total: \\${result.total_usd/1000:.2f}T USD')\n        print(f'  Fed: \\${result.fed_usd:.0f}B USD')\n        print(f'  ECB: \\${result.ecb_usd:.0f}B USD')\n        print(f'  BoJ: \\${result.boj_usd:.0f}B USD')\n        print(f'  PBoC: \\${result.pboc_usd:.0f}B USD')\n        print(f'  Weekly delta: \\${result.weekly_delta:.1f}B')\n        print(f'  Coverage: {result.coverage_pct:.1f}%')\n    except Exception as e:\n        print(f'Error getting current liquidity: {e}')\n        import traceback\n        traceback.print_exc()\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Functional test of GlobalLiquidityCalculator with real API calls"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:01:12.892558",
+      "command": "uv run python -m mypy src/liquidity/calculators/stealth_qe.py --ignore-missing-imports 2>&1 | head -30",
+      "description": "Type check stealth_qe.py"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T10:01:17.797546",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/calculators/stealth_qe.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T10:01:34.358082",
+      "command": "uv run python -c \"\nimport asyncio\nfrom datetime import datetime, timedelta, UTC\nfrom liquidity.calculators import NetLiquidityCalculator\n\nasync def test():\n    calc = NetLiquidityCalculator()\n    result = await calc.get_current()\n    print(f'Net Liquidity: {result.net_liquidity:.2f} (should be ~6000-7000 billion)')\n    print(f'WALCL: {result.walcl:.2f}')\n    print(f'TGA: {result.tga:.2f}')\n    print(f'RRP: {result.rrp:.2f}')\n\nasyncio.run(test())\n\" 2>&1",
+      "description": "Check Net Liquidity values to understand the units"
     }
   ],
-  "last_updated": "2026-01-24T09:54:38.942413"
+  "last_updated": "2026-01-24T10:01:34.358103"
 }
