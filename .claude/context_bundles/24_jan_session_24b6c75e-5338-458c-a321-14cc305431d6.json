@@ -376,7 +376,31 @@
       "timestamp": "2026-01-24T09:34:25.920801",
       "command": "cd /media/sam/1TB && find . -type d -name \"*.egg-info\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"egg-info cleaned\"",
       "description": "Delete egg-info directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:48.188033",
+      "command": "df -h /media/sam/1TB | tail -1 | awk '{print \"Current usage: \"$5\" (\"$4\" available)\"}'",
+      "description": "Check disk space after second wave"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:48.642680",
+      "command": "cd /media/sam/1TB && find . -type d -name \"build\" -path \"*/.git\" -prune -o -type d -name \"build\" -print 2>/dev/null | head -20",
+      "description": "Find build directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:56.408929",
+      "command": "cd /media/sam/1TB && find . -maxdepth 3 -type d -name \"dist\" 2>/dev/null | grep -v node_modules | grep -v site-packages | grep -v \".venv\"",
+      "description": "Find project dist directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:34:56.911702",
+      "command": "cd /media/sam/1TB && find . -type d -name \".nox\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"nox cache cleaned\"",
+      "description": "Delete nox cache"
     }
   ],
-  "last_updated": "2026-01-24T09:34:25.920829"
+  "last_updated": "2026-01-24T09:34:56.911739"
 }
