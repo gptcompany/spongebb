@@ -3,7 +3,7 @@ status: complete
 phase: 07-liquidity-calculations
 source: 07-SUMMARY.md
 started: 2026-01-24T12:00:00Z
-updated: 2026-01-24T12:15:00Z
+updated: 2026-01-24T12:30:00Z
 ---
 
 ## Current Test
@@ -38,15 +38,13 @@ result: pass
 
 ### 7. Stealth QE Daily Score
 expected: `StealthQECalculator().calculate_daily()` returns DataFrame with score_daily, rrp_velocity, tga_spending columns
-result: issue
-reported: "TypeError: Cannot compare tz-naive and tz-aware timestamps at stealth_qe.py:236"
-severity: blocker
+result: pass
+notes: Fixed timezone comparison bug (tz-aware vs tz-naive timestamps)
 
 ### 8. Stealth QE Weekly Score
 expected: `StealthQECalculator().calculate_weekly()` returns DataFrame with score_weekly (Wednesday values only)
-result: issue
-reported: "TypeError: Cannot compare tz-naive and tz-aware timestamps at stealth_qe.py:410"
-severity: blocker
+result: pass
+notes: Fixed timezone comparison bug (tz-aware vs tz-naive timestamps)
 
 ### 9. Validation Import
 expected: Import LiquidityValidator, ValidationResult, CheckResult without errors
@@ -67,12 +65,11 @@ result: pass
 ## Summary
 
 total: 12
-passed: 10
-issues: 2
+passed: 12
+issues: 0
 pending: 0
 skipped: 0
 
 ## Issues for /gsd:plan-fix
 
-- UAT-001: Stealth QE calculate_daily() timezone comparison error (blocker) - Test 7
-- UAT-002: Stealth QE calculate_weekly() timezone comparison error (blocker) - Test 8
+[none - all issues resolved]

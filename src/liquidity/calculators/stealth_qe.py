@@ -233,7 +233,15 @@ class StealthQECalculator:
             timestamp = pivot.index[idx]
 
             # Skip if before requested start date
-            if pd.Timestamp(timestamp) < pd.Timestamp(start_date):
+            # Normalize both to same tz for comparison
+            ts = pd.Timestamp(timestamp)
+            start_ts = pd.Timestamp(start_date)
+            # Convert both to naive for comparison
+            if ts.tzinfo is not None:
+                ts = ts.tz_convert(None)
+            if start_ts.tzinfo is not None:
+                start_ts = start_ts.tz_convert(None)
+            if ts < start_ts:
                 # Still calculate for smoothing purposes
                 if idx >= 7:
                     rrp_velocity, tga_spending, fed_change = (
@@ -407,7 +415,14 @@ class StealthQECalculator:
                 continue
 
             # Skip if before requested start date
-            if ts < pd.Timestamp(start_date):
+            # Normalize both to same tz for comparison
+            start_ts = pd.Timestamp(start_date)
+            ts_naive = ts
+            if ts_naive.tzinfo is not None:
+                ts_naive = ts_naive.tz_convert(None)
+            if start_ts.tzinfo is not None:
+                start_ts = start_ts.tz_convert(None)
+            if ts_naive < start_ts:
                 prev_wed_idx = idx
                 continue
 
