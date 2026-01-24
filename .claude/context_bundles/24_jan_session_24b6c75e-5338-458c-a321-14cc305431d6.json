@@ -45,7 +45,24 @@
     {
       "operation": "tasklist",
       "timestamp": "2026-01-24T09:19:23.525585"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:19:45.474553",
+      "command": "df -h /media/sam/1TB",
+      "description": "Check disk space on project drive"
+    },
+    {
+      "operation": "read",
+      "timestamp": "2026-01-24T09:19:45.572491",
+      "file_path": "/media/sam/1TB/openbb_liquidity/src/liquidity/config.py"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:19:50.702163",
+      "command": "rm -rf .mypy_cache .pytest_cache .ruff_cache __pycache__ **/__pycache__ 2>/dev/null; find . -type d -name \"__pycache__\" -exec rm -rf {} + 2>/dev/null; find . -type f -name \"*.pyc\" -delete 2>/dev/null; df -h /media/sam/1TB",
+      "description": "Clean up Python cache files to free disk space"
     }
   ],
-  "last_updated": "2026-01-24T09:19:23.525633"
+  "last_updated": "2026-01-24T09:19:50.702186"
 }
