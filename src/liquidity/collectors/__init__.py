@@ -10,8 +10,19 @@ from liquidity.collectors.base import (
     CollectorError,
     CollectorFetchError,
 )
+from liquidity.collectors.bis import (
+    BIS_COLUMN_MAPPING,
+    BISCollector,
+    LBS_DIMENSION_CODES,
+)
 from liquidity.collectors.boc import SERIES_MAP as BOC_SERIES_MAP
 from liquidity.collectors.boc import BOCCollector
+from liquidity.collectors.credit import (
+    CP_SERIES,
+    LENDING_THRESHOLDS,
+    SLOOS_SERIES,
+    CreditCollector,
+)
 from liquidity.collectors.boe import BOECollector
 from liquidity.collectors.cofer import COFER_SERIES, COFERCollector
 from liquidity.collectors.commodities import (
@@ -113,6 +124,15 @@ __all__ = [
     # Stress Indicators (Phase 5)
     "StressIndicatorCollector",
     "STRESS_THRESHOLDS",
+    # Credit Market (Phase 6)
+    "CreditCollector",
+    "SLOOS_SERIES",
+    "CP_SERIES",
+    "LENDING_THRESHOLDS",
+    # BIS International Banking (Phase 6)
+    "BISCollector",
+    "LBS_DIMENSION_CODES",
+    "BIS_COLUMN_MAPPING",
     # TIC (Phase 5)
     "TICCollector",
     "TIC_URLS",

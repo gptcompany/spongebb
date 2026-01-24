@@ -73,6 +73,14 @@ SERIES_MAP: dict[str, str] = {
     # Phase 2: Global CB totals via FRED
     "ecb_total_assets": "ECBASSETSW",  # Weekly, millions EUR
     "boj_total_assets": "JPNASSETS",  # Monthly, 100 million JPY (not millions!)
+    # Phase 6: SLOOS - Senior Loan Officer Opinion Survey (quarterly)
+    # Net % of banks tightening standards (positive = tightening, negative = easing)
+    "sloos_ci_large": "DRTSCILM",  # C&I loans to large/middle firms (main indicator)
+    "sloos_ci_small": "DRTSCIS",  # C&I loans to small firms
+    "sloos_cre": "DRTSROM",  # Commercial real estate loans
+    "sloos_demand_ci": "DRSDCILM",  # Demand for C&I from large firms (complement)
+    # Phase 6: Commercial Paper rates (daily)
+    "cp_nonfinancial_3m": "DCPN3M",  # 90-day AA Nonfinancial CP
 }
 
 # Unit conversions for standardization
@@ -96,6 +104,13 @@ UNIT_MAP: dict[str, str] = {
     # Global CB totals (Phase 2)
     "ECBASSETSW": "millions_eur",
     "JPNASSETS": "100_millions_jpy",  # FRED unit is "100 Million Yen"
+    # SLOOS - Net % of banks tightening (range: -30% to +70%)
+    "DRTSCILM": "net_percent",  # C&I loans to large/middle firms
+    "DRTSCIS": "net_percent",  # C&I loans to small firms
+    "DRTSROM": "net_percent",  # Commercial real estate loans
+    "DRSDCILM": "net_percent",  # Demand for C&I from large firms
+    # Commercial Paper rates
+    "DCPN3M": "percent",  # 90-day AA Nonfinancial CP
 }
 
 

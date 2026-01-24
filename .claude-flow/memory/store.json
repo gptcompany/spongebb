@@ -25,6 +25,23 @@
       "storedAt": "2026-01-23T17:57:12.194Z",
       "accessCount": 0,
       "lastAccessed": "2026-01-23T17:57:12.194Z"
+    },
+    "gsd:openbb_liquidity:6": {
+      "key": "gsd:openbb_liquidity:6",
+      "value": {
+        "status": "in_progress",
+        "phase": 6,
+        "started_at": "2026-01-24T00:00:00Z",
+        "plans": [
+          "06-01",
+          "06-02",
+          "06-03"
+        ]
+      },
+      "metadata": {},
+      "storedAt": "2026-01-24T09:07:32.922Z",
+      "accessCount": 0,
+      "lastAccessed": "2026-01-24T09:07:32.922Z"
     }
   },
   "version": "3.0.0"

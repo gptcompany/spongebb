@@ -124,6 +124,19 @@ class Settings(BaseSettings):
         """Get QuestDB HTTP connection URI."""
         return f"http://{self.questdb_host}:{self.questdb_http_port}"
 
+    @property
+    def cache_dir(self) -> "Path":
+        """Get cache directory for bulk downloads.
+
+        Returns:
+            Path to cache directory, created if it doesn't exist.
+        """
+        from pathlib import Path
+
+        cache_path = Path.home() / ".cache" / "liquidity-monitor"
+        cache_path.mkdir(parents=True, exist_ok=True)
+        return cache_path
+
     def model_post_init(self, __context: Any) -> None:
         """Post-initialization validation."""
         # Load nested settings from environment if not provided
@@ -137,11 +150,10 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Get cached settings instance.
 
+    Uses lru_cache to ensure a single Settings instance is created
+    and reused across the application.
+
     Returns:
-        Settings: Application settings loaded from environment.
+        Settings instance with configuration values.
     """
     return Settings()
-
-
-# Global settings instance for convenience
-settings = get_settings()
