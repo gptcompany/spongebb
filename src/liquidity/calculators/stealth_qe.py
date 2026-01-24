@@ -525,12 +525,12 @@ class StealthQECalculator:
             f"FED:{latest['comp_fed']:.0f}%"
         )
 
-        # Convert timestamp, handling potential NaT
-        ts_pydatetime = latest_ts.to_pydatetime()
-        if pd.isna(ts_pydatetime):
-            ts_pydatetime = datetime.now(UTC)
-        else:
-            ts_pydatetime = ts_pydatetime.replace(tzinfo=UTC)
+        # Convert timestamp to UTC datetime
+        ts_pydatetime = (
+            datetime.now(UTC)
+            if pd.isna(latest_ts)
+            else latest_ts.to_pydatetime().replace(tzinfo=UTC)
+        )
 
         result = StealthQEResult(
             timestamp=ts_pydatetime,
@@ -680,14 +680,13 @@ class StealthQECalculator:
         """
         if score >= 70:
             return StealthQEStatus.VERY_ACTIVE
-        elif score >= 50:
+        if score >= 50:
             return StealthQEStatus.ACTIVE
-        elif score >= 30:
+        if score >= 30:
             return StealthQEStatus.MODERATE
-        elif score >= 10:
+        if score >= 10:
             return StealthQEStatus.LOW
-        else:
-            return StealthQEStatus.MINIMAL
+        return StealthQEStatus.MINIMAL
 
     def _empty_daily_dataframe(self) -> pd.DataFrame:
         """Return an empty DataFrame with daily score columns."""

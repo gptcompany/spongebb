@@ -224,7 +224,9 @@ class GlobalLiquidityCalculator:
         fed_df = results[0] if not isinstance(results[0], Exception) else pd.DataFrame()
         ecb_df = results[1] if not isinstance(results[1], Exception) else pd.DataFrame()
         boj_df = results[2] if not isinstance(results[2], Exception) else pd.DataFrame()
-        pboc_df = results[3] if not isinstance(results[3], Exception) else pd.DataFrame()
+        pboc_df = (
+            results[3] if not isinstance(results[3], Exception) else pd.DataFrame()
+        )
         fx_df = results[4] if not isinstance(results[4], Exception) else pd.DataFrame()
 
         # Log any errors
@@ -237,9 +239,15 @@ class GlobalLiquidityCalculator:
         boc_df = pd.DataFrame()
 
         if tier >= 2 and len(results) > 5:
-            boe_df = results[5] if not isinstance(results[5], Exception) else pd.DataFrame()
-            snb_df = results[6] if not isinstance(results[6], Exception) else pd.DataFrame()
-            boc_df = results[7] if not isinstance(results[7], Exception) else pd.DataFrame()
+            boe_df = (
+                results[5] if not isinstance(results[5], Exception) else pd.DataFrame()
+            )
+            snb_df = (
+                results[6] if not isinstance(results[6], Exception) else pd.DataFrame()
+            )
+            boc_df = (
+                results[7] if not isinstance(results[7], Exception) else pd.DataFrame()
+            )
 
             for i, r in enumerate(results[5:8]):
                 if isinstance(r, Exception):
@@ -288,12 +296,12 @@ class GlobalLiquidityCalculator:
         # Calculate coverage
         coverage = self._calculate_coverage(tier)
 
-        # Convert timestamp
-        ts_pydatetime = latest_ts.to_pydatetime()
-        if pd.isna(ts_pydatetime):
-            ts_pydatetime = datetime.now(UTC)
-        else:
-            ts_pydatetime = ts_pydatetime.replace(tzinfo=UTC)
+        # Convert timestamp to UTC datetime
+        ts_pydatetime = (
+            datetime.now(UTC)
+            if pd.isna(latest_ts)
+            else latest_ts.to_pydatetime().replace(tzinfo=UTC)
+        )
 
         result = GlobalLiquidityResult(
             timestamp=ts_pydatetime,
@@ -369,10 +377,7 @@ class GlobalLiquidityCalculator:
 
         rate = fx_rates[ticker]
 
-        if conversion == "multiply":
-            return value * rate
-        else:  # divide
-            return value / rate
+        return value * rate if conversion == "multiply" else value / rate
 
     def _aggregate_data(
         self,
@@ -469,10 +474,14 @@ class GlobalLiquidityCalculator:
 
         # Merge all dataframes on timestamp
         result = None
-        for _name, df in dfs.items():
+        for df in dfs.values():
             df = df.copy()
             df["timestamp"] = pd.to_datetime(df["timestamp"]).dt.normalize()
-            result = df if result is None else pd.merge(result, df, on="timestamp", how="outer")
+            result = (
+                df
+                if result is None
+                else pd.merge(result, df, on="timestamp", how="outer")
+            )
 
         if result is None or result.empty:
             return pd.DataFrame()
@@ -540,7 +549,9 @@ class GlobalLiquidityCalculator:
         else:
             # Try to find a value column
             value_cols = [
-                c for c in result.columns if c not in ["timestamp", "series_id", "source", "unit"]
+                c
+                for c in result.columns
+                if c not in ["timestamp", "series_id", "source", "unit"]
             ]
             if not value_cols:
                 return pd.DataFrame()
@@ -584,17 +595,21 @@ class GlobalLiquidityCalculator:
         if "PBOC_TOTAL_ASSETS" in series:
             # Total assets in 100 million CNY
             assets = result[result["series_id"] == "PBOC_TOTAL_ASSETS"].copy()
-            assets["local_billions"] = assets["value"] / CB_UNITS["pboc_assets"]["divisor"]
+            assets["local_billions"] = (
+                assets["value"] / CB_UNITS["pboc_assets"]["divisor"]
+            )
             assets["pboc_usd"] = assets["local_billions"].apply(
                 lambda x: self._convert_to_usd(x, "CNY", fx_rates)
             )
             return assets[["timestamp", "pboc_usd"]].dropna()
 
-        elif "CHINA_FOREIGN_RESERVES" in series:
+        if "CHINA_FOREIGN_RESERVES" in series:
             # Foreign reserves in millions USD - use as proxy
             # Note: This is a proxy, not actual balance sheet, but correlates well
             reserves = result[result["series_id"] == "CHINA_FOREIGN_RESERVES"].copy()
-            reserves["pboc_usd"] = reserves["value"] / CB_UNITS["pboc_reserves"]["divisor"]
+            reserves["pboc_usd"] = (
+                reserves["value"] / CB_UNITS["pboc_reserves"]["divisor"]
+            )
             # Scale up: reserves are ~3T, total assets ~47T -> multiply by ~15
             reserves["pboc_usd"] = reserves["pboc_usd"] * 15
             return reserves[["timestamp", "pboc_usd"]].dropna()

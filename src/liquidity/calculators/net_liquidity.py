@@ -283,12 +283,12 @@ class NetLiquidityCalculator:
         # Classify sentiment
         sentiment = self.get_sentiment(weekly_delta)
 
-        # Convert timestamp, handling potential NaT
-        ts_pydatetime = latest_ts.to_pydatetime()
-        if pd.isna(ts_pydatetime):
-            ts_pydatetime = datetime.now(UTC)
-        else:
-            ts_pydatetime = ts_pydatetime.replace(tzinfo=UTC)
+        # Convert timestamp to UTC datetime
+        ts_pydatetime = (
+            datetime.now(UTC)
+            if pd.isna(latest_ts)
+            else latest_ts.to_pydatetime().replace(tzinfo=UTC)
+        )
 
         result = NetLiquidityResult(
             timestamp=ts_pydatetime,
@@ -357,10 +357,9 @@ class NetLiquidityCalculator:
         """
         if weekly_delta > SENTIMENT_THRESHOLDS["bullish"]:
             return Sentiment.BULLISH
-        elif weekly_delta < SENTIMENT_THRESHOLDS["bearish"]:
+        if weekly_delta < SENTIMENT_THRESHOLDS["bearish"]:
             return Sentiment.BEARISH
-        else:
-            return Sentiment.NEUTRAL
+        return Sentiment.NEUTRAL
 
     def __repr__(self) -> str:
         """Return string representation of the calculator."""
