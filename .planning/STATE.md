@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary, Neutral, or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** Phase 5 — Capital Flows & Stress (research complete)
+**Current focus:** Phase 6 — Credit & BIS Data (research complete)
 
 ## Current Position
 
-Phase: 5 of 10 (Capital Flows & Stress) - RESEARCH COMPLETE
-Plan: 0 of 5 in current phase
+Phase: 6 of 10 (Credit & BIS Data) - RESEARCH COMPLETE
+Plan: 0 of 3 in current phase
 Status: Ready for planning
-Last activity: 2026-01-23 — Completed Phase 5 research (TIC, Fed custody, COFER, stress indicators)
+Last activity: 2026-01-24 — Completed Phase 6 research (credit markets, SLOOS, BIS LBS/CBS)
 
 Progress: ██████░░░░ 40%
 
@@ -79,16 +79,18 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-01-23
-Stopped at: Completed Phase 5 research
-Resume command: `/gsd:plan-phase 5`
+Last session: 2026-01-24
+Stopped at: Completed Phase 6 research
+Resume command: `/gsd:plan-phase 6`
 
 ### Resume Context
 - Phase 1 Foundation complete: uv project, collectors, QuestDB storage
 - Phase 2 Global CB complete: ECB, BoJ, PBoC, BoE, SNB, BoC collectors
 - Phase 3 complete: SOFR, €STR, SONIA, CORRA collectors + FX (DXY, major pairs)
 - Phase 4 complete: CommodityCollector (gold, silver, copper, oil), ETFFlowCollector (GLD, SLV, USO, CPER, DBA)
-- Phase 5 research complete: TIC data, Fed custody, IMF COFER, stress indicators (SOFR-OIS, cross-currency basis, repo)
+- Phase 5 complete: TIC, Fed custody, COFER, stress indicators, risk ETFs
+- Phase 6 research complete: Credit markets (HY OAS, SLOOS, CP rates), BIS international banking (LBS/CBS bulk CSV)
 - GitHub: https://github.com/gptprojectmanager/openbb_liquidity
-- Next: `/gsd:plan-phase 5` to create execution plans
+- Next: `/gsd:plan-phase 6` to create execution plans
+- Key insight: LIBOR/TED spread discontinued (Jan 2022) - use SOFR-based spreads
 - Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier), overnight rates (multi-tier)
