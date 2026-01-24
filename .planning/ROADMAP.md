@@ -118,10 +118,10 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 07-01: Net Liquidity Index (Hayes formula: WALCL - TGA - RRP)
-- [ ] 07-02: Global Liquidity Index (Fed + ECB + BoJ + PBoC in USD)
-- [ ] 07-03: Stealth QE Score (port from Apps Script)
-- [ ] 07-04: Double-entry validation and >85% coverage verification
+- [x] 07-01: Net Liquidity Index (Hayes formula: WALCL - TGA - RRP)
+- [x] 07-02: Global Liquidity Index (Fed + ECB + BoJ + PBoC in USD)
+- [x] 07-03: Stealth QE Score (port from Apps Script)
+- [x] 07-04: Double-entry validation and >85% coverage verification
 
 ### Phase 8: Analysis & Correlations
 **Goal**: Regime classification and cross-asset correlation engine
@@ -175,7 +175,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 4. Market Indicators | 2/2 | Complete | 2026-01-23 |
 | 5. Capital Flows & Stress | 5/5 | Complete | 2026-01-23 |
 | 6. Credit & BIS Data | 3/3 | Complete | 2026-01-24 |
-| 7. Liquidity Calculations | 0/4 | Not started | - |
+| 7. Liquidity Calculations | 4/4 | Complete | 2026-01-24 |
 | 8. Analysis & Correlations | 0/3 | Not started | - |
 | 9. Calendar & API | 0/4 | Not started | - |
 | 10. Visualization & Alerting | 0/5 | Not started | - |
