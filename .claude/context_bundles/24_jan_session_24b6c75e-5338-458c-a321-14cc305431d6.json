@@ -340,7 +340,13 @@
       "timestamp": "2026-01-24T09:29:49.575730",
       "command": "cd /media/sam/1TB && find . -type d -name \".coverage\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; find . -type f -name \".coverage\" 2>/dev/null | xargs rm -f 2>/dev/null; echo \"coverage data cleaned\"",
       "description": "Delete coverage data"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:30:22.005802",
+      "command": "cd /media/sam/1TB && find . -type d -name \"htmlcov\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"htmlcov directories cleaned\"",
+      "description": "Delete HTML coverage reports"
     }
   ],
-  "last_updated": "2026-01-24T09:29:49.575750"
+  "last_updated": "2026-01-24T09:30:22.005824"
 }
