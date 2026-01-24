@@ -361,16 +361,19 @@ class BISCollector(BaseCollector[pd.DataFrame]):
             return None
 
         try:
-            quarter_str = str(quarter_str).strip()
-            if "-Q" in quarter_str:
-                year, q = quarter_str.split("-Q")
-                year = int(year)
-                q = int(q)
+            quarter_str_clean = str(quarter_str).strip()
+            if "-Q" in quarter_str_clean:
+                year_str, q_str = quarter_str_clean.split("-Q")
+                year_int = int(year_str)
+                q_int = int(q_str)
                 # Return end of quarter
-                month = q * 3
-                return datetime(year, month, 1, tzinfo=UTC)
+                month = q_int * 3
+                return datetime(year_int, month, 1, tzinfo=UTC)
             # Fallback: try pandas parsing
-            return pd.to_datetime(quarter_str).replace(tzinfo=UTC)
+            parsed = pd.to_datetime(quarter_str_clean)
+            if pd.isna(parsed):
+                return None
+            return parsed.to_pydatetime().replace(tzinfo=UTC)
         except Exception:
             return None
 
