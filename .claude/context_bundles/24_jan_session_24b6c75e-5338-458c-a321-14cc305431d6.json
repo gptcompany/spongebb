@@ -412,7 +412,68 @@
       "timestamp": "2026-01-24T09:35:36.136550",
       "command": "cd /media/sam/1TB && find . -type d -name \".npm\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"local .npm cache cleaned\"",
       "description": "Delete local .npm cache directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:35:55.013448",
+      "command": "cd /media/sam/1TB && find . -name \"*.orig\" -type f 2>/dev/null | xargs rm -f 2>/dev/null; echo \"*.orig files cleaned\"",
+      "description": "Delete .orig backup files"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:36:10.618217",
+      "command": "cd /media/sam/1TB && find . -name \".DS_Store\" -type f 2>/dev/null | xargs rm -f 2>/dev/null; echo \".DS_Store files cleaned\"",
+      "description": "Delete .DS_Store files"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:36:29.872849",
+      "command": "cat /tmp/claude/-media-sam-1TB-openbb-liquidity/tasks/bae026d.output 2>/dev/null || echo \"Still running or no output\"",
+      "description": "Check git gc task output"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:36:30.345313",
+      "command": "df -h /media/sam/1TB | tail -1 | awk '{print \"Current usage: \"$5\" (\"$4\" available)\"}'",
+      "description": "Check current disk space"
+    },
+    {
+      "operation": "taskoutput",
+      "timestamp": "2026-01-24T09:36:35.187152",
+      "task_id": "bae026d",
+      "block": true,
+      "timeout": 120000
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:38:41.227080",
+      "command": "cd /media/sam/1TB && find . -type f -name \"*.bak\" 2>/dev/null | xargs rm -f 2>/dev/null; echo \"*.bak files cleaned\"",
+      "description": "Delete backup files"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:38:58.014765",
+      "command": "cd /media/sam/1TB && find . -type d -name \".cache\" -path \"*/venv*\" 2>/dev/null | head -20",
+      "description": "Find venv pip cache directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:39:14.961313",
+      "command": "df -h /media/sam/1TB | tail -1 | awk '{print \"Current usage: \"$5\" (\"$4\" available)\"}'",
+      "description": "Check current disk space"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:39:20.916283",
+      "command": "cd /media/sam/1TB && find . -type d -name \".uv\" 2>/dev/null | head -5",
+      "description": "Find .uv cache directories"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:39:36.621412",
+      "command": "cd /media/sam/1TB && find . -type d -name \"pip-wheel-metadata\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"pip-wheel-metadata cleaned\"",
+      "description": "Delete pip wheel metadata"
     }
   ],
-  "last_updated": "2026-01-24T09:35:36.136572"
+  "last_updated": "2026-01-24T09:39:36.621440"
 }
