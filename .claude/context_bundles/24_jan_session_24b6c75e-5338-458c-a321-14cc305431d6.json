@@ -400,7 +400,13 @@
       "timestamp": "2026-01-24T09:34:56.911702",
       "command": "cd /media/sam/1TB && find . -type d -name \".nox\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"nox cache cleaned\"",
       "description": "Delete nox cache"
+    },
+    {
+      "operation": "bash",
+      "timestamp": "2026-01-24T09:35:13.523894",
+      "command": "cd /media/sam/1TB && find . -type d -name \"node_modules/.cache\" 2>/dev/null | xargs -I {} rm -rf {} 2>/dev/null; echo \"node_modules cache cleaned\"",
+      "description": "Delete node_modules cache directories"
     }
   ],
-  "last_updated": "2026-01-24T09:34:56.911739"
+  "last_updated": "2026-01-24T09:35:13.523924"
 }
