@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary, Neutral, or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** Phase 6 — Credit & BIS Data (research complete)
+**Current focus:** Phase 8 — Analysis & Correlations (planned, ready for execution)
 
 ## Current Position
 
-Phase: 6 of 10 (Credit & BIS Data) - RESEARCH COMPLETE
+Phase: 8 of 10 (Analysis & Correlations) - PLANNED
 Plan: 0 of 3 in current phase
-Status: Ready for planning
-Last activity: 2026-01-24 — Completed Phase 6 research (credit markets, SLOOS, BIS LBS/CBS)
+Status: Ready for execution
+Last activity: 2026-01-26 — Planned Phase 8 (regime classifier, correlation engine, alert engine)
 
-Progress: ██████░░░░ 40%
+Progress: ███████░░░ 70%
 
 ## Performance Metrics
 
@@ -79,9 +79,9 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-01-24
-Stopped at: Completed Phase 6 research
-Resume command: `/gsd:plan-phase 6`
+Last session: 2026-01-26
+Stopped at: Planned Phase 8 (Analysis & Correlations)
+Resume command: `/gsd:execute-phase 8`
 
 ### Resume Context
 - Phase 1 Foundation complete: uv project, collectors, QuestDB storage
@@ -90,7 +90,11 @@ Resume command: `/gsd:plan-phase 6`
 - Phase 4 complete: CommodityCollector (gold, silver, copper, oil), ETFFlowCollector (GLD, SLV, USO, CPER, DBA)
 - Phase 5 complete: TIC, Fed custody, COFER, stress indicators, risk ETFs
 - Phase 6 research complete: Credit markets (HY OAS, SLOOS, CP rates), BIS international banking (LBS/CBS bulk CSV)
+- Phase 7 complete: Net Liquidity, Global Liquidity, Stealth QE Score calculators
+- Phase 8 planned: 3 plans (regime classifier, correlation engine, alert engine)
 - GitHub: https://github.com/gptprojectmanager/openbb_liquidity
-- Next: `/gsd:plan-phase 6` to create execution plans
-- Key insight: LIBOR/TED spread discontinued (Jan 2022) - use SOFR-based spreads
+- Next: `/gsd:execute-phase 8` to implement analyzers
+- Key insight: Binary regime (EXPANSION/CONTRACTION) with intensity 0-100, no "neutral" cop-out
+- Correlation: 30d + 90d fixed windows + EWMA (halflife=21) for faster regime shift detection
+- Alert threshold: 0.3 absolute change OR 2σ statistical deviation
 - Collectors with robust fallbacks: BoE (3-tier), PBoC (3-tier), SOFR (3-tier), overnight rates (multi-tier)
