@@ -7,7 +7,7 @@ cd /media/sam/1TB/openbb_liquidity
 
 LOG_FILE="/tmp/openbb_validation_$(date +%Y%m%d).log"
 DISCORD_WEBHOOK="${DISCORD_WEBHOOK_URL:-}"
-SOPS_KEY="$HOME/.config/sops/age/keys.txt"
+DOTENVX="/home/sam/.local/bin/dotenvx"
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
@@ -61,7 +61,7 @@ done
 # GitHub Secret - auto-fix from SOPS
 fix_and_retry "GitHub Secret" \
     "gh secret list 2>/dev/null | grep -q GH_PROJECT_PAT" \
-    "SOPS_AGE_KEY_FILE=$SOPS_KEY sops --input-type dotenv --output-type dotenv -d /media/sam/1TB/.env.enc 2>/dev/null | grep '^GH_PROJECT_PAT=' | cut -d= -f2 | gh secret set GH_PROJECT_PAT"
+    "$DOTENVX get GH_PROJECT_PAT -f /media/sam/1TB/.env 2>/dev/null | gh secret set GH_PROJECT_PAT"
 
 # GitHub Issues - auto-fix by triggering sync
 fix_and_retry "GitHub Issues >=35" \
@@ -103,9 +103,9 @@ cp ~/.claude/templates/<template> <destination>
         grep -q "❌.*Secret" "$LOG_FILE" && FIX_SUMMARY="$FIX_SUMMARY
 ### GitHub Secret Missing
 **Why:** GH_PROJECT_PAT is needed for GitHub Project API access.
-**How:** Re-set from SOPS:
+**How:** Re-set from dotenvx:
 \`\`\`bash
-sops -d /media/sam/1TB/.env.enc | grep GH_PROJECT_PAT | cut -d= -f2 | gh secret set GH_PROJECT_PAT
+dotenvx get GH_PROJECT_PAT -f /media/sam/1TB/.env | gh secret set GH_PROJECT_PAT
 \`\`\`
 "
         grep -q "❌.*Issues" "$LOG_FILE" && FIX_SUMMARY="$FIX_SUMMARY
