@@ -11,7 +11,7 @@ Primary API -> FRED fallback -> Cached baseline (guaranteed)
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import httpx
@@ -145,9 +145,9 @@ class ESTRCollector(BaseCollector[pd.DataFrame]):
             DataFrame with ESTR data from FRED.
         """
         if start_date is None:
-            start_date = datetime.now(timezone.utc) - timedelta(days=30)
+            start_date = datetime.now(UTC) - timedelta(days=30)
         if end_date is None:
-            end_date = datetime.now(timezone.utc)
+            end_date = datetime.now(UTC)
 
         def _sync_fetch() -> pd.DataFrame:
             # Set API key if available
@@ -280,9 +280,9 @@ class SONIACollector(BaseCollector[pd.DataFrame]):
             DataFrame with SONIA data from FRED.
         """
         if start_date is None:
-            start_date = datetime.now(timezone.utc) - timedelta(days=30)
+            start_date = datetime.now(UTC) - timedelta(days=30)
         if end_date is None:
-            end_date = datetime.now(timezone.utc)
+            end_date = datetime.now(UTC)
 
         def _sync_fetch() -> pd.DataFrame:
             # Set API key if available

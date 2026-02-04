@@ -16,7 +16,7 @@ For v1, we collect current snapshots. Full flow tracking requires persistence.
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pandas as pd
@@ -171,7 +171,7 @@ class ETFFlowCollector(BaseCollector[pd.DataFrame]):
 
                 results.append(
                     {
-                        "timestamp": datetime.now(timezone.utc),
+                        "timestamp": datetime.now(UTC),
                         "etf": etf,
                         "underlying": ETF_UNDERLYING.get(etf, "unknown"),
                         "shares_outstanding": info.get("sharesOutstanding"),
@@ -185,7 +185,7 @@ class ETFFlowCollector(BaseCollector[pd.DataFrame]):
                 logger.warning("Failed to fetch info for %s: %s", etf, e)
                 results.append(
                     {
-                        "timestamp": datetime.now(timezone.utc),
+                        "timestamp": datetime.now(UTC),
                         "etf": etf,
                         "underlying": ETF_UNDERLYING.get(etf, "unknown"),
                         "shares_outstanding": None,
@@ -226,7 +226,7 @@ class ETFFlowCollector(BaseCollector[pd.DataFrame]):
         if etfs is None:
             etfs = list(ETF_TICKERS.values())
         if end_date is None:
-            end_date = datetime.now(timezone.utc)
+            end_date = datetime.now(UTC)
 
         async def _fetch() -> pd.DataFrame:
             return await asyncio.to_thread(

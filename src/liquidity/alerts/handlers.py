@@ -9,10 +9,6 @@ Handles detection and alerting for:
 
 import logging
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
-from typing import Any
-
-import pandas as pd
 
 from liquidity.alerts.config import AlertConfig
 from liquidity.alerts.discord import DiscordClient

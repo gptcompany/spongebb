@@ -12,7 +12,7 @@ DXY fallback via FRED (DTWEXBGS - Broad Dollar Index) when Yahoo unavailable.
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pandas as pd
@@ -117,7 +117,7 @@ class FXCollector(BaseCollector[pd.DataFrame]):
         if symbols is None:
             symbols = list(FX_SYMBOLS.values())
         if end_date is None:
-            end_date = datetime.now(timezone.utc)
+            end_date = datetime.now(UTC)
 
         async def _fetch() -> pd.DataFrame:
             return await asyncio.to_thread(
@@ -279,7 +279,7 @@ class FXCollector(BaseCollector[pd.DataFrame]):
         from openbb import obb
 
         delta = PERIOD_MAP.get(period, timedelta(days=30))
-        end_date = datetime.now(timezone.utc)
+        end_date = datetime.now(UTC)
         start_date = end_date - delta
 
         def _fetch_fred() -> pd.DataFrame:

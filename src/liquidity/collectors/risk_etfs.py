@@ -18,7 +18,7 @@ The SPY/TLT flow ratio is a key risk appetite indicator.
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pandas as pd
@@ -178,7 +178,7 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
 
                 results.append(
                     {
-                        "timestamp": datetime.now(timezone.utc),
+                        "timestamp": datetime.now(UTC),
                         "etf": etf,
                         "risk_type": RISK_ETF_TYPE.get(etf, "unknown"),
                         "source": "yfinance",
@@ -191,7 +191,7 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
                 logger.warning("Failed to fetch info for %s: %s", etf, e)
                 results.append(
                     {
-                        "timestamp": datetime.now(timezone.utc),
+                        "timestamp": datetime.now(UTC),
                         "etf": etf,
                         "risk_type": RISK_ETF_TYPE.get(etf, "unknown"),
                         "source": "yfinance",
@@ -231,7 +231,7 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
         if etfs is None:
             etfs = list(RISK_ETF_TICKERS.values())
         if end_date is None:
-            end_date = datetime.now(timezone.utc)
+            end_date = datetime.now(UTC)
 
         async def _fetch() -> pd.DataFrame:
             return await asyncio.to_thread(

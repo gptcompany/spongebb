@@ -12,23 +12,25 @@ from liquidity.collectors.base import (
 )
 from liquidity.collectors.bis import (
     BIS_COLUMN_MAPPING,
-    BISCollector,
     LBS_DIMENSION_CODES,
+    BISCollector,
 )
 from liquidity.collectors.boc import SERIES_MAP as BOC_SERIES_MAP
 from liquidity.collectors.boc import BOCCollector
+from liquidity.collectors.boe import BOECollector
+from liquidity.collectors.cofer import COFER_SERIES, COFERCollector
+from liquidity.collectors.commodities import (
+    COMMODITY_SYMBOLS,
+    CommodityCollector,
+)
+from liquidity.collectors.commodities import (
+    UNIT_MAP as COMMODITY_UNIT_MAP,
+)
 from liquidity.collectors.credit import (
     CP_SERIES,
     LENDING_THRESHOLDS,
     SLOOS_SERIES,
     CreditCollector,
-)
-from liquidity.collectors.boe import BOECollector
-from liquidity.collectors.cofer import COFER_SERIES, COFERCollector
-from liquidity.collectors.commodities import (
-    COMMODITY_SYMBOLS,
-    UNIT_MAP as COMMODITY_UNIT_MAP,
-    CommodityCollector,
 )
 from liquidity.collectors.etf_flows import (
     ETF_TICKERS,
@@ -62,6 +64,8 @@ from liquidity.collectors.stress import (
 )
 from liquidity.collectors.tic import (
     COUNTRY_CODES as TIC_COUNTRY_CODES,
+)
+from liquidity.collectors.tic import (
     FRED_TIC_SERIES,
     TIC_URLS,
     TICCollector,

@@ -357,7 +357,7 @@ class COFERCollector(BaseCollector[pd.DataFrame]):
 
                 # Build DataFrame
                 records = []
-                for period_str, value in zip(periods, values):
+                for period_str, value in zip(periods, values, strict=False):
                     if value is not None and not pd.isna(value):
                         records.append(
                             {

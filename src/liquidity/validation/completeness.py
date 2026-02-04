@@ -6,7 +6,7 @@ and holidays.
 
 import logging
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 import pandas as pd
 
@@ -173,11 +173,7 @@ class CompletenessChecker:
         delta = (end - start).days
 
         # Friday to Monday (3 days) or Friday to Sunday (2 days)
-        if delta == 2 and start.weekday() == 4:  # Friday to Sunday
-            return True
-        if delta == 3 and start.weekday() == 4:  # Friday to Monday
-            return True
-        return False
+        return (delta == 2 or delta == 3) and start.weekday() == 4
 
     def _classify_gap(self, days: int) -> GapSeverity:
         """Classify gap severity based on duration.

@@ -274,7 +274,7 @@ def create_quality_detail_panel() -> dbc.Card:
 def create_quality_gauge(
     value: float,
     label: str,
-    gauge_id: str | None = None,
+    _gauge_id: str | None = None,
 ) -> go.Figure:
     """Create a gauge figure for a quality metric.
 

@@ -319,13 +319,17 @@ class TICCollector(BaseCollector[pd.DataFrame]):
                 # Data typically starts 2-3 lines after the date header
                 continue
             # Look for country data lines (start with country name)
-            if date_header_line and i > date_header_line:
-                if re.match(r"^\s*[A-Za-z]", line) and not any(
+            if (
+                date_header_line
+                and i > date_header_line
+                and re.match(r"^\s*[A-Za-z]", line)
+                and not any(
                     x in line.upper()
                     for x in ["MAJOR", "HOLDINGS", "TREASURY", "BILLION"]
-                ):
-                    data_start = i
-                    break
+                )
+            ):
+                data_start = i
+                break
 
         if data_start == 0:
             # Try alternative parsing - look for "Japan" as first country

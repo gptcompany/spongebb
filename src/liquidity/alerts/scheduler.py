@@ -5,8 +5,9 @@ Runs periodic alert checks at configurable intervals.
 
 import asyncio
 import logging
+from collections.abc import Callable, Coroutine
 from datetime import UTC, datetime
-from typing import Any, Callable, Coroutine
+from typing import Any
 
 from liquidity.alerts.config import AlertConfig
 from liquidity.alerts.handlers import AlertHandlers

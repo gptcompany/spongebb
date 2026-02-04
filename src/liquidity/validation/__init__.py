@@ -64,7 +64,7 @@ from .cross_validation import (
     TimeSeriesValidationResult,
     ValidationResult,
 )
-from .freshness import FreshnessCheckResult, FreshnessChecker
+from .freshness import FreshnessChecker, FreshnessCheckResult
 from .quality_score import QualityDetails, QualityReport, QualityScorer
 from .regression import RegressionSuiteResult, RegressionTester, RegressionTestResult
 

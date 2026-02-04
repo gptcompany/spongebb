@@ -4,11 +4,9 @@ Provides a thread-safe Discord webhook client that respects rate limits
 to prevent alert spam while ensuring important notifications are delivered.
 """
 
-import asyncio
 import logging
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import Any
 
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed, DiscordWebhook
 

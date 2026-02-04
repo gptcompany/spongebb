@@ -199,20 +199,19 @@ def create_repo_stress_gauge(value: float | None = None) -> go.Figure:
 
 def create_stress_status(
     regime: str = "GREEN",
-    sofr_ois: float | None = None,
-    repo_stress: float | None = None,
+    sofr_ois: float | None = None,  # noqa: ARG001
+    repo_stress: float | None = None,  # noqa: ARG001
 ) -> html.Div:
     """Create stress status indicator.
 
     Args:
         regime: Current stress regime ("GREEN", "YELLOW", "RED").
-        sofr_ois: SOFR-OIS spread value.
-        repo_stress: Repo stress ratio value.
+        sofr_ois: SOFR-OIS spread value (reserved for future use).
+        repo_stress: Repo stress ratio value (reserved for future use).
 
     Returns:
         Div with status badge and key values.
     """
-    color = STRESS_COLORS.get(regime, "#888888")
     badge_color = {
         "GREEN": "success",
         "YELLOW": "warning",

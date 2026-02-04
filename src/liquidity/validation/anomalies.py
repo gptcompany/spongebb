@@ -146,10 +146,7 @@ class AnomalyDetector:
             z_score = (current - mean) / std
 
             if abs(z_score) > z_threshold:
-                if z_score > 0:
-                    anomaly_type = AnomalyType.SPIKE
-                else:
-                    anomaly_type = AnomalyType.DROP
+                anomaly_type = AnomalyType.SPIKE if z_score > 0 else AnomalyType.DROP
 
                 # Handle date conversion
                 if isinstance(current_date, pd.Timestamp):
@@ -223,9 +220,6 @@ class AnomalyDetector:
             change_pct = abs(curr - prev) / abs(prev) * 100
 
             if change_pct > jump_threshold:
-                # Calculate direction-aware z-score analog
-                relative_change = (curr - prev) / abs(prev)
-
                 # Handle date conversion
                 if isinstance(current_date, pd.Timestamp):
                     anomaly_date = current_date.date()

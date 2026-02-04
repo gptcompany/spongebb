@@ -16,7 +16,7 @@ FRED fallback available for gold, WTI, and Brent.
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pandas as pd
@@ -140,7 +140,7 @@ class CommodityCollector(BaseCollector[pd.DataFrame]):
         if symbols is None:
             symbols = list(COMMODITY_SYMBOLS.values())
         if end_date is None:
-            end_date = datetime.now(timezone.utc)
+            end_date = datetime.now(UTC)
 
         async def _fetch() -> pd.DataFrame:
             return await asyncio.to_thread(

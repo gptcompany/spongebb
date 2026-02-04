@@ -63,7 +63,7 @@ class HTMLExporter:
 
         # Add each figure
         for name, fig in figures.items():
-            html_parts.append(f'<div class="chart-container">')
+            html_parts.append('<div class="chart-container">')
             html_parts.append(f'<h2>{name}</h2>')
             # Include plotlyjs only for first chart, reference for others
             include_js = "cdn" if name == list(figures.keys())[0] else False
@@ -89,7 +89,7 @@ class HTMLExporter:
         self,
         fig: go.Figure,
         name: str,
-        title: str | None = None,
+        _title: str | None = None,
     ) -> Path:
         """Export a single figure to a standalone HTML file.
 

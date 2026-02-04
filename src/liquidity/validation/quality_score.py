@@ -131,7 +131,7 @@ class QualityScorer:
             QualityReport with overall score and detailed breakdowns.
         """
         if value_columns is None:
-            value_columns = {source: "value" for source in data.keys()}
+            value_columns = dict.fromkeys(data.keys(), "value")
 
         critical_issues: list[str] = []
         details: dict[str, list] = {
@@ -255,7 +255,7 @@ class QualityScorer:
             Tuple of (QualityReport, QualityDetails).
         """
         if value_columns is None:
-            value_columns = {source: "value" for source in data.keys()}
+            value_columns = dict.fromkeys(data.keys(), "value")
 
         critical_issues: list[str] = []
 
