@@ -184,7 +184,7 @@ class TestStealthQEEndpoint:
 
             from liquidity.api.deps import get_stealth_qe_calculator
 
-            app.dependency_overrides[get_stealth_qe_calculator] = lambda: mock_calc
+            app.dependency_overrides[get_stealth_qe_calculator] = lambda mc=mock_calc: mc
 
             response = client.get("/metrics/stealth-qe")
             data = response.json()

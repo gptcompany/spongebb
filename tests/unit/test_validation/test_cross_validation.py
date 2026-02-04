@@ -6,7 +6,6 @@ import pytest
 from liquidity.validation.config import CrossValidationConfig, ValidationStatus
 from liquidity.validation.cross_validation import (
     CrossValidator,
-    TimeSeriesValidationResult,
     ValidationResult,
 )
 

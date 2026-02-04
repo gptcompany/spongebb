@@ -9,11 +9,11 @@ import os
 import pytest
 
 from liquidity.calculators import (
-    NetLiquidityCalculator,
     GlobalLiquidityCalculator,
-    StealthQECalculator,
     LiquidityValidator,
+    NetLiquidityCalculator,
     Sentiment,
+    StealthQECalculator,
 )
 
 

@@ -222,12 +222,6 @@ class TestCollectAll:
 
         # Verify all indicators are present
         series_present = set(df["series_id"].unique())
-        expected_series = {
-            "stress_sofr_ois",
-            "stress_sofr_width",
-            "stress_repo",
-            "stress_cp",
-        }
 
         # At least some indicators should be present
         assert len(series_present) > 0, "At least one indicator should be collected"

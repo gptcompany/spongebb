@@ -6,12 +6,12 @@ import pandas as pd
 import pytest
 
 from liquidity.validation import (
-    ValidationEngine,
-    QualityConfig,
-    QualityReport,
-    QualityDetails,
     FreshnessStatus,
+    QualityConfig,
+    QualityDetails,
+    QualityReport,
     RegressionSuiteResult,
+    ValidationEngine,
 )
 
 

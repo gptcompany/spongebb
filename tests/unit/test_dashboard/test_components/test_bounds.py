@@ -1,7 +1,6 @@
 """Tests for sanity bounds component."""
 
 import plotly.graph_objects as go
-import pytest
 
 
 class TestSanityBounds:

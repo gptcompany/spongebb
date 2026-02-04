@@ -1,6 +1,5 @@
 """Tests for regime classification panel components."""
 
-import pytest
 
 
 class TestRegimePanel:
@@ -58,7 +57,6 @@ class TestRegimeIndicator:
         """Test that EXPANSION uses green color (#00ff88)."""
         from liquidity.dashboard.components.regime import (
             REGIME_COLORS,
-            create_regime_indicator,
         )
 
         assert REGIME_COLORS["EXPANSION"] == "#00ff88"
@@ -67,7 +65,6 @@ class TestRegimeIndicator:
         """Test that CONTRACTION uses red color (#ff4444)."""
         from liquidity.dashboard.components.regime import (
             REGIME_COLORS,
-            create_regime_indicator,
         )
 
         assert REGIME_COLORS["CONTRACTION"] == "#ff4444"

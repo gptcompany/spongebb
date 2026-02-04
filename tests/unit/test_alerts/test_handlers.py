@@ -1,12 +1,11 @@
 """Tests for alert handlers."""
 
-from datetime import UTC, datetime
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
 from liquidity.alerts.config import AlertConfig, RateLimits, StressThresholds
-from liquidity.alerts.discord import DiscordClient, DiscordConfig
+from liquidity.alerts.discord import DiscordClient
 from liquidity.alerts.formatter import LiquidityMetrics
 from liquidity.alerts.handlers import AlertHandlers, AlertState
 
@@ -68,7 +67,7 @@ class TestAlertHandlersInit:
         self, mock_discord_client: MagicMock, alert_config: AlertConfig
     ) -> None:
         """Test that rate limits are set on initialization."""
-        handlers = AlertHandlers(mock_discord_client, alert_config)
+        AlertHandlers(mock_discord_client, alert_config)
 
         mock_discord_client.set_rate_limit.assert_any_call("regime_change", 60)
         mock_discord_client.set_rate_limit.assert_any_call("stress_breach", 300)

@@ -3,8 +3,6 @@
 import os
 from unittest.mock import patch
 
-import pytest
-
 from liquidity.alerts.config import (
     AlertConfig,
     RateLimits,

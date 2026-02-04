@@ -1,13 +1,12 @@
 """Unit tests for anomaly detection (QA-04)."""
 
-from datetime import date, datetime
+from datetime import date
 
 import numpy as np
 import pandas as pd
 import pytest
 
 from liquidity.validation.anomalies import (
-    Anomaly,
     AnomalyDetector,
     AnomalyReport,
     AnomalyType,

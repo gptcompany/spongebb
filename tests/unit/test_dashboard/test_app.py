@@ -1,6 +1,5 @@
 """Tests for dashboard app setup."""
 
-import pytest
 
 
 class TestDashAppSetup:

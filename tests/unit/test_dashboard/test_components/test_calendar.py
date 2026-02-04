@@ -3,7 +3,6 @@
 from datetime import date, timedelta
 
 import plotly.graph_objects as go
-import pytest
 
 
 class TestCalendarStrip:
@@ -92,8 +91,8 @@ class TestCalendarEvents:
 
     def test_event_impact_colors(self) -> None:
         """Test that events have correct impact-based colors."""
-        from liquidity.dashboard.components.calendar import IMPACT_COLORS
         from liquidity.calendar.base import ImpactLevel
+        from liquidity.dashboard.components.calendar import IMPACT_COLORS
 
         # HIGH should be danger
         assert IMPACT_COLORS[ImpactLevel.HIGH] == "danger"

@@ -1,6 +1,5 @@
 """Tests for dashboard callbacks."""
 
-import pytest
 
 
 class TestMockDataFunctions:

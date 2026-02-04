@@ -3,7 +3,7 @@
 Run with: uv run pytest tests/unit/test_calendar/test_holidays.py -v
 """
 
-from datetime import date, timedelta
+from datetime import date
 
 import pytest
 

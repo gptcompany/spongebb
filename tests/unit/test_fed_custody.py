@@ -31,7 +31,7 @@ class TestCustodySeries:
 
     def test_unit_map_complete(self) -> None:
         """Test that all FRED series have unit mappings."""
-        for internal_name, fred_id in CUSTODY_SERIES.items():
+        for _internal_name, fred_id in CUSTODY_SERIES.items():
             assert fred_id in CUSTODY_UNIT_MAP, f"Missing unit for {fred_id}"
             assert CUSTODY_UNIT_MAP[fred_id] == "millions_usd"
 

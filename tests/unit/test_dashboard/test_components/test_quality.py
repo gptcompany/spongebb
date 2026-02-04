@@ -2,8 +2,6 @@
 
 from datetime import UTC, datetime, timedelta
 
-import pytest
-
 
 class TestFormatRelativeTime:
     """Test relative time formatting."""
@@ -24,7 +22,7 @@ class TestFormatRelativeTime:
         ts = datetime.now(UTC) - timedelta(minutes=15)
         result = format_relative_time(ts)
 
-        assert "15 min ago" == result
+        assert result == "15 min ago"
 
     def test_hours_ago(self) -> None:
         """Test formatting for timestamps hours ago."""
@@ -33,7 +31,7 @@ class TestFormatRelativeTime:
         ts = datetime.now(UTC) - timedelta(hours=5)
         result = format_relative_time(ts)
 
-        assert "5h ago" == result
+        assert result == "5h ago"
 
     def test_days_ago(self) -> None:
         """Test formatting for timestamps days ago."""
@@ -42,7 +40,7 @@ class TestFormatRelativeTime:
         ts = datetime.now(UTC) - timedelta(days=3)
         result = format_relative_time(ts)
 
-        assert "3d ago" == result
+        assert result == "3d ago"
 
     def test_naive_timestamp_handled(self) -> None:
         """Test that naive (no timezone) timestamps are handled."""

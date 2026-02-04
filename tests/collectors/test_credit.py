@@ -494,12 +494,12 @@ class TestThresholdsExport:
     def test_sloos_series_structure(self) -> None:
         """Test SLOOS_SERIES contains expected series."""
         expected = ["DRTSCILM", "DRTSCIS", "DRTSROM", "DRSDCILM"]
-        assert SLOOS_SERIES == expected
+        assert expected == SLOOS_SERIES
 
     def test_cp_series_structure(self) -> None:
         """Test CP_SERIES contains expected series."""
         expected = ["DCPF3M", "DCPN3M"]
-        assert CP_SERIES == expected
+        assert expected == CP_SERIES
 
 
 class TestIntegrationWithRealAPI:

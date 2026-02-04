@@ -7,8 +7,8 @@ import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
 
-from liquidity.api.server import app
 from liquidity.analyzers.correlation_engine import CorrelationMatrix, CorrelationResult
+from liquidity.api.server import app
 
 
 class TestCorrelationsEndpoint:

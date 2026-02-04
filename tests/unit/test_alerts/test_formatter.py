@@ -1,6 +1,5 @@
 """Tests for alert formatters."""
 
-import pytest
 from discord_webhook import DiscordEmbed
 
 from liquidity.alerts.formatter import AlertColors, AlertFormatter, LiquidityMetrics

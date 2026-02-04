@@ -108,6 +108,9 @@ ignore = [
     "C408",   # unnecessary dict call (Plotly uses dict() extensively)
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ARG002"]  # Unused method argument - pytest fixtures as side effects
+
 [tool.ruff.lint.isort]
 known-first-party = ["liquidity"]
 

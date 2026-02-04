@@ -1,11 +1,9 @@
 """Tests for HTML export functionality."""
 
 import tempfile
-from datetime import UTC, datetime
 from pathlib import Path
 
 import plotly.graph_objects as go
-import pytest
 
 
 class TestHTMLExporter:

@@ -665,18 +665,18 @@ class TestGetCurrent:
             }
         )
 
-        with patch.object(calc, "calculate_daily", new_callable=AsyncMock) as mock_d:
-            with patch.object(
-                calc, "calculate_weekly", new_callable=AsyncMock
-            ) as mock_w:
-                mock_d.return_value = mock_daily
-                mock_w.return_value = mock_weekly
-                result = await calc.get_current()
+        with (
+            patch.object(calc, "calculate_daily", new_callable=AsyncMock) as mock_d,
+            patch.object(calc, "calculate_weekly", new_callable=AsyncMock) as mock_w,
+        ):
+            mock_d.return_value = mock_daily
+            mock_w.return_value = mock_weekly
+            result = await calc.get_current()
 
-                assert isinstance(result, StealthQEResult)
-                assert result.score_daily == 50.0
-                # Weekly score should be included on Wednesday
-                assert result.score_weekly == 55.0
+            assert isinstance(result, StealthQEResult)
+            assert result.score_daily == 50.0
+            # Weekly score should be included on Wednesday
+            assert result.score_weekly == 55.0
 
 
 class TestCalculateWeeklyEdgeCases:

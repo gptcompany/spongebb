@@ -3,7 +3,7 @@
 Run with: uv run pytest tests/unit/test_calendar/test_central_banks.py -v
 """
 
-from datetime import date, timedelta
+from datetime import date
 
 import pytest
 
@@ -11,9 +11,9 @@ from liquidity.calendar.base import EventType, ImpactLevel
 from liquidity.calendar.central_banks import (
     BOE_MEETINGS_2026,
     BOJ_MEETINGS_2026,
-    CBMeetingCalendar,
     ECB_MEETINGS_2026,
     FOMC_MEETINGS_2026,
+    CBMeetingCalendar,
 )
 
 

@@ -22,10 +22,9 @@ import pytest
 
 from liquidity.collectors.bis import (
     BIS_COLUMN_MAPPING,
-    BISCollector,
     LBS_DIMENSION_CODES,
+    BISCollector,
 )
-
 
 # Sample BIS LBS CSV data (simplified structure)
 SAMPLE_LBS_CSV = """FREQ,L_MEASURE,L_POSITION,L_INSTR,L_CURR_TYPE,L_PARENT_CTY,L_REP_CTY,L_CP_COUNTRY,L_CP_SECTOR,TIME_PERIOD,OBS_VALUE

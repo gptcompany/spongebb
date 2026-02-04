@@ -1,15 +1,14 @@
 """Tests for AlertManager high-level interface."""
 
 import os
-from unittest.mock import MagicMock, patch, AsyncMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from liquidity.alerts import (
-    AlertManager,
     AlertConfig,
+    AlertManager,
     DiscordClient,
-    DiscordConfig,
     LiquidityMetrics,
 )
 

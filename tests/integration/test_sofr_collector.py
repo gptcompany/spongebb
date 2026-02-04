@@ -134,27 +134,26 @@ class TestSOFRCollectorFallback:
             sofr_collector,
             "_collect_via_nyfed",
             side_effect=Exception("Simulated NY Fed failure"),
+        ), patch.object(
+            sofr_collector,
+            "_collect_via_fred",
+            side_effect=Exception("Simulated FRED failure"),
         ):
-            with patch.object(
-                sofr_collector,
-                "_collect_via_fred",
-                side_effect=Exception("Simulated FRED failure"),
-            ):
-                df = await sofr_collector.collect()
+            df = await sofr_collector.collect()
 
-                # Should return cached baseline
-                assert not df.empty, (
-                    "DataFrame should not be empty with cached baseline"
-                )
-                assert len(df) == 1, "Cached baseline should have exactly 1 row"
-                assert df["source"].iloc[0] == "cached_baseline"
-                assert df["series_id"].iloc[0] == "SOFR"
-                assert df["unit"].iloc[0] == "percent"
+            # Should return cached baseline
+            assert not df.empty, (
+                "DataFrame should not be empty with cached baseline"
+            )
+            assert len(df) == 1, "Cached baseline should have exactly 1 row"
+            assert df["source"].iloc[0] == "cached_baseline"
+            assert df["series_id"].iloc[0] == "SOFR"
+            assert df["unit"].iloc[0] == "percent"
 
-                # Verify baseline value matches class constant
-                assert df["value"].iloc[0] == SOFRCollector.BASELINE_VALUE
-                assert "stale" in df.columns
-                assert df["stale"].iloc[0] == True  # noqa: E712
+            # Verify baseline value matches class constant
+            assert df["value"].iloc[0] == SOFRCollector.BASELINE_VALUE
+            assert "stale" in df.columns
+            assert df["stale"].iloc[0] == True  # noqa: E712
 
     @pytest.mark.asyncio
     async def test_sofr_collector_always_returns_data(
@@ -166,17 +165,16 @@ class TestSOFRCollectorFallback:
             sofr_collector,
             "_collect_via_nyfed",
             side_effect=Exception("Network error"),
+        ), patch.object(
+            sofr_collector,
+            "_collect_via_fred",
+            side_effect=Exception("API key invalid"),
         ):
-            with patch.object(
-                sofr_collector,
-                "_collect_via_fred",
-                side_effect=Exception("API key invalid"),
-            ):
-                df = await sofr_collector.collect()
+            df = await sofr_collector.collect()
 
-                # Should always return non-empty DataFrame
-                assert not df.empty
-                assert df["source"].iloc[0] == "cached_baseline"
+            # Should always return non-empty DataFrame
+            assert not df.empty
+            assert df["source"].iloc[0] == "cached_baseline"
 
 
 class TestSOFRCollectorRegistry:

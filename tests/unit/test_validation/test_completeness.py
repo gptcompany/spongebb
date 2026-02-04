@@ -1,16 +1,13 @@
 """Unit tests for completeness validation (QA-02)."""
 
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 import pandas as pd
 import pytest
 
 from liquidity.validation.completeness import (
     CompletenessChecker,
-    CompletenessReport,
-    GapInfo,
     GapSeverity,
-    MissingValueReport,
 )
 from liquidity.validation.config import CompletenessConfig
 

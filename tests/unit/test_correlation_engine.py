@@ -4,7 +4,7 @@ Tests use synthetic data (np.sin(), np.random.randn(), identical series)
 to verify correlation calculations without external dependencies.
 """
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 import numpy as np
 import pandas as pd

@@ -330,27 +330,23 @@ class TestCalculateAsync:
         # Mock all the async calls
         with patch.object(
             calc._net_liq_calc, "calculate", new_callable=AsyncMock
-        ) as mock_net:
-            with patch.object(
-                calc._fred, "collect_ecb_assets", new_callable=AsyncMock
-            ) as mock_ecb:
-                with patch.object(
-                    calc._fred, "collect_boj_assets", new_callable=AsyncMock
-                ) as mock_boj:
-                    with patch.object(
-                        calc._pboc, "collect", new_callable=AsyncMock
-                    ) as mock_pboc:
-                        with patch.object(
-                            calc, "_get_fx_rates", new_callable=AsyncMock
-                        ) as mock_fx:
-                            mock_net.return_value = pd.DataFrame()
-                            mock_ecb.return_value = pd.DataFrame()
-                            mock_boj.return_value = pd.DataFrame()
-                            mock_pboc.return_value = pd.DataFrame()
-                            mock_fx.return_value = pd.DataFrame()
+        ) as mock_net, patch.object(
+            calc._fred, "collect_ecb_assets", new_callable=AsyncMock
+        ) as mock_ecb, patch.object(
+            calc._fred, "collect_boj_assets", new_callable=AsyncMock
+        ) as mock_boj, patch.object(
+            calc._pboc, "collect", new_callable=AsyncMock
+        ) as mock_pboc, patch.object(
+            calc, "_get_fx_rates", new_callable=AsyncMock
+        ) as mock_fx:
+            mock_net.return_value = pd.DataFrame()
+            mock_ecb.return_value = pd.DataFrame()
+            mock_boj.return_value = pd.DataFrame()
+            mock_pboc.return_value = pd.DataFrame()
+            mock_fx.return_value = pd.DataFrame()
 
-                            result = await calc.calculate()
-                            assert result.empty
+            result = await calc.calculate()
+            assert result.empty
 
     @pytest.mark.asyncio
     async def test_calculate_with_data(self):
@@ -422,31 +418,27 @@ class TestCalculateAsync:
 
         with patch.object(
             calc._net_liq_calc, "calculate", new_callable=AsyncMock
-        ) as mock_net:
-            with patch.object(
-                calc._fred, "collect_ecb_assets", new_callable=AsyncMock
-            ) as mock_ecb:
-                with patch.object(
-                    calc._fred, "collect_boj_assets", new_callable=AsyncMock
-                ) as mock_boj:
-                    with patch.object(
-                        calc._pboc, "collect", new_callable=AsyncMock
-                    ) as mock_pboc:
-                        with patch.object(
-                            calc, "_get_fx_rates", new_callable=AsyncMock
-                        ) as mock_fx:
-                            mock_net.return_value = fed_df
-                            mock_ecb.return_value = ecb_df
-                            mock_boj.return_value = boj_df
-                            mock_pboc.return_value = pboc_df
-                            mock_fx.return_value = fx_df
+        ) as mock_net, patch.object(
+            calc._fred, "collect_ecb_assets", new_callable=AsyncMock
+        ) as mock_ecb, patch.object(
+            calc._fred, "collect_boj_assets", new_callable=AsyncMock
+        ) as mock_boj, patch.object(
+            calc._pboc, "collect", new_callable=AsyncMock
+        ) as mock_pboc, patch.object(
+            calc, "_get_fx_rates", new_callable=AsyncMock
+        ) as mock_fx:
+            mock_net.return_value = fed_df
+            mock_ecb.return_value = ecb_df
+            mock_boj.return_value = boj_df
+            mock_pboc.return_value = pboc_df
+            mock_fx.return_value = fx_df
 
-                            result = await calc.calculate()
+            result = await calc.calculate()
 
-                            # Check structure
-                            assert not result.empty
-                            assert "global_liquidity" in result.columns
-                            assert "fed_usd" in result.columns
+            # Check structure
+            assert not result.empty
+            assert "global_liquidity" in result.columns
+            assert "fed_usd" in result.columns
 
 
 class TestGetCurrentAsync:
@@ -584,45 +576,38 @@ class TestCalculateTier2:
 
         with patch.object(
             calc._net_liq_calc, "calculate", new_callable=AsyncMock
-        ) as mock_net:
-            with patch.object(
-                calc._fred, "collect_ecb_assets", new_callable=AsyncMock
-            ) as mock_ecb:
-                with patch.object(
-                    calc._fred, "collect_boj_assets", new_callable=AsyncMock
-                ) as mock_boj:
-                    with patch.object(
-                        calc._pboc, "collect", new_callable=AsyncMock
-                    ) as mock_pboc:
-                        with patch.object(
-                            calc, "_get_fx_rates", new_callable=AsyncMock
-                        ) as mock_fx:
-                            with patch.object(
-                                calc._boe, "collect", new_callable=AsyncMock
-                            ) as mock_boe:
-                                with patch.object(
-                                    calc._snb, "collect", new_callable=AsyncMock
-                                ) as mock_snb:
-                                    with patch.object(
-                                        calc._boc,
-                                        "collect_total_assets",
-                                        new_callable=AsyncMock,
-                                    ) as mock_boc:
-                                        mock_net.return_value = fed_df
-                                        mock_ecb.return_value = pd.DataFrame()
-                                        mock_boj.return_value = pd.DataFrame()
-                                        mock_pboc.return_value = pd.DataFrame()
-                                        mock_fx.return_value = fx_df
-                                        mock_boe.return_value = boe_df
-                                        mock_snb.return_value = pd.DataFrame()
-                                        mock_boc.return_value = pd.DataFrame()
+        ) as mock_net, patch.object(
+            calc._fred, "collect_ecb_assets", new_callable=AsyncMock
+        ) as mock_ecb, patch.object(
+            calc._fred, "collect_boj_assets", new_callable=AsyncMock
+        ) as mock_boj, patch.object(
+            calc._pboc, "collect", new_callable=AsyncMock
+        ) as mock_pboc, patch.object(
+            calc, "_get_fx_rates", new_callable=AsyncMock
+        ) as mock_fx, patch.object(
+            calc._boe, "collect", new_callable=AsyncMock
+        ) as mock_boe, patch.object(
+            calc._snb, "collect", new_callable=AsyncMock
+        ) as mock_snb, patch.object(
+            calc._boc,
+            "collect_total_assets",
+            new_callable=AsyncMock,
+        ) as mock_boc:
+            mock_net.return_value = fed_df
+            mock_ecb.return_value = pd.DataFrame()
+            mock_boj.return_value = pd.DataFrame()
+            mock_pboc.return_value = pd.DataFrame()
+            mock_fx.return_value = fx_df
+            mock_boe.return_value = boe_df
+            mock_snb.return_value = pd.DataFrame()
+            mock_boc.return_value = pd.DataFrame()
 
-                                        result = await calc.calculate(tier=2)
+            await calc.calculate(tier=2)
 
-                                        # Should have called Tier 2 collectors
-                                        mock_boe.assert_called_once()
-                                        mock_snb.assert_called_once()
-                                        mock_boc.assert_called_once()
+            # Should have called Tier 2 collectors
+            mock_boe.assert_called_once()
+            mock_snb.assert_called_once()
+            mock_boc.assert_called_once()
 
 
 class TestCalculateWithExceptions:
@@ -635,29 +620,25 @@ class TestCalculateWithExceptions:
 
         with patch.object(
             calc._net_liq_calc, "calculate", new_callable=AsyncMock
-        ) as mock_net:
-            with patch.object(
-                calc._fred, "collect_ecb_assets", new_callable=AsyncMock
-            ) as mock_ecb:
-                with patch.object(
-                    calc._fred, "collect_boj_assets", new_callable=AsyncMock
-                ) as mock_boj:
-                    with patch.object(
-                        calc._pboc, "collect", new_callable=AsyncMock
-                    ) as mock_pboc:
-                        with patch.object(
-                            calc, "_get_fx_rates", new_callable=AsyncMock
-                        ) as mock_fx:
-                            # Simulate exception from one collector
-                            mock_net.return_value = Exception("Network error")
-                            mock_ecb.return_value = pd.DataFrame()
-                            mock_boj.return_value = pd.DataFrame()
-                            mock_pboc.return_value = pd.DataFrame()
-                            mock_fx.return_value = pd.DataFrame()
+        ) as mock_net, patch.object(
+            calc._fred, "collect_ecb_assets", new_callable=AsyncMock
+        ) as mock_ecb, patch.object(
+            calc._fred, "collect_boj_assets", new_callable=AsyncMock
+        ) as mock_boj, patch.object(
+            calc._pboc, "collect", new_callable=AsyncMock
+        ) as mock_pboc, patch.object(
+            calc, "_get_fx_rates", new_callable=AsyncMock
+        ) as mock_fx:
+            # Simulate exception from one collector
+            mock_net.return_value = Exception("Network error")
+            mock_ecb.return_value = pd.DataFrame()
+            mock_boj.return_value = pd.DataFrame()
+            mock_pboc.return_value = pd.DataFrame()
+            mock_fx.return_value = pd.DataFrame()
 
-                            # Should handle exception gracefully
-                            result = await calc.calculate()
-                            assert result.empty or isinstance(result, pd.DataFrame)
+            # Should handle exception gracefully
+            result = await calc.calculate()
+            assert result.empty or isinstance(result, pd.DataFrame)
 
 
 class TestAggregateData:

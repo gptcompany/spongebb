@@ -1,14 +1,14 @@
 """Unit tests for liquidity router endpoints."""
 
 from datetime import UTC, datetime
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock
 
 import pytest
 from fastapi.testclient import TestClient
 
 from liquidity.api.server import app
-from liquidity.calculators.net_liquidity import NetLiquidityResult, Sentiment
 from liquidity.calculators.global_liquidity import GlobalLiquidityResult
+from liquidity.calculators.net_liquidity import NetLiquidityResult, Sentiment
 
 
 class TestNetLiquidityEndpoint:

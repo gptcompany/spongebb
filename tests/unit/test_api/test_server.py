@@ -1,6 +1,5 @@
 """Unit tests for API server and health endpoint."""
 
-from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -112,7 +111,7 @@ class TestOpenAPIDocs:
         """Test OpenAPI schema has endpoints with correct tags."""
         response = client.get("/openapi.json")
         data = response.json()
-        paths_str = str(data["paths"])
+        str(data["paths"])
 
         # Endpoints should exist under their respective prefixes
         assert "/liquidity/net" in data["paths"]

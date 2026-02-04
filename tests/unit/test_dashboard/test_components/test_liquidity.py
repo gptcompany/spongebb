@@ -1,9 +1,8 @@
 """Tests for liquidity chart components."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import pandas as pd
-import pytest
 
 
 class TestNetLiquidityChart:
@@ -150,7 +149,6 @@ class TestLiquidityPanel:
 
     def test_panel_contains_two_cards(self) -> None:
         """Test that panel has two chart cards."""
-        import dash_bootstrap_components as dbc
 
         from liquidity.dashboard.components.liquidity import create_liquidity_panel
 

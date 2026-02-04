@@ -6,7 +6,6 @@ from liquidity.validation.config import RegressionConfig
 from liquidity.validation.regression import (
     RegressionSuiteResult,
     RegressionTester,
-    RegressionTestResult,
 )
 
 

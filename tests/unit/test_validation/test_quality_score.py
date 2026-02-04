@@ -5,7 +5,7 @@ from datetime import UTC, datetime, timedelta
 import pandas as pd
 import pytest
 
-from liquidity.validation.config import FreshnessStatus, QualityConfig
+from liquidity.validation.config import QualityConfig
 from liquidity.validation.quality_score import (
     QualityDetails,
     QualityReport,

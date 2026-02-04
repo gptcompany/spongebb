@@ -1,7 +1,8 @@
 """Tests for alert scheduler."""
 
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
+import contextlib
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -182,10 +183,8 @@ class TestAlertSchedulerStart:
 
         # Task should complete
         task.cancel()
-        try:
+        with contextlib.suppress(asyncio.CancelledError):
             await task
-        except asyncio.CancelledError:
-            pass
 
         assert scheduler.is_running is False
 

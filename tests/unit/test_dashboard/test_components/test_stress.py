@@ -1,6 +1,5 @@
 """Tests for stress indicators panel component."""
 
-import pytest
 
 
 class TestStressPanel:

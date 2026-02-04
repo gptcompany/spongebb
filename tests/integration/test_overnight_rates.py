@@ -21,7 +21,6 @@ from liquidity.collectors.overnight_rates import (
     calculate_rate_differentials,
 )
 
-
 # Marker for tests that require FRED API key
 requires_fred_api = pytest.mark.skipif(
     not os.environ.get("LIQUIDITY_FRED_API_KEY"),

@@ -8,8 +8,8 @@ import os
 
 import pytest
 
-from liquidity.collectors.credit import CreditCollector
 from liquidity.collectors.bis import BISCollector
+from liquidity.collectors.credit import CreditCollector
 
 
 @pytest.mark.integration

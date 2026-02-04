@@ -1,6 +1,5 @@
 """Tests for dashboard layout composition."""
 
-import pytest
 
 
 class TestLayoutCreation:
@@ -19,7 +18,6 @@ class TestLayoutCreation:
 
     def test_layout_contains_refresh_interval(self) -> None:
         """Test that layout includes auto-refresh interval component."""
-        from dash import dcc
 
         from liquidity.dashboard.layout import create_layout
 

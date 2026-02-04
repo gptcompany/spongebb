@@ -5,7 +5,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 
 from liquidity.validation.config import FreshnessConfig, FreshnessStatus
-from liquidity.validation.freshness import FreshnessCheckResult, FreshnessChecker
+from liquidity.validation.freshness import FreshnessChecker
 
 
 class TestFreshnessChecker:

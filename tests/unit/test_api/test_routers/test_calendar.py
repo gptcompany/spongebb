@@ -104,7 +104,7 @@ class TestCalendarEventsEndpoint:
 
     def test_get_calendar_events_filter_by_type(self, client, mock_events):
         """Test calendar events filtered by event type."""
-        fed_events = [e for e in mock_events if e.event_type == EventType.FED_MEETING]
+        [e for e in mock_events if e.event_type == EventType.FED_MEETING]
 
         mock_registry = MagicMock()
         mock_registry.get_events.return_value = mock_events

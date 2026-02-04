@@ -2,7 +2,6 @@
 
 import numpy as np
 import pandas as pd
-import pytest
 
 
 class TestCorrelationPanel:
@@ -67,7 +66,7 @@ class TestCorrelationHeatmap:
             create_correlation_heatmap,
         )
 
-        fig = create_correlation_heatmap(None)
+        create_correlation_heatmap(None)
 
         # Check that axes have 7 labels
         assert len(DEFAULT_ASSETS) == 7
