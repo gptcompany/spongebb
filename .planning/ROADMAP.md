@@ -22,10 +22,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Market Indicators** - Commodities (gold, silver, copper, oil) + ETF flows
 - [x] **Phase 5: Capital Flows & Stress** - TIC data, ETF flows, stress indicators
 - [x] **Phase 6: Credit & BIS Data** - Credit markets, BIS Eurodollar/international banking
-- [ ] **Phase 7: Liquidity Calculations** - Net Liquidity, Global Liquidity, Stealth QE Score
-- [ ] **Phase 8: Analysis & Correlations** - Regime classifier, correlation engine
-- [ ] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
-- [ ] **Phase 10: Visualization & Alerting** - Plotly dashboards, Discord alerts, QA validation
+- [x] **Phase 7: Liquidity Calculations** - Net Liquidity, Global Liquidity, Stealth QE Score
+- [x] **Phase 8: Analysis & Correlations** - Regime classifier, correlation engine
+- [x] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
+- [x] **Phase 10: Visualization & Alerting** - Plotly dashboards, Discord alerts, QA validation
 
 ## Phase Details
 
@@ -131,9 +131,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 08-01: Regime classifier (Expansionary/Neutral/Contractionary)
-- [ ] 08-02: Correlation engine (BTC, SPX, Gold vs liquidity)
-- [ ] 08-03: Correlation alerts on regime shift
+- [x] 08-01: Regime classifier (EXPANSION/CONTRACTION binary, intensity 0-100)
+- [x] 08-02: Correlation engine (BTC, SPX, GOLD, TLT, DXY, COPPER, HYG)
+- [x] 08-03: Alert engine (regime shift, correlation breakdown/surge)
 
 ### Phase 9: Calendar & API
 **Goal**: Calendar effects tracking and FastAPI REST server
@@ -143,10 +143,10 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 09-01: Calendar effects (auctions, month-end, tax dates, Fed meetings)
-- [ ] 09-02: FastAPI server setup and core endpoints
-- [ ] 09-03: Additional API endpoints (FX, stress, correlations, calendar)
-- [ ] 09-04: NautilusTrader macro filter integration
+- [x] 09-01: Calendar effects (auctions, month-end, tax dates, Fed meetings) | wave:1 | effort:L
+- [x] 09-02: FastAPI server setup and core endpoints | wave:1 | effort:L
+- [x] 09-03: Additional API endpoints (FX, stress, correlations, calendar) | wave:2 | effort:M
+- [x] 09-04: Docker deployment (Dockerfile, docker-compose) | wave:2 | effort:M
 
 ### Phase 10: Visualization & Alerting
 **Goal**: Plotly dashboards, Discord alerting, and quality validation
@@ -156,11 +156,11 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 10-01: Core Plotly dashboard (Net/Global Liquidity, regime)
-- [ ] 10-02: Extended dashboard panels (FX, commodities, stress, flows)
-- [ ] 10-03: Discord alerting (regime changes, stress alerts, DXY moves)
-- [ ] 10-04: Quality & validation system (freshness, anomalies, cross-validation)
-- [ ] 10-05: HTML export and data quality indicators
+- [x] 10-01: Core Plotly dashboard (Net/Global Liquidity, regime) | wave:1 | effort:L
+- [x] 10-02: Extended dashboard panels (FX, commodities, stress, flows) | wave:2 | effort:L
+- [x] 10-03: Discord alerting (regime changes, stress alerts, DXY moves) | wave:2 | effort:M
+- [x] 10-04: Quality & validation system (freshness, anomalies, cross-validation) | wave:1 | effort:L
+- [x] 10-05: HTML export and data quality indicators | wave:3 | effort:M
 
 ## Progress
 
@@ -176,9 +176,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Capital Flows & Stress | 5/5 | Complete | 2026-01-23 |
 | 6. Credit & BIS Data | 3/3 | Complete | 2026-01-24 |
 | 7. Liquidity Calculations | 4/4 | Complete | 2026-01-24 |
-| 8. Analysis & Correlations | 0/3 | Not started | - |
-| 9. Calendar & API | 0/4 | Not started | - |
-| 10. Visualization & Alerting | 0/5 | Not started | - |
+| 8. Analysis & Correlations | 3/3 | Complete | 2026-01-26 |
+| 9. Calendar & API | 4/4 | Complete | 2026-02-04 |
+| 10. Visualization & Alerting | 5/5 | Complete | 2026-02-04 |
 
 ---
 *Created: 2026-01-21*
+*Last updated: 2026-02-04*

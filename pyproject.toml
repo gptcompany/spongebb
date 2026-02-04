@@ -43,6 +43,17 @@ dependencies = [
     "lxml>=5.0.0",
     "yfinance>=0.2.66",
     "scipy>=1.17.0",
+    # Calendar module
+    "holidays>=0.40",
+    "python-dateutil>=2.8",
+    # API server
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    # Dashboard
+    "dash>=2.18.0",
+    "dash-bootstrap-components>=1.6.0",
+    # Discord alerting
+    "discord-webhook>=1.3.0",
 ]
 
 [project.optional-dependencies]
@@ -61,6 +72,10 @@ dev = [
     # Type stubs
     "types-redis>=4.6.0",
 ]
+
+[project.scripts]
+liquidity-api = "liquidity.api:main"
+liquidity-dashboard = "liquidity.dashboard.__main__:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -90,6 +105,7 @@ select = [
 ignore = [
     "E501",   # line too long (handled by formatter)
     "B008",   # do not perform function calls in argument defaults
+    "C408",   # unnecessary dict call (Plotly uses dict() extensively)
 ]
 
 [tool.ruff.lint.isort]
@@ -124,6 +140,16 @@ module = [
     "pandas.*",
     "psycopg2",
     "psycopg2.*",
+    "holidays",
+    "holidays.*",
+    "dash",
+    "dash.*",
+    "dash_bootstrap_components",
+    "dash_bootstrap_components.*",
+    "plotly",
+    "plotly.*",
+    "discord_webhook",
+    "discord_webhook.*",
 ]
 ignore_missing_imports = true
 
@@ -165,4 +191,5 @@ dev = [
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.0.0",
     "types-psycopg2>=2.9.21.20251012",
+    "httpx>=0.27.0",  # For FastAPI TestClient
 ]

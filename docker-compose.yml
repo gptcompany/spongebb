@@ -1,14 +1,115 @@
 # Docker Compose for Global Liquidity Monitor
-# Services: QuestDB (time-series), Redis (pub/sub + caching)
+# Services: liquidity-api, QuestDB (time-series), Redis (pub/sub + caching)
+#
+# Usage:
+#   docker compose up -d                    # Start API with external QuestDB/Redis
+#   docker compose --profile isolated up -d # Start all services (isolated)
+#   docker compose --profile dev up -d      # Development mode with hot reload
 #
 # Port allocation strategy:
+# - API: 8000 (configurable via LIQUIDITY_API_PORT)
 # - Development: Use nautilus-questdb (9000/9009/8812) and nautilus-redis (6379)
 # - Isolated testing: Use liquidity-* containers with alternate ports
 #
 # Default: Share existing NautilusTrader infrastructure (same QuestDB/Redis)
-# Set LIQUIDITY_ISOLATED=true to use dedicated containers
+# Set profile=isolated to use dedicated containers
 
 services:
+  # ===========================================================================
+  # Application Services
+  # ===========================================================================
+
+  liquidity-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: liquidity-api
+    restart: unless-stopped
+    ports:
+      - "${LIQUIDITY_API_PORT:-8000}:8000"
+    environment:
+      - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-localhost}
+      - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
+      - LIQUIDITY_QUESTDB_HTTP_PORT=${LIQUIDITY_QUESTDB_HTTP_PORT:-9000}
+      - LIQUIDITY_REDIS_URL=${LIQUIDITY_REDIS_URL:-redis://localhost:6379}
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - liquidity-network
+
+  # API with isolated infrastructure (depends on local QuestDB/Redis)
+  liquidity-api-isolated:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: liquidity-api-isolated
+    profiles:
+      - isolated
+    restart: unless-stopped
+    ports:
+      - "${LIQUIDITY_API_PORT:-8000}:8000"
+    environment:
+      # Use container names for isolated network
+      - LIQUIDITY_QUESTDB_HOST=liquidity-questdb
+      - LIQUIDITY_QUESTDB_PORT=9009
+      - LIQUIDITY_QUESTDB_HTTP_PORT=9000
+      - LIQUIDITY_REDIS_URL=redis://liquidity-redis:6379
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
+    depends_on:
+      questdb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - liquidity-network
+
+  # Development mode with hot reload
+  liquidity-api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: liquidity-api-dev
+    profiles:
+      - dev
+    restart: unless-stopped
+    ports:
+      - "${LIQUIDITY_API_PORT:-8000}:8000"
+    environment:
+      - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-localhost}
+      - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
+      - LIQUIDITY_QUESTDB_HTTP_PORT=${LIQUIDITY_QUESTDB_HTTP_PORT:-9000}
+      - LIQUIDITY_REDIS_URL=${LIQUIDITY_REDIS_URL:-redis://localhost:6379}
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-DEBUG}
+    volumes:
+      - ./src:/app/src:ro  # Mount source for hot reload
+    command: ["python", "-m", "uvicorn", "liquidity.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - liquidity-network
+
+  # ===========================================================================
+  # Infrastructure Services (isolated profile)
+  # ===========================================================================
+
   questdb:
     image: questdb/questdb:latest
     container_name: liquidity-questdb
