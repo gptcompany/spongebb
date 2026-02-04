@@ -177,8 +177,13 @@ async def get_correlation_matrix(
         for asset in assets:
             matrix[asset] = {}
             for other in assets:
-                val = result.correlations.loc[asset, other]
-                matrix[asset][other] = round(float(val), 3) if not _is_nan(val) else None
+                # Access correlation value and convert safely
+                raw_val = result.correlations.loc[asset, other]
+                try:
+                    float_val = float(raw_val)  # type: ignore[arg-type]
+                    matrix[asset][other] = round(float_val, 3) if not _is_nan(float_val) else None
+                except (TypeError, ValueError):
+                    matrix[asset][other] = None
 
         return CorrelationMatrixResponse(
             assets=assets,

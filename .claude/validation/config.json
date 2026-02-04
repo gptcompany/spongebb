@@ -1,5 +1,12 @@
 {
   "domain": "finance",
+  "commands": {
+    "python": "uv run python",
+    "pyright": "uv run pyright",
+    "ruff": "uv run ruff",
+    "pytest": "uv run pytest",
+    "bandit": "uv run bandit"
+  },
   "anti_patterns": [
     "hardcoded_api_keys",
     "missing_error_handling",

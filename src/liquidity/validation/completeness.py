@@ -205,7 +205,9 @@ class CompletenessChecker:
         if df.empty:
             return {}
 
-        return (df.isnull().sum() / len(df) * 100).to_dict()
+        result = (df.isnull().sum() / len(df) * 100).to_dict()
+        # Ensure keys are strings and values are floats
+        return {str(k): float(v) for k, v in result.items()}
 
     def get_missing_value_reports(self, df: pd.DataFrame) -> list[MissingValueReport]:
         """Get detailed missing value reports per column.

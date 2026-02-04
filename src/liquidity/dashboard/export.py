@@ -66,12 +66,12 @@ class HTMLExporter:
             html_parts.append('<div class="chart-container">')
             html_parts.append(f'<h2>{name}</h2>')
             # Include plotlyjs only for first chart, reference for others
-            include_js = "cdn" if name == list(figures.keys())[0] else False
+            include_js: bool | str = "cdn" if name == list(figures.keys())[0] else False
             html_parts.append(
                 pio.to_html(
                     fig,
                     full_html=False,
-                    include_plotlyjs=include_js,
+                    include_plotlyjs=include_js,  # type: ignore[arg-type]
                     config={"displayModeBar": True, "displaylogo": False},
                 )
             )
@@ -109,7 +109,7 @@ class HTMLExporter:
         pio.write_html(
             fig,
             output_path,
-            include_plotlyjs="cdn",
+            include_plotlyjs="cdn",  # type: ignore[arg-type]
             full_html=True,
             config={"displayModeBar": True, "displaylogo": False},
         )
@@ -296,12 +296,12 @@ class HTMLExporter:
         for name, fig in figures.items():
             html_parts.append('<div class="chart-container">')
             html_parts.append(f"<h2>{name}</h2>")
-            include_js = "cdn" if name == list(figures.keys())[0] else False
+            include_js: bool | str = "cdn" if name == list(figures.keys())[0] else False
             html_parts.append(
                 pio.to_html(
                     fig,
                     full_html=False,
-                    include_plotlyjs=include_js,
+                    include_plotlyjs=include_js,  # type: ignore[arg-type]
                     config={"displayModeBar": True, "displaylogo": False},
                 )
             )

@@ -134,16 +134,18 @@ def create_freshness_indicators(stale_sources: list[str]) -> html.Div:
         Div containing freshness status and badges.
     """
     if not stale_sources:
-        return html.Span(
-            [
-                html.I(className="bi bi-check-circle me-1"),
-                "All data fresh",
-            ],
-            className="text-success",
+        return html.Div(
+            html.Span(
+                [
+                    html.I(className="bi bi-check-circle me-1"),
+                    "All data fresh",
+                ],
+                className="text-success",
+            )
         )
 
     # Show first 3 stale sources as badges
-    badges = [
+    badges: list[Any] = [
         dbc.Badge(source, color="warning", className="me-1", pill=True)
         for source in stale_sources[:3]
     ]
@@ -348,7 +350,10 @@ def create_source_freshness_table(
         Bootstrap Table with source freshness information.
     """
     if not last_updates:
-        return html.Div("No data sources available", className="text-muted")
+        return dbc.Table(
+            [html.Tbody([html.Tr([html.Td("No data sources available")])])],
+            className="text-muted",
+        )
 
     rows = []
     now = datetime.now(UTC)

@@ -7,6 +7,7 @@ Provides:
 import logging
 from datetime import UTC, datetime
 
+import pandas as pd
 from fastapi import APIRouter, HTTPException
 
 from liquidity.api.deps import StressCollectorDep
@@ -123,7 +124,7 @@ async def get_stress_indicators(
 
 def _calculate_sofr_percentile(
     current_value: float | None,
-    historical_df: "pd.DataFrame",  # noqa: F821
+    historical_df: "pd.DataFrame",
 ) -> int | None:
     """Calculate SOFR-OIS spread percentile vs 60-day history.
 

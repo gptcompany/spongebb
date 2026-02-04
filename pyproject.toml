@@ -187,6 +187,15 @@ exclude_lines = [
     "if __name__ == .__main__.:",
 ]
 
+# Pyright configuration
+[tool.pyright]
+pythonVersion = "3.11"
+include = ["src"]
+exclude = ["tests", "**/__pycache__"]
+typeCheckingMode = "standard"
+reportMissingImports = true
+reportMissingTypeStubs = false
+
 [dependency-groups]
 dev = [
     "pandas-stubs>=2.3.3.260113",

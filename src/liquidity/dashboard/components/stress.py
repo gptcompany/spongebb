@@ -171,7 +171,7 @@ def create_sofr_ois_gauge(value: float | None = None) -> go.Figure:
     return create_stress_gauge(
         value=value if value is not None else 0,
         label="SOFR-OIS",
-        thresholds=STRESS_THRESHOLDS["sofr_ois"],
+        thresholds={k: float(v) for k, v in STRESS_THRESHOLDS["sofr_ois"].items()},
         unit="bps",
         max_value=50,
     )
@@ -191,7 +191,7 @@ def create_repo_stress_gauge(value: float | None = None) -> go.Figure:
     return create_stress_gauge(
         value=value if value is not None else 0,
         label="Repo Stress",
-        thresholds=STRESS_THRESHOLDS["repo_stress"],
+        thresholds={k: float(v) for k, v in STRESS_THRESHOLDS["repo_stress"].items()},
         unit="%",
         max_value=10,
     )

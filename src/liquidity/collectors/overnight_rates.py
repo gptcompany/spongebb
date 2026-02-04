@@ -153,9 +153,9 @@ class ESTRCollector(BaseCollector[pd.DataFrame]):
             # Set API key if available
             api_key = self._settings.fred_api_key.get_secret_value()
             if api_key:
-                obb.user.credentials.fred_api_key = api_key
+                obb.user.credentials.fred_api_key = api_key  # type: ignore[attr-defined]
 
-            result = obb.economy.fred_series(
+            result = obb.economy.fred_series(  # type: ignore[attr-defined]
                 symbol="ECBESTRVOLWGTTRMDMNRT",
                 start_date=start_date.strftime("%Y-%m-%d"),
                 end_date=end_date.strftime("%Y-%m-%d"),
@@ -288,9 +288,9 @@ class SONIACollector(BaseCollector[pd.DataFrame]):
             # Set API key if available
             api_key = self._settings.fred_api_key.get_secret_value()
             if api_key:
-                obb.user.credentials.fred_api_key = api_key
+                obb.user.credentials.fred_api_key = api_key  # type: ignore[attr-defined]
 
-            result = obb.economy.fred_series(
+            result = obb.economy.fred_series(  # type: ignore[attr-defined]
                 symbol="IUDSOIA",
                 start_date=start_date.strftime("%Y-%m-%d"),
                 end_date=end_date.strftime("%Y-%m-%d"),

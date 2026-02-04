@@ -13,7 +13,7 @@ from typing import Any
 
 import pandas as pd
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, State, callback_context, no_update
+from dash import Dash, Input, Output, State, callback_context
 
 from liquidity.dashboard.components.calendar import (
     add_calendar_overlay,
@@ -337,7 +337,7 @@ def register_callbacks(app: Dash) -> None:
             Download data for HTML file, or None.
         """
         if not n_clicks:
-            return no_update
+            return None  # type: ignore[return-value]
 
         try:
             exporter = HTMLExporter()
@@ -390,7 +390,7 @@ def register_callbacks(app: Dash) -> None:
 
         except Exception as e:
             logger.error("Export failed: %s", e)
-            return no_update
+            return None  # type: ignore[return-value]
 
     # Quality indicators callback
     @app.callback(
@@ -475,7 +475,7 @@ def register_callbacks(app: Dash) -> None:
             Tuple of (new_is_open, icon_class).
         """
         if not n_clicks:
-            return no_update, no_update
+            return (is_open, "bi bi-chevron-down ms-2")  # Return current state
 
         new_is_open = not is_open
         icon_class = "bi bi-chevron-up ms-2" if new_is_open else "bi bi-chevron-down ms-2"

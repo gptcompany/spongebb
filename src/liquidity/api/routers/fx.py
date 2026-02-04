@@ -72,9 +72,10 @@ async def get_dxy(
         change_1w = _calculate_change(df, days=7)
 
         # Prepare historical data (last 30 points max)
+        from liquidity.api.schemas import DXYDataPoint
         history = df.tail(30)[["timestamp", "value"]].to_dict("records")
         data_points = [
-            {"timestamp": str(row["timestamp"]), "value": float(row["value"])}
+            DXYDataPoint(timestamp=str(row["timestamp"]), value=float(row["value"]))
             for row in history
         ]
 
@@ -159,7 +160,9 @@ async def get_fx_pairs(
             current = float(series_df.iloc[-1]["value"])
             change_1d = _calculate_change(series_df, days=1)
 
-            display_name = symbol_map.get(series_id, series_id)
+            display_name = symbol_map.get(series_id)
+            if display_name is None:
+                display_name = str(series_id) if series_id is not None else "UNKNOWN"
             pairs[display_name] = FXPairData(
                 current=current,
                 change_1d=change_1d,

@@ -660,12 +660,12 @@ class TICCollector(BaseCollector[pd.DataFrame]):
         # Set FRED API key if available
         api_key = self._settings.fred_api_key.get_secret_value()
         if api_key:
-            obb.user.credentials.fred_api_key = api_key
+            obb.user.credentials.fred_api_key = api_key  # type: ignore[attr-defined]
 
         symbols = list(FRED_TIC_SERIES.values())
 
         try:
-            result = obb.economy.fred_series(
+            result = obb.economy.fred_series(  # type: ignore[attr-defined]
                 symbol=",".join(symbols),
                 start_date=start_date.strftime("%Y-%m-%d"),
                 end_date=end_date.strftime("%Y-%m-%d"),

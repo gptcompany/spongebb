@@ -83,7 +83,7 @@ class StressIndicatorCollector(BaseCollector[pd.DataFrame]):
         # Set OpenBB FRED API key if available
         api_key = self._settings.fred_api_key.get_secret_value()
         if api_key:
-            obb.user.credentials.fred_api_key = api_key
+            obb.user.credentials.fred_api_key = api_key  # type: ignore[attr-defined]
             logger.debug("FRED API key configured from settings")
 
     async def collect(
@@ -196,7 +196,7 @@ class StressIndicatorCollector(BaseCollector[pd.DataFrame]):
         """Synchronous fetch for SOFR-OIS spread."""
         logger.info("Fetching SOFR and EFFR for spread calculation")
 
-        result = obb.economy.fred_series(
+        result = obb.economy.fred_series(  # type: ignore[attr-defined]
             symbol="SOFR,EFFR",
             start_date=start_date.strftime("%Y-%m-%d"),
             end_date=end_date.strftime("%Y-%m-%d"),
@@ -273,7 +273,7 @@ class StressIndicatorCollector(BaseCollector[pd.DataFrame]):
         """Synchronous fetch for SOFR distribution width."""
         logger.info("Fetching SOFR percentiles for distribution width")
 
-        result = obb.economy.fred_series(
+        result = obb.economy.fred_series(  # type: ignore[attr-defined]
             symbol="SOFR1,SOFR99",
             start_date=start_date.strftime("%Y-%m-%d"),
             end_date=end_date.strftime("%Y-%m-%d"),
@@ -349,7 +349,7 @@ class StressIndicatorCollector(BaseCollector[pd.DataFrame]):
         """Synchronous fetch for repo stress ratio."""
         logger.info("Fetching RRP and WALCL for repo stress ratio")
 
-        result = obb.economy.fred_series(
+        result = obb.economy.fred_series(  # type: ignore[attr-defined]
             symbol="RRPONTSYD,WALCL",
             start_date=start_date.strftime("%Y-%m-%d"),
             end_date=end_date.strftime("%Y-%m-%d"),
@@ -427,7 +427,7 @@ class StressIndicatorCollector(BaseCollector[pd.DataFrame]):
         """Synchronous fetch for CP-Treasury spread."""
         logger.info("Fetching CP and T-Bill rates for spread calculation")
 
-        result = obb.economy.fred_series(
+        result = obb.economy.fred_series(  # type: ignore[attr-defined]
             symbol="DCPF3M,DTB3",
             start_date=start_date.strftime("%Y-%m-%d"),
             end_date=end_date.strftime("%Y-%m-%d"),

@@ -220,14 +220,17 @@ class GlobalLiquidityCalculator:
 
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        # Unpack results
-        fed_df = results[0] if not isinstance(results[0], Exception) else pd.DataFrame()
-        ecb_df = results[1] if not isinstance(results[1], Exception) else pd.DataFrame()
-        boj_df = results[2] if not isinstance(results[2], Exception) else pd.DataFrame()
-        pboc_df = (
-            results[3] if not isinstance(results[3], Exception) else pd.DataFrame()
-        )
-        fx_df = results[4] if not isinstance(results[4], Exception) else pd.DataFrame()
+        # Unpack results - cast to DataFrame after checking for exceptions
+        def safe_df(result: pd.DataFrame | BaseException) -> pd.DataFrame:
+            if isinstance(result, BaseException):
+                return pd.DataFrame()
+            return result
+
+        fed_df = safe_df(results[0])
+        ecb_df = safe_df(results[1])
+        boj_df = safe_df(results[2])
+        pboc_df = safe_df(results[3])
+        fx_df = safe_df(results[4])
 
         # Log any errors
         for i, r in enumerate(results[:5]):
@@ -239,15 +242,9 @@ class GlobalLiquidityCalculator:
         boc_df = pd.DataFrame()
 
         if tier >= 2 and len(results) > 5:
-            boe_df = (
-                results[5] if not isinstance(results[5], Exception) else pd.DataFrame()
-            )
-            snb_df = (
-                results[6] if not isinstance(results[6], Exception) else pd.DataFrame()
-            )
-            boc_df = (
-                results[7] if not isinstance(results[7], Exception) else pd.DataFrame()
-            )
+            boe_df = safe_df(results[5])
+            snb_df = safe_df(results[6])
+            boc_df = safe_df(results[7])
 
             for i, r in enumerate(results[5:8]):
                 if isinstance(r, Exception):

@@ -418,7 +418,7 @@ class CorrelationEngine:
                 auto_adjust=True,
             )
 
-            if data.empty:
+            if data is None or data.empty:
                 logger.warning("No data returned from Yahoo Finance")
                 return pd.DataFrame()
 
@@ -432,7 +432,7 @@ class CorrelationEngine:
 
             # Rename columns to friendly names
             rename_map = {v: k for k, v in self.YAHOO_SYMBOLS.items()}
-            prices = prices.rename(columns=rename_map)
+            prices = prices.rename(columns=rename_map)  # type: ignore[arg-type]
 
             logger.info(
                 "Fetched %d observations for %d assets",
@@ -504,7 +504,7 @@ class CorrelationEngine:
 
         # Avoid division by zero
         denominator = ewm_std_x * ewm_std_y
-        correlation = ewm_cov / denominator.replace(0, np.nan)
+        correlation = ewm_cov / denominator.replace(0, np.nan)  # type: ignore[attr-defined]
 
         return correlation
 

@@ -104,7 +104,7 @@ class QuestDBStorage:
                 host=self.host,
                 port=self.pg_port,
                 user="admin",
-                password="quest",
+                password="quest",  # nosec B106 - QuestDB default for local dev
                 database="qdb",
             )
         except psycopg2.Error as e:
@@ -179,7 +179,7 @@ class QuestDBStorage:
             df[timestamp_col] = pd.to_datetime(df[timestamp_col])
 
         try:
-            with Sender(self.host, self.ilp_port) as sender:
+            with Sender.from_conf(f"tcp::addr={self.host}:{self.ilp_port};") as sender:  # type: ignore[attr-defined]
                 sender.dataframe(
                     df, table_name=table, at=timestamp_col, symbols=symbols
                 )
@@ -211,7 +211,7 @@ class QuestDBStorage:
             WHERE series_id = '{series_id}'
             ORDER BY timestamp DESC
             LIMIT 1
-        """
+        """  # nosec B608 - table and series_id are internal enums, not user input
         result = self.query(sql)
         if result and len(result) > 0:
             return result[0]

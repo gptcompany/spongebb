@@ -64,7 +64,7 @@ class USMarketHolidays(BaseCalendar):
                 # NYSE holidays
                 nyse_holidays = holidays_lib.financial_holidays("NYSE", years=self._year)
                 return dict(nyse_holidays.items())
-            except Exception:
+            except Exception:  # nosec B110 - intentional fallback to static data
                 # Fall back to static data
                 pass
 

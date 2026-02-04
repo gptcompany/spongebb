@@ -31,7 +31,7 @@ def main() -> None:
     parser.add_argument(
         "--host",
         type=str,
-        default="0.0.0.0",
+        default="0.0.0.0",  # nosec B104 - configurable via CLI
         help="Server host (default: 0.0.0.0)",
     )
 

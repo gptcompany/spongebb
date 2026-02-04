@@ -192,7 +192,7 @@ class CommodityCollector(BaseCollector[pd.DataFrame]):
                 auto_adjust=True,
             )
 
-            if df.empty:
+            if df is None or df.empty:
                 logger.warning("No commodity data returned for symbols: %s", symbols)
                 return pd.DataFrame(
                     columns=["timestamp", "series_id", "source", "value", "unit"]
@@ -202,7 +202,7 @@ class CommodityCollector(BaseCollector[pd.DataFrame]):
             if len(symbols) == 1:
                 # Single symbol: columns are just price types
                 df = df[["Close"]].copy()
-                df.columns = symbols
+                df.columns = pd.Index(symbols)
             else:
                 # Multiple symbols: MultiIndex columns (price_type, ticker)
                 if isinstance(df.columns, pd.MultiIndex):

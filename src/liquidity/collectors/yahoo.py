@@ -143,7 +143,7 @@ class YahooCollector(BaseCollector[pd.DataFrame]):
                     calc_start = start_date
 
                 # Fetch data using OpenBB equity historical
-                result = obb.equity.price.historical(
+                result = obb.equity.price.historical(  # type: ignore[attr-defined]
                     symbol=symbol,
                     start_date=calc_start.strftime("%Y-%m-%d"),
                     end_date=end_date.strftime("%Y-%m-%d"),

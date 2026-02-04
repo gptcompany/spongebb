@@ -24,7 +24,7 @@ app.layout = create_layout()
 register_callbacks(app)
 
 
-def run_server(debug: bool = False, port: int = 8050, host: str = "0.0.0.0") -> None:
+def run_server(debug: bool = False, port: int = 8050, host: str = "0.0.0.0") -> None:  # nosec B104
     """Run the Dash dashboard server.
 
     Args:

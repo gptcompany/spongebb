@@ -226,11 +226,11 @@ class AlertHandlers:
                 thresholds, f"{indicator_lower}_critical", 25.0
             )
 
-        # Determine severity
-        if value >= critical_threshold:
+        # Determine severity (thresholds are guaranteed non-None at this point)
+        if critical_threshold is not None and value >= critical_threshold:
             severity = "critical"
             threshold = critical_threshold
-        elif value >= elevated_threshold:
+        elif elevated_threshold is not None and value >= elevated_threshold:
             severity = "elevated"
             threshold = elevated_threshold
         else:
@@ -244,11 +244,11 @@ class AlertHandlers:
             # Already alerted at this level, skip
             return False
 
-        # Send alert
+        # Send alert (threshold is guaranteed non-None at this point due to above checks)
         embed = self._formatter.stress_breach(
             indicator=indicator,
             value=value,
-            threshold=threshold,
+            threshold=threshold if threshold is not None else 0.0,
             severity=severity,
             unit=unit,
         )
@@ -291,10 +291,10 @@ class AlertHandlers:
                 thresholds, f"{indicator_lower}_critical", 25.0
             )
 
-        if value >= critical_threshold:
+        if critical_threshold is not None and value >= critical_threshold:
             severity = "critical"
             threshold = critical_threshold
-        elif value >= elevated_threshold:
+        elif elevated_threshold is not None and value >= elevated_threshold:
             severity = "elevated"
             threshold = elevated_threshold
         else:
@@ -308,7 +308,7 @@ class AlertHandlers:
         embed = self._formatter.stress_breach(
             indicator=indicator,
             value=value,
-            threshold=threshold,
+            threshold=threshold if threshold is not None else 0.0,
             severity=severity,
             unit=unit,
         )

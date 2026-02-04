@@ -214,6 +214,8 @@ class FullAlertScheduler(AlertScheduler):
     async def _check_regime(self) -> None:
         """Check regime and alert on change."""
         try:
+            if self._regime_classifier is None:
+                return
             result = await self._regime_classifier.classify()
 
             await self._handlers.check_regime_change_async(
@@ -228,6 +230,8 @@ class FullAlertScheduler(AlertScheduler):
     async def _check_stress(self) -> None:
         """Check stress indicators and alert on breaches."""
         try:
+            if self._stress_collector is None:
+                return
             df = await self._stress_collector.collect()
 
             if df.empty:
@@ -272,6 +276,8 @@ class FullAlertScheduler(AlertScheduler):
     async def _check_dxy(self) -> None:
         """Check DXY and alert on significant moves."""
         try:
+            if self._fx_collector is None:
+                return
             current_dxy = await self._fx_collector.get_current_dxy()
 
             if current_dxy is not None:

@@ -153,7 +153,7 @@ def main() -> None:
 
     uvicorn.run(
         "liquidity.api:app",
-        host="0.0.0.0",
+        host="0.0.0.0",  # nosec B104 - local development server
         port=8000,
         reload=True,
         log_level="info",

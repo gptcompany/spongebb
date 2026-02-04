@@ -170,7 +170,7 @@ class FXCollector(BaseCollector[pd.DataFrame]):
                 auto_adjust=True,  # Use adjusted prices
             )
 
-            if df.empty:
+            if df is None or df.empty:
                 logger.warning("No FX data returned for symbols: %s", symbols)
                 return pd.DataFrame(
                     columns=["timestamp", "series_id", "source", "value", "unit"]
@@ -180,7 +180,7 @@ class FXCollector(BaseCollector[pd.DataFrame]):
             if len(symbols) == 1:
                 # Single symbol: columns are just price types
                 df = df[["Close"]].copy()
-                df.columns = symbols
+                df.columns = pd.Index(symbols)
             else:
                 # Multiple symbols: MultiIndex columns (price_type, ticker)
                 # Extract just Close prices
@@ -283,7 +283,7 @@ class FXCollector(BaseCollector[pd.DataFrame]):
         start_date = end_date - delta
 
         def _fetch_fred() -> pd.DataFrame:
-            result = obb.economy.fred_series(
+            result = obb.economy.fred_series(  # type: ignore[attr-defined]
                 symbol=FRED_DXY_SERIES,
                 start_date=start_date.strftime("%Y-%m-%d"),
                 end_date=end_date.strftime("%Y-%m-%d"),

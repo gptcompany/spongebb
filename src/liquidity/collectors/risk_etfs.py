@@ -281,7 +281,7 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
                 auto_adjust=True,
             )
 
-            if df.empty:
+            if df is None or df.empty:
                 logger.warning("No risk ETF price data returned for: %s", etfs)
                 return pd.DataFrame(
                     columns=[
@@ -298,9 +298,9 @@ class RiskETFCollector(BaseCollector[pd.DataFrame]):
             if len(etfs) == 1:
                 # Single ETF: columns are just price types
                 close_df = df[["Close"]].copy()
-                close_df.columns = etfs
+                close_df.columns = pd.Index(etfs)
                 volume_df = df[["Volume"]].copy()
-                volume_df.columns = etfs
+                volume_df.columns = pd.Index(etfs)
             else:
                 # Multiple ETFs: MultiIndex columns
                 if isinstance(df.columns, pd.MultiIndex):
