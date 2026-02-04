@@ -26,6 +26,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Analysis & Correlations** - Regime classifier, correlation engine
 - [x] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
 - [x] **Phase 10: Visualization & Alerting** - Plotly dashboards, Discord alerts, QA validation
+- [ ] **Phase 11: High-Frequency Data Layer** - TGA daily, NY Fed APIs, China proxies, stablecoins, cross-currency basis
+- [ ] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
+- [ ] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
+- [ ] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
+- [ ] **Phase 15: Backtesting Engine** - Historical loader, signal generator, strategy backtester
 
 ## Phase Details
 
@@ -162,6 +167,77 @@ Plans:
 - [x] 10-04: Quality & validation system (freshness, anomalies, cross-validation) | wave:1 | effort:L
 - [x] 10-05: HTML export and data quality indicators | wave:3 | effort:M
 
+### Phase 11: High-Frequency Data Layer
+**Goal**: Reduce data lag from weekly to daily, add missing critical indicators
+**Depends on**: Phase 10
+**Requirements**: HF-01 (TGA daily), HF-02 (NY Fed APIs), HF-03 (China proxies), HF-04 (Cross-currency basis), HF-05 (Stablecoins), HF-06 (Credit proxies)
+**Research**: Likely (US Treasury FiscalData API, NY Fed Markets API, akshare library, DefiLlama API)
+**Research topics**: DTS API structure, NY Fed swap lines endpoint, SHIBOR/DR007 via akshare, EUR/USD basis sources
+
+Plans:
+- [ ] 11-01: TGA Daily collector (US Treasury FiscalData API) | wave:1 | effort:M
+- [ ] 11-02: NY Fed collectors (RRP daily, SOMA, Swap Lines) | wave:1 | effort:M
+- [ ] 11-03: China HF proxies (DR007, SHIBOR via akshare) | wave:1 | effort:M
+- [ ] 11-04: Cross-currency basis collector (ECB/CME data) | wave:2 | effort:L
+- [ ] 11-05: Stablecoin supply collector (DefiLlama API) | wave:2 | effort:M
+- [ ] 11-06: Credit card proxy collectors (FRED consumer series) | wave:2 | effort:M
+
+### Phase 12: Nowcasting & Forecasting
+**Goal**: Estimate current/future liquidity before official releases
+**Depends on**: Phase 11
+**Requirements**: NOW-01 (Kalman nowcast), NOW-02 (PBoC estimator), NOW-03 (Regime forecaster), NOW-04 (Correlation predictor)
+**Research**: Likely (statsmodels state-space, hmmlearn, filterpy)
+**Research topics**: Kalman filter for macro nowcasting, Markov switching regression, Dynamic Factor Models
+
+Plans:
+- [ ] 12-01: Liquidity nowcast engine (Kalman filter on HF proxies) | wave:1 | effort:L
+- [ ] 12-02: PBoC balance sheet estimator (SHIBOR/DR007 regression) | wave:1 | effort:M
+- [ ] 12-03: Regime forecaster (HMM + LSTM) | wave:2 | effort:L
+- [ ] 12-04: Correlation trend predictor (rolling beta forecast) | wave:2 | effort:M
+
+### Phase 13: Risk Metrics
+**Goal**: Professional risk analytics for portfolio management
+**Depends on**: Phase 12
+**Requirements**: RISK-01 (Historical VaR), RISK-02 (Parametric VaR), RISK-03 (CVaR), RISK-04 (Liquidity-adjusted), RISK-05 (Regime VaR)
+**Research**: Likely (riskfolio-lib, quantstats)
+**Research topics**: VaR methodologies, Expected Shortfall calculation, regime-conditional risk
+
+Plans:
+- [ ] 13-01: Historical VaR calculator (95%, 99% confidence) | wave:1 | effort:M
+- [ ] 13-02: Parametric VaR (Normal/t-distribution) | wave:1 | effort:M
+- [ ] 13-03: CVaR / Expected Shortfall | wave:1 | effort:S
+- [ ] 13-04: Liquidity-adjusted risk metrics | wave:2 | effort:M
+- [ ] 13-05: Regime-conditional VaR (Expansion vs Contraction) | wave:2 | effort:M
+
+### Phase 14: News Intelligence
+**Goal**: Early warning via CB communications and news monitoring
+**Depends on**: Phase 11
+**Requirements**: NEWS-01 (RSS aggregator), NEWS-02 (NLP translation), NEWS-03 (Sentiment analyzer), NEWS-04 (Breaking alerts), NEWS-05 (Dashboard panel)
+**Research**: Likely (finBERT, Helsinki NLP models, RSS parsing)
+**Research topics**: finBERT financial sentiment, Chinese translation models, RSS feed parsing
+
+Plans:
+- [ ] 14-01: RSS feed aggregator (PBoC, ECB, Fed, BoJ) | wave:1 | effort:M
+- [ ] 14-02: NLP translation pipeline (Chinese→English) | wave:1 | effort:M
+- [ ] 14-03: CB speech sentiment analyzer (finBERT) | wave:2 | effort:L
+- [ ] 14-04: Breaking news keyword alerts | wave:2 | effort:M
+- [ ] 14-05: News dashboard panel integration | wave:3 | effort:M
+
+### Phase 15: Backtesting Engine
+**Goal**: Validate signal quality and strategy performance
+**Depends on**: Phase 13
+**Requirements**: BT-01 (Historical loader), BT-02 (Signal generator), BT-03 (Strategy backtester), BT-04 (Performance metrics), BT-05 (Monte Carlo), BT-06 (Regime analysis)
+**Research**: Likely (quantstats, pyfolio patterns)
+**Research topics**: Backtesting frameworks, Monte Carlo simulation, regime-based P&L attribution
+
+Plans:
+- [ ] 15-01: Historical data loader (2010-present via FRED/archives) | wave:1 | effort:L
+- [ ] 15-02: Signal generator (regime-based long/short signals) | wave:1 | effort:M
+- [ ] 15-03: Strategy backtester (equity, BTC, multi-asset) | wave:2 | effort:L
+- [ ] 15-04: Performance metrics (Sharpe, Sortino, MaxDD, Calmar) | wave:2 | effort:M
+- [ ] 15-05: Monte Carlo simulation (distribution of outcomes) | wave:3 | effort:L
+- [ ] 15-06: Regime transition P&L analysis | wave:3 | effort:M
+
 ## Progress
 
 **Execution Order:**
@@ -179,7 +255,13 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Analysis & Correlations | 3/3 | Complete | 2026-01-26 |
 | 9. Calendar & API | 4/4 | Complete | 2026-02-04 |
 | 10. Visualization & Alerting | 5/5 | Complete | 2026-02-04 |
+| 11. High-Frequency Data Layer | 0/6 | Planned | - |
+| 12. Nowcasting & Forecasting | 0/4 | Planned | - |
+| 13. Risk Metrics | 0/5 | Planned | - |
+| 14. News Intelligence | 0/5 | Planned | - |
+| 15. Backtesting Engine | 0/6 | Planned | - |
 
 ---
 *Created: 2026-01-21*
 *Last updated: 2026-02-04*
+*Milestone 2 (v2.0): Phases 11-15 planned*
