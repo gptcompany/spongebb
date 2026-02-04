@@ -8,7 +8,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from pydantic import Field, SecretStr
+from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -68,9 +68,11 @@ class Settings(BaseSettings):
     )
 
     # API Keys (loaded from environment, use SOPS for encryption)
+    # Accepts both LIQUIDITY_FRED_API_KEY and FRED_API_KEY (for OpenBB compatibility)
     fred_api_key: SecretStr = Field(
         default=SecretStr(""),
         description="FRED API key for data fetching",
+        validation_alias=AliasChoices("LIQUIDITY_FRED_API_KEY", "FRED_API_KEY"),
     )
 
     # QuestDB configuration

@@ -101,26 +101,36 @@ def create_correlation_heatmap(
         if available:
             corr_matrix = corr_matrix.loc[available, available]
 
-    # Create heatmap
+    # Create heatmap with high-contrast colorscale
+    # Custom RdBu with enhanced saturation for better visibility
+    high_contrast_colorscale = [
+        [0.0, "#b2182b"],    # Strong negative - deep red
+        [0.25, "#ef8a62"],   # Moderate negative - salmon
+        [0.5, "#f7f7f7"],    # Zero - white
+        [0.75, "#67a9cf"],   # Moderate positive - light blue
+        [1.0, "#2166ac"],    # Strong positive - deep blue
+    ]
+
     fig = go.Figure(
         data=go.Heatmap(
             z=corr_matrix.values,
             x=list(corr_matrix.columns),
             y=list(corr_matrix.index),
-            colorscale="RdBu",
+            colorscale=high_contrast_colorscale,
             zmid=0,  # Center colorscale at 0
             zmin=-1,
             zmax=1,
             text=corr_matrix.round(2).astype(str).values,
             texttemplate="%{text}",
-            textfont={"size": 10},
+            textfont={"size": 12, "color": "#111"},  # Larger, darker text
             hovertemplate="%{y} vs %{x}: %{z:.2f}<extra></extra>",
             colorbar=dict(
-                title=dict(text="Corr", side="right"),
+                title=dict(text="Corr", side="right", font={"size": 11}),
                 tickvals=[-1, -0.5, 0, 0.5, 1],
                 ticktext=["-1", "-0.5", "0", "0.5", "1"],
                 len=0.9,
-                thickness=15,
+                thickness=18,
+                tickfont={"size": 10},
             ),
         )
     )

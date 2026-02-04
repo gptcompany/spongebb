@@ -96,7 +96,9 @@ def create_calendar_events(events: list[CalendarEvent] | None = None) -> list:
 
         # Add days until
         days_until = event.days_until
-        if days_until == 0:
+        if days_until < 0:
+            time_str = "Past"
+        elif days_until == 0:
             time_str = "Today"
         elif days_until == 1:
             time_str = "Tomorrow"

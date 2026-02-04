@@ -153,9 +153,9 @@ def create_tic_chart(data: pd.DataFrame | None = None, top_n: int = 5) -> go.Fig
 
 
 def create_etf_flows_chart(data: pd.DataFrame | None = None) -> go.Figure:
-    """Create ETF flows heatmap for commodity ETFs.
+    """Create ETF flows chart for commodity ETFs.
 
-    Shows price changes for SPY, TLT, GLD, HYG style.
+    Shows price changes for SPY, TLT, GLD, HYG style with distinct line styles.
 
     Args:
         data: DataFrame with columns: etf, close, timestamp.
@@ -165,9 +165,13 @@ def create_etf_flows_chart(data: pd.DataFrame | None = None) -> go.Figure:
     """
     fig = go.Figure()
 
+    # Use different dash patterns to distinguish overlapping lines
+    dash_patterns = ["solid", "dash", "dot", "dashdot", "longdash"]
+
     if data is not None and not data.empty:
-        # Group by ETF and plot each
-        for etf in data["etf"].unique():
+        # Group by ETF and plot each with different line styles
+        etfs = list(data["etf"].unique())
+        for i, etf in enumerate(etfs):
             etf_data = data[data["etf"] == etf].sort_values("timestamp")
 
             if len(etf_data) < 2:
@@ -178,13 +182,14 @@ def create_etf_flows_chart(data: pd.DataFrame | None = None) -> go.Figure:
             pct_change = ((etf_data["close"] - first_price) / first_price) * 100
 
             color = FLOWS_COLORS.get(etf.lower(), "#888888")
+            dash = dash_patterns[i % len(dash_patterns)]
 
             fig.add_trace(
                 go.Scatter(
                     x=etf_data["timestamp"],
                     y=pct_change,
                     name=etf,
-                    line=dict(color=color, width=1.5),
+                    line=dict(color=color, width=2, dash=dash),
                     hovertemplate=f"{etf}: %{{y:.1f}}%<extra></extra>",
                 )
             )
@@ -192,23 +197,24 @@ def create_etf_flows_chart(data: pd.DataFrame | None = None) -> go.Figure:
     # Add zero line
     fig.add_hline(y=0, line_dash="dash", line_color="rgba(255,255,255,0.3)")
 
-    # Layout
+    # Layout with legend positioned to avoid overlap
     fig.update_layout(
         template="plotly_dark",
         title=None,
         xaxis_title=None,
-        yaxis_title="% Change",
+        yaxis_title="% Chg",
         hovermode="x unified",
         legend=dict(
             orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1,
+            yanchor="top",
+            y=-0.15,  # Below the chart
+            xanchor="center",
+            x=0.5,
             font=dict(size=9),
+            bgcolor="rgba(0,0,0,0)",
         ),
-        margin=dict(l=40, r=10, t=25, b=25),
-        height=120,
+        margin=dict(l=45, r=10, t=5, b=35),  # More bottom margin for legend
+        height=140,  # Slightly taller to accommodate legend
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
     )
