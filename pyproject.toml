@@ -61,6 +61,8 @@ dependencies = [
     "statsmodels>=0.14.0",       # State-space models, Markov switching
     "filterpy>=1.4.5",           # Kalman filter (prototyping)
     "torch>=2.0.0",              # LSTM forecasting (CPU)
+    # Phase 13: Risk Metrics
+    "riskfolio-lib>=7.0.0",      # Portfolio risk analytics (VaR, CVaR)
 ]
 
 [project.optional-dependencies]

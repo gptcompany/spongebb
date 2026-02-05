@@ -27,8 +27,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
 - [x] **Phase 10: Visualization & Alerting** - Plotly dashboards, Discord alerts, QA validation
 - [x] **Phase 11: High-Frequency Data Layer** - TGA daily, NY Fed APIs, China proxies, stablecoins, cross-currency basis
-- [ ] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
-- [ ] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
+- [x] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
+- [x] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
 - [ ] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
 - [ ] **Phase 15: Backtesting Engine** - Historical loader, signal generator, strategy backtester
 
@@ -203,11 +203,11 @@ Plans:
 **Research topics**: VaR methodologies, Expected Shortfall calculation, regime-conditional risk
 
 Plans:
-- [ ] 13-01: Historical VaR calculator (95%, 99% confidence) | wave:1 | effort:M
-- [ ] 13-02: Parametric VaR (Normal/t-distribution) | wave:1 | effort:M
-- [ ] 13-03: CVaR / Expected Shortfall | wave:1 | effort:S
-- [ ] 13-04: Liquidity-adjusted risk metrics | wave:2 | effort:M
-- [ ] 13-05: Regime-conditional VaR (Expansion vs Contraction) | wave:2 | effort:M
+- [x] 13-01: Historical VaR calculator (95%, 99% confidence) | wave:1 | effort:M
+- [x] 13-02: Parametric VaR (Normal/t-distribution) | wave:1 | effort:M
+- [x] 13-03: CVaR / Expected Shortfall | wave:1 | effort:S
+- [x] 13-04: Liquidity-adjusted risk metrics | wave:2 | effort:M
+- [x] 13-05: Regime-conditional VaR (Expansion vs Contraction) | wave:2 | effort:M
 
 ### Phase 14: News Intelligence
 **Goal**: Early warning via CB communications, FOMC statement analysis, and news monitoring
@@ -260,8 +260,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 9. Calendar & API | 4/4 | Complete | 2026-02-04 |
 | 10. Visualization & Alerting | 5/5 | Complete | 2026-02-04 |
 | 11. High-Frequency Data Layer | 6/6 | Complete | 2026-02-05 |
-| 12. Nowcasting & Forecasting | 0/4 | Planned | - |
-| 13. Risk Metrics | 0/5 | Planned | - |
+| 12. Nowcasting & Forecasting | 4/4 | Complete | 2026-02-05 |
+| 13. Risk Metrics | 5/5 | Complete | 2026-02-05 |
 | 14. News Intelligence | 0/9 | Planned | - |
 | 15. Backtesting Engine | 0/6 | Planned | - |
 
