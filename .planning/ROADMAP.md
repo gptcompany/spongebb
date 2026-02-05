@@ -26,7 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Analysis & Correlations** - Regime classifier, correlation engine
 - [x] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
 - [x] **Phase 10: Visualization & Alerting** - Plotly dashboards, Discord alerts, QA validation
-- [ ] **Phase 11: High-Frequency Data Layer** - TGA daily, NY Fed APIs, China proxies, stablecoins, cross-currency basis
+- [x] **Phase 11: High-Frequency Data Layer** - TGA daily, NY Fed APIs, China proxies, stablecoins, cross-currency basis
 - [ ] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
 - [ ] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
 - [ ] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
@@ -175,12 +175,12 @@ Plans:
 **Research topics**: DTS API structure, NY Fed swap lines endpoint, SHIBOR/DR007 via akshare, EUR/USD basis sources
 
 Plans:
-- [ ] 11-01: TGA Daily collector (US Treasury FiscalData API) | wave:1 | effort:M
-- [ ] 11-02: NY Fed collectors (RRP daily, SOMA, Swap Lines) | wave:1 | effort:M
-- [ ] 11-03: China HF proxies (DR007, SHIBOR via akshare) | wave:1 | effort:M
-- [ ] 11-04: Cross-currency basis collector (ECB/CME data) | wave:2 | effort:L
-- [ ] 11-05: Stablecoin supply collector (DefiLlama API) | wave:2 | effort:M
-- [ ] 11-06: Credit card proxy collectors (FRED consumer series) | wave:2 | effort:M
+- [x] 11-01: TGA Daily collector (US Treasury FiscalData API) | wave:1 | effort:M
+- [x] 11-02: NY Fed collectors (RRP daily, SOMA, Swap Lines) | wave:1 | effort:M
+- [x] 11-03: China HF proxies (DR007, SHIBOR via akshare) | wave:1 | effort:M
+- [x] 11-04: Cross-currency basis collector (ECB/CME data) | wave:2 | effort:L
+- [x] 11-05: Stablecoin supply collector (DefiLlama API) | wave:2 | effort:M
+- [x] 11-06: Credit card proxy collectors (FRED consumer series) | wave:2 | effort:M
 
 ### Phase 12: Nowcasting & Forecasting
 **Goal**: Estimate current/future liquidity before official releases
@@ -210,18 +210,22 @@ Plans:
 - [ ] 13-05: Regime-conditional VaR (Expansion vs Contraction) | wave:2 | effort:M
 
 ### Phase 14: News Intelligence
-**Goal**: Early warning via CB communications and news monitoring
+**Goal**: Early warning via CB communications, FOMC statement analysis, and news monitoring
 **Depends on**: Phase 11
-**Requirements**: NEWS-01 (RSS aggregator), NEWS-02 (NLP translation), NEWS-03 (Sentiment analyzer), NEWS-04 (Breaking alerts), NEWS-05 (Dashboard panel)
-**Research**: Likely (finBERT, Helsinki NLP models, RSS parsing)
-**Research topics**: finBERT financial sentiment, Chinese translation models, RSS feed parsing
+**Requirements**: NEWS-01 (RSS aggregator), NEWS-02 (NLP translation), NEWS-03 (Sentiment analyzer), NEWS-04 (Breaking alerts), NEWS-05 (Dashboard panel), NEWS-06 (Statement scraper), NEWS-07 (Statement diff), NEWS-08 (Diff UI), NEWS-09 (Real-time webhook)
+**Research**: Likely (finBERT, Helsinki NLP models, RSS parsing, difflib)
+**Research topics**: finBERT financial sentiment, Chinese/German/Japanese translation models, RSS feed parsing, FOMC statement diff analysis
 
 Plans:
 - [ ] 14-01: RSS feed aggregator (PBoC, ECB, Fed, BoJ) | wave:1 | effort:M
-- [ ] 14-02: NLP translation pipeline (Chinese→English) | wave:1 | effort:M
-- [ ] 14-03: CB speech sentiment analyzer (finBERT) | wave:2 | effort:L
+- [ ] 14-02: NLP translation pipeline (CN+DE+JP+FR via Helsinki-NLP) | wave:1 | effort:M
+- [ ] 14-03: CB speech sentiment analyzer (finBERT + Qwen3) | wave:2 | effort:L
 - [ ] 14-04: Breaking news keyword alerts | wave:2 | effort:M
 - [ ] 14-05: News dashboard panel integration | wave:3 | effort:M
+- [ ] 14-06: FOMC Statement Scraper (Fed website + GitHub fallback) | wave:1 | effort:M
+- [ ] 14-07: Statement Diff Engine (word-level, hawkish/dovish scoring) | wave:1 | effort:M
+- [ ] 14-08: Statement Diff UI (Bloomberg-style side-by-side) | wave:2 | effort:M
+- [ ] 14-09: Real-time Statement Webhook (RSS→diff→Discord, <60s latency) | wave:3 | effort:L
 
 ### Phase 15: Backtesting Engine
 **Goal**: Validate signal quality and strategy performance
@@ -255,13 +259,13 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Analysis & Correlations | 3/3 | Complete | 2026-01-26 |
 | 9. Calendar & API | 4/4 | Complete | 2026-02-04 |
 | 10. Visualization & Alerting | 5/5 | Complete | 2026-02-04 |
-| 11. High-Frequency Data Layer | 0/6 | Planned | - |
+| 11. High-Frequency Data Layer | 6/6 | Complete | 2026-02-05 |
 | 12. Nowcasting & Forecasting | 0/4 | Planned | - |
 | 13. Risk Metrics | 0/5 | Planned | - |
-| 14. News Intelligence | 0/5 | Planned | - |
+| 14. News Intelligence | 0/9 | Planned | - |
 | 15. Backtesting Engine | 0/6 | Planned | - |
 
 ---
 *Created: 2026-01-21*
-*Last updated: 2026-02-04*
+*Last updated: 2026-02-05*
 *Milestone 2 (v2.0): Phases 11-15 planned*

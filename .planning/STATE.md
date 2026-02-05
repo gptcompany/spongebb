@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-22)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** PROJECT COMPLETE
+**Current focus:** v2.0 Milestone - Advanced Analytics
 
 ## Current Position
 
-Phase: 10 of 10 (Visualization & Alerting) - COMPLETE
-Plan: 5 of 5 in current phase
-Status: ALL PHASES COMPLETE - Project finished!
-Last activity: 2026-02-04 — Completed Phase 10 (dashboard, alerts, validation)
+Phase: 11 of 15 (High-Frequency Data Layer) - COMPLETE
+Plan: 6 of 6 in current phase
+Status: Phase 11 complete, ready for Phase 12
+Last activity: 2026-02-05 — Completed Phase 11 (HF collectors via /pipeline.gsd)
 
-Progress: ██████████ 100%
+Progress: ███████████░░░░ 73% (11/15 phases)
 
 ## Performance Metrics
 

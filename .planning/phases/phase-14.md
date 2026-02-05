@@ -7,10 +7,14 @@ Implement news and central bank communication monitoring for early warning signa
 ## Goals
 
 1. **RSS Aggregation**: Collect CB announcements, speeches, and news
-2. **NLP Translation**: Translate Chinese PBoC communications to English
-3. **Sentiment Analysis**: Classify CB speech sentiment (hawkish/dovish)
+2. **NLP Translation**: Translate Chinese/German/Japanese/French CB communications to English
+3. **Sentiment Analysis**: Classify CB speech sentiment (hawkish/dovish) via finBERT + Qwen3
 4. **Breaking Alerts**: Keyword-triggered notifications
 5. **Dashboard Panel**: News timeline with sentiment indicators
+6. **FOMC Statement Scraping**: Fetch and store FOMC statements from Fed website
+7. **Statement Diff Analysis**: Word-level diff with hawkish/dovish scoring (Bloomberg-style)
+8. **Statement Diff UI**: Side-by-side comparison with inline highlighting
+9. **Real-time Statement Webhook**: Immediate alert on new statement publication
 
 ## Dependencies
 
@@ -21,10 +25,14 @@ Implement news and central bank communication monitoring for early warning signa
 | ID | Requirement | Priority |
 |----|-------------|----------|
 | NEWS-01 | RSS feed aggregation from major CBs | HIGH |
-| NEWS-02 | Chinese→English translation pipeline | HIGH |
-| NEWS-03 | finBERT sentiment analysis for CB text | MEDIUM |
+| NEWS-02 | Multi-language translation (CN+DE+JP+FR→EN) | HIGH |
+| NEWS-03 | finBERT + Qwen3 sentiment analysis for CB text | MEDIUM |
 | NEWS-04 | Keyword-based breaking news alerts | MEDIUM |
 | NEWS-05 | News panel in dashboard | MEDIUM |
+| NEWS-06 | FOMC statement scraper (Fed website + GitHub) | HIGH |
+| NEWS-07 | Statement diff engine (word-level, hawkish/dovish) | HIGH |
+| NEWS-08 | Statement diff UI (Bloomberg-style side-by-side) | MEDIUM |
+| NEWS-09 | Real-time statement webhook (<60s latency) | MEDIUM |
 
 ## Research Topics
 
@@ -203,6 +211,130 @@ Add news timeline panel to dashboard.
 - [ ] Filterable by source
 - [ ] Links to original source
 
+### Plan 14-06: FOMC Statement Scraper
+**Wave**: 1 | **Effort**: M | **Priority**: HIGH
+
+Fetch FOMC statements from Fed website with GitHub fallback.
+
+**Sources**:
+- Primary: https://www.federalreserve.gov/monetarypolicy/fomc.htm
+- Fallback: https://github.com/fomc/statements (raw text files)
+
+**Deliverables**:
+- `src/liquidity/collectors/fomc_statements.py`
+- Tests in `tests/unit/collectors/test_fomc_statements.py`
+- Integration tests in `tests/integration/collectors/`
+
+**Schema**:
+```python
+columns = ["timestamp", "meeting_date", "series_id", "source", "text", "url", "word_count"]
+```
+
+**Acceptance Criteria**:
+- [ ] Fetches current and historical statements (2020+)
+- [ ] Falls back to GitHub if Fed website unavailable
+- [ ] Follows BaseCollector pattern with retry/circuit breaker
+- [ ] Registered in collector registry
+
+### Plan 14-07: Statement Diff Engine
+**Wave**: 1 | **Effort**: M | **Priority**: HIGH
+
+Word-level diff between consecutive FOMC statements with hawkish/dovish scoring.
+
+**Methodology**:
+```python
+from difflib import SequenceMatcher
+
+# Hawkish keywords (tightening)
+HAWKISH = {"inflation": 0.3, "restrictive": 0.5, "tightening": 0.5, "elevated": 0.2}
+
+# Dovish keywords (easing)
+DOVISH = {"patient": -0.3, "accommodative": -0.5, "data-dependent": -0.2, "gradual": -0.3}
+```
+
+**Deliverables**:
+- `src/liquidity/analyzers/statement_diff.py`
+- Tests in `tests/unit/analyzers/test_statement_diff.py`
+
+**Output**:
+```python
+@dataclass
+class StatementDiff:
+    previous_date: date
+    current_date: date
+    added_words: list[str]
+    removed_words: list[str]
+    word_count_delta: int
+    hawkish_score_delta: float  # -1 (dovish) to +1 (hawkish)
+    summary: str
+```
+
+**Acceptance Criteria**:
+- [ ] Computes word-level diff with ChangeType enum
+- [ ] Calculates hawkish/dovish score delta
+- [ ] Generates human-readable summary
+- [ ] Handles edge cases (identical statements, empty text)
+
+### Plan 14-08: Statement Diff UI (Bloomberg-style)
+**Wave**: 2 | **Effort**: M | **Priority**: MEDIUM
+
+Dashboard panel with side-by-side statement comparison.
+
+**Deliverables**:
+- `src/liquidity/dashboard/components/statement_diff.py`
+- Integration with layout.py and callbacks.py
+- Tests in `tests/unit/test_dashboard/`
+
+**UI Components**:
+- Meeting date selector dropdown
+- Hawkish/Dovish sentiment meter (gauge)
+- Side-by-side statement text with inline highlighting
+- Key changes summary table
+
+**Color Scheme**:
+```python
+DIFF_COLORS = {
+    "added": "#00ff88",      # Green
+    "removed": "#ff4444",    # Red
+    "modified": "#ffaa00",   # Yellow
+    "unchanged": "#888888",  # Gray
+}
+```
+
+**Acceptance Criteria**:
+- [ ] Side-by-side comparison with inline highlights
+- [ ] Sentiment meter showing hawkish/dovish shift
+- [ ] Meeting selector with all available dates
+- [ ] Follows existing dashboard dark theme
+
+### Plan 14-09: Real-time Statement Webhook
+**Wave**: 3 | **Effort**: L | **Priority**: MEDIUM
+
+Monitor for new FOMC statements and trigger immediate alert pipeline.
+
+**Pipeline**:
+```
+RSS Monitor → Detect New Statement → Fetch Full Text → Compute Diff → Analyze Sentiment → Discord Alert
+```
+
+**Deliverables**:
+- `src/liquidity/alerts/statement_monitor.py`
+- Additions to `alerts/formatter.py` (fomc_statement method)
+- Tests in `tests/unit/test_alerts/`
+
+**Configuration**:
+```python
+CHECK_INTERVAL_SECONDS = 30   # During FOMC meeting days
+IDLE_INTERVAL_SECONDS = 3600  # Non-meeting days (uses CBMeetingCalendar)
+```
+
+**Acceptance Criteria**:
+- [ ] Monitors Fed RSS feed for new statements
+- [ ] Triggers full pipeline on detection
+- [ ] Sends Discord alert with diff summary
+- [ ] Target latency: <60s from publication
+- [ ] Integrates with calendar for smart polling
+
 ## Technical Notes
 
 ### New Dependencies
@@ -224,8 +356,8 @@ src/liquidity/news/
 ├── __init__.py
 ├── rss_aggregator.py    # Feed polling
 ├── feeds.py             # Feed configurations
-├── translator.py        # Translation pipeline
-├── sentiment.py         # finBERT analysis
+├── translator.py        # Multi-language translation (CN/DE/JP/FR)
+├── sentiment.py         # finBERT + Qwen3 analysis
 ├── alerts.py            # Keyword alerts
 ├── processors/
 │   ├── __init__.py
@@ -234,6 +366,18 @@ src/liquidity/news/
 │   └── base.py          # Base processor class
 └── models/
     └── news_item.py     # News data model
+
+src/liquidity/collectors/
+└── fomc_statements.py   # NEW: FOMC statement scraper
+
+src/liquidity/analyzers/
+└── statement_diff.py    # NEW: Statement diff engine
+
+src/liquidity/dashboard/components/
+└── statement_diff.py    # NEW: Statement diff UI panel
+
+src/liquidity/alerts/
+└── statement_monitor.py # NEW: Real-time statement monitor
 ```
 
 ### Database Schema
@@ -262,11 +406,21 @@ CREATE TABLE cb_news (
 | Translation quality | >90% accuracy |
 | Sentiment accuracy | >75% vs human labels |
 | Alert latency | <5 min from publication |
+| Statement fetch success | >95% (with fallback) |
+| Diff accuracy | 100% word-level |
+| Hawkish/dovish scoring | Validated against known speeches |
+| Real-time webhook latency | <60s from publication |
 
 ## References
 
 - finBERT: https://github.com/ProsusAI/finBERT
+- FinGPT: https://github.com/AI4Finance-Foundation/FinGPT
 - Helsinki NLP: https://huggingface.co/Helsinki-NLP
 - feedparser: https://feedparser.readthedocs.io/
 - awesome-financial-nlp: https://github.com/icoxfog417/awesome-financial-nlp
 - Loughran-McDonald Dictionary: https://sraf.nd.edu/loughranmcdonald-master-dictionary/
+- FOMC Statements GitHub: https://github.com/fomc/statements
+- FedTools: https://github.com/David-Woroniuk/FedTools
+- centralbank_analysis: https://github.com/yukit-k/centralbank_analysis
+- LLM Open Finance (Qwen3-based): https://huggingface.co/blog/DragonLLM/llm-open-finance-models
+- Qwen3 on Ollama: https://ollama.com/library/qwen3
