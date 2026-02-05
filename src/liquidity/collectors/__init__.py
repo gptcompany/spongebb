@@ -18,6 +18,10 @@ from liquidity.collectors.bis import (
 from liquidity.collectors.boc import SERIES_MAP as BOC_SERIES_MAP
 from liquidity.collectors.boc import BOCCollector
 from liquidity.collectors.boe import BOECollector
+from liquidity.collectors.china_rates import (
+    SHIBOR_TENORS,
+    ChinaRatesCollector,
+)
 from liquidity.collectors.cofer import COFER_SERIES, COFERCollector
 from liquidity.collectors.commodities import (
     COMMODITY_SYMBOLS,
@@ -25,6 +29,12 @@ from liquidity.collectors.commodities import (
 )
 from liquidity.collectors.commodities import (
     UNIT_MAP as COMMODITY_UNIT_MAP,
+)
+from liquidity.collectors.consumer_credit import (
+    ALL_CONSUMER_SERIES,
+    CONSUMER_SERIES,
+    WEEKLY_HF_SERIES,
+    ConsumerCreditCollector,
 )
 from liquidity.collectors.credit import (
     CP_SERIES,
@@ -43,6 +53,7 @@ from liquidity.collectors.fed_custody import (
 )
 from liquidity.collectors.fred import SERIES_MAP, FredCollector
 from liquidity.collectors.fx import FX_SYMBOLS, FXCollector
+from liquidity.collectors.nyfed import NYFedCollector
 from liquidity.collectors.overnight_rates import (
     CORRACollector,
     ESTRCollector,
@@ -58,10 +69,13 @@ from liquidity.collectors.risk_etfs import (
 )
 from liquidity.collectors.snb import SNBCollector
 from liquidity.collectors.sofr import SOFRCollector
+from liquidity.collectors.stablecoins import TOP_STABLECOINS, StablecoinCollector
 from liquidity.collectors.stress import (
     STRESS_THRESHOLDS,
     StressIndicatorCollector,
 )
+from liquidity.collectors.swap_lines import SWAP_PARTNERS, SwapLinesCollector
+from liquidity.collectors.tga_daily import TGADailyCollector
 from liquidity.collectors.tic import (
     COUNTRY_CODES as TIC_COUNTRY_CODES,
 )
@@ -69,6 +83,12 @@ from liquidity.collectors.tic import (
     FRED_TIC_SERIES,
     TIC_URLS,
     TICCollector,
+)
+from liquidity.collectors.xccy_basis import (
+    STRESS_THRESHOLDS as XCCY_STRESS_THRESHOLDS,
+)
+from liquidity.collectors.xccy_basis import (
+    XCcyBasisCollector,
 )
 from liquidity.collectors.yahoo import SYMBOLS as YAHOO_SYMBOLS
 from liquidity.collectors.yahoo import YahooCollector
@@ -142,4 +162,24 @@ __all__ = [
     "TIC_URLS",
     "FRED_TIC_SERIES",
     "TIC_COUNTRY_CODES",
+    # NY Fed (Phase 11)
+    "NYFedCollector",
+    "SwapLinesCollector",
+    "SWAP_PARTNERS",
+    # China Rates (Phase 11)
+    "ChinaRatesCollector",
+    "SHIBOR_TENORS",
+    # Stablecoins (Phase 11)
+    "StablecoinCollector",
+    "TOP_STABLECOINS",
+    # Consumer Credit (Phase 11)
+    "ConsumerCreditCollector",
+    "CONSUMER_SERIES",
+    "ALL_CONSUMER_SERIES",
+    "WEEKLY_HF_SERIES",
+    # Cross-Currency Basis (Phase 11)
+    "XCcyBasisCollector",
+    "XCCY_STRESS_THRESHOLDS",
+    # TGA Daily (Phase 11)
+    "TGADailyCollector",
 ]

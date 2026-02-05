@@ -81,6 +81,14 @@ SERIES_MAP: dict[str, str] = {
     "sloos_demand_ci": "DRSDCILM",  # Demand for C&I from large firms (complement)
     # Phase 6: Commercial Paper rates (daily)
     "cp_nonfinancial_3m": "DCPN3M",  # 90-day AA Nonfinancial CP
+    # Phase 11: Consumer Credit Proxy (spending/credit/sentiment)
+    "retail_sales": "RSAFS",  # Retail Sales: Total (millions USD, SA, monthly)
+    "retail_sales_ex_auto": "RRSFS",  # Retail Sales: ex Autos (millions USD, SA, monthly)
+    "consumer_sentiment": "UMCSENT",  # U of Michigan Consumer Sentiment Index (monthly)
+    "consumer_credit_total": "TOTALSL",  # Total Consumer Credit (billions USD, SA, monthly)
+    "pce": "PCE",  # Personal Consumption Expenditures (billions USD, SAAR, monthly)
+    "credit_card_loans": "CCLACBW027SBOG",  # Credit Card Loans at Banks (millions USD, weekly)
+    "consumer_loans": "CLSACBW027SBOG",  # Consumer Loans at Banks (millions USD, weekly)
 }
 
 # Unit conversions for standardization
@@ -111,6 +119,14 @@ UNIT_MAP: dict[str, str] = {
     "DRSDCILM": "net_percent",  # Demand for C&I from large firms
     # Commercial Paper rates
     "DCPN3M": "percent",  # 90-day AA Nonfinancial CP
+    # Consumer Credit Proxy (Phase 11)
+    "RSAFS": "millions_usd",  # Retail Sales: Total
+    "RRSFS": "millions_usd",  # Retail Sales: ex Autos
+    "UMCSENT": "index",  # Consumer Sentiment Index
+    "TOTALSL": "billions_usd",  # Total Consumer Credit
+    "PCE": "billions_usd_saar",  # Personal Consumption Expenditures
+    "CCLACBW027SBOG": "millions_usd",  # Credit Card Loans at Banks
+    "CLSACBW027SBOG": "millions_usd",  # Consumer Loans at Banks
 }
 
 

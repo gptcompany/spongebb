@@ -1,6 +1,276 @@
 {
   "testModules": [
     {
+      "moduleId": "tests/collectors/test_credit.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/collectors/test_credit.py",
+          "fullName": "tests/collectors/test_credit.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/collectors/test_credit.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/collectors/test_credit.py:12: in <module>\n    from datetime import UTC, datetime\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_analyzers.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_analyzers.py",
+          "fullName": "tests/integration/test_analyzers.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_analyzers.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_analyzers.py:14: in <module>\n    from datetime import UTC, datetime\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_calculators.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_calculators.py",
+          "fullName": "tests/integration/test_calculators.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_calculators.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_calculators.py:11: in <module>\n    from liquidity.calculators import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_cofer.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_cofer.py",
+          "fullName": "tests/integration/test_cofer.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_cofer.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_cofer.py:19: in <module>\n    from liquidity.collectors.cofer import COFERCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_commodities.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_commodities.py",
+          "fullName": "tests/integration/test_commodities.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_commodities.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_commodities.py:18: in <module>\n    from liquidity.collectors.commodities import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_credit_bis.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_credit_bis.py",
+          "fullName": "tests/integration/test_credit_bis.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_credit_bis.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_credit_bis.py:11: in <module>\n    from liquidity.collectors.credit import CreditCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_etf_flows.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_etf_flows.py",
+          "fullName": "tests/integration/test_etf_flows.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_etf_flows.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_etf_flows.py:17: in <module>\n    from liquidity.collectors.etf_flows import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_fed_custody.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_fed_custody.py",
+          "fullName": "tests/integration/test_fed_custody.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_fed_custody.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_fed_custody.py:19: in <module>\n    from liquidity.collectors.fed_custody import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_fred_collector.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_fred_collector.py",
+          "fullName": "tests/integration/test_fred_collector.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_fred_collector.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_fred_collector.py:15: in <module>\n    from liquidity.collectors.fred import FredCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_fx_collector.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_fx_collector.py",
+          "fullName": "tests/integration/test_fx_collector.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_fx_collector.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_fx_collector.py:19: in <module>\n    from liquidity.collectors.fx import FX_SYMBOLS, FXCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_global_cb_collectors.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_global_cb_collectors.py",
+          "fullName": "tests/integration/test_global_cb_collectors.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_global_cb_collectors.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_global_cb_collectors.py:15: in <module>\n    from liquidity.collectors.fred import FredCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_market_collectors.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_market_collectors.py",
+          "fullName": "tests/integration/test_market_collectors.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_market_collectors.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_market_collectors.py:15: in <module>\n    from liquidity.collectors.fred import FredCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_overnight_rates.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_overnight_rates.py",
+          "fullName": "tests/integration/test_overnight_rates.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_overnight_rates.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_overnight_rates.py:17: in <module>\n    from liquidity.collectors.overnight_rates import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_risk_etfs.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_risk_etfs.py",
+          "fullName": "tests/integration/test_risk_etfs.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_risk_etfs.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_risk_etfs.py:18: in <module>\n    from liquidity.collectors.risk_etfs import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_sofr_collector.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_sofr_collector.py",
+          "fullName": "tests/integration/test_sofr_collector.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_sofr_collector.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_sofr_collector.py:17: in <module>\n    from liquidity.collectors.sofr import SOFRCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_stress.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_stress.py",
+          "fullName": "tests/integration/test_stress.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_stress.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_stress.py:20: in <module>\n    from liquidity.collectors.stress import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/integration/test_tic.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/integration/test_tic.py",
+          "fullName": "tests/integration/test_tic.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/integration/test_tic.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/integration/test_tic.py:17: in <module>\n    from liquidity.collectors.tic import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_bis.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_bis.py",
+          "fullName": "tests/unit/test_bis.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_bis.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_bis.py:23: in <module>\n    from liquidity.collectors.bis import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "moduleId": "tests/unit/test_calculations.py",
       "tests": [
         {
@@ -9,7 +279,112 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_calculations.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/home/sam/.local/lib/python3.10/site-packages/_pytest/python.py:507: in importtestmodule\n    mod = import_path(\n/home/sam/.local/lib/python3.10/site-packages/_pytest/pathlib.py:587: in import_path\n    importlib.import_module(module_name)\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n<frozen importlib._bootstrap>:1050: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1027: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1006: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:688: in _load_unlocked\n    ???\n/home/sam/.local/lib/python3.10/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/unit/test_calculations.py:12: in <module>\n    from liquidity.collectors.fred import FredCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_calculations.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_calculations.py:12: in <module>\n    from liquidity.collectors.fred import FredCollector\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_correlation_engine.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_correlation_engine.py",
+          "fullName": "tests/unit/test_correlation_engine.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_correlation_engine.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_correlation_engine.py:7: in <module>\n    from datetime import UTC, datetime, timedelta\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_fed_custody.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_fed_custody.py",
+          "fullName": "tests/unit/test_fed_custody.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_fed_custody.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_fed_custody.py:7: in <module>\n    from liquidity.collectors.fed_custody import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_global_liquidity.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_global_liquidity.py",
+          "fullName": "tests/unit/test_global_liquidity.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_global_liquidity.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_global_liquidity.py:3: in <module>\n    from datetime import UTC, datetime, timedelta\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_net_liquidity.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_net_liquidity.py",
+          "fullName": "tests/unit/test_net_liquidity.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_net_liquidity.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_net_liquidity.py:3: in <module>\n    from datetime import UTC, datetime, timedelta\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_regime_classifier.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_regime_classifier.py",
+          "fullName": "tests/unit/test_regime_classifier.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_regime_classifier.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_regime_classifier.py:3: in <module>\n    from datetime import UTC, datetime\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_stealth_qe.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_stealth_qe.py",
+          "fullName": "tests/unit/test_stealth_qe.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_stealth_qe.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_stealth_qe.py:3: in <module>\n    from datetime import UTC, datetime, timedelta\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_validation.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_validation.py",
+          "fullName": "tests/unit/test_validation.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_validation.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_validation.py:3: in <module>\n    from datetime import UTC, datetime, timedelta\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
             }
           ]
         }
