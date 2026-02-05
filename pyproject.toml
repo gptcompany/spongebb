@@ -56,6 +56,11 @@ dependencies = [
     "discord-webhook>=1.3.0",
     # China financial data (SHIBOR, DR007)
     "akshare>=1.18.0",
+    # Phase 12: Nowcasting & Forecasting
+    "hmmlearn>=0.3.3",           # HMM regime detection
+    "statsmodels>=0.14.0",       # State-space models, Markov switching
+    "filterpy>=1.4.5",           # Kalman filter (prototyping)
+    "torch>=2.0.0",              # LSTM forecasting (CPU)
 ]
 
 [project.optional-dependencies]
@@ -157,6 +162,14 @@ module = [
     "discord_webhook.*",
     "akshare",
     "akshare.*",
+    "hmmlearn",
+    "hmmlearn.*",
+    "filterpy",
+    "filterpy.*",
+    "torch",
+    "torch.*",
+    "statsmodels",
+    "statsmodels.*",
 ]
 ignore_missing_imports = true
 
