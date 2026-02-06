@@ -24,7 +24,6 @@ from dash import dcc, html
 
 from liquidity.news.fomc.diff import ChangeScore, PhraseShift, StatementDiff
 
-
 # =============================================================================
 # Color Constants (Bloomberg-style)
 # =============================================================================

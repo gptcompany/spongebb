@@ -504,7 +504,7 @@ class NewsPoller:
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
         all_items: list[NewsItem] = []
-        for source, result in zip(self.feeds, results):
+        for source, result in zip(self.feeds, results, strict=False):
             if isinstance(result, Exception):
                 logger.error("Poll task failed for %s: %s", source.value, result)
                 continue

@@ -329,7 +329,7 @@ async def warm_models(
     if include_translation:
         langs = translation_languages or ["ja", "de", "fr"]
         for lang in langs:
-            tasks.append((f"translation_{lang}", lambda l=lang: _warm_translation_model(l)))
+            tasks.append((f"translation_{lang}", lambda lang_code=lang: _warm_translation_model(lang_code)))
 
     if include_chinese:
         tasks.append(("qwen", _warm_qwen))
@@ -344,7 +344,7 @@ async def warm_models(
         warmup_coros = [run_warmup(name, func) for name, func in tasks]
         completed = await asyncio.gather(*warmup_coros, return_exceptions=True)
 
-        for (name, _), result in zip(tasks, completed):
+        for (name, _), result in zip(tasks, completed, strict=False):
             if isinstance(result, Exception):
                 results.append(
                     WarmupResult(

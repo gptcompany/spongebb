@@ -32,11 +32,23 @@ from liquidity.dashboard.components.flows import (
     create_etf_flows_chart,
     create_tic_chart,
 )
+from liquidity.dashboard.components.fomc_diff import (
+    create_change_summary,
+    create_diff_view,
+    create_empty_diff_view,
+    create_error_diff_view,
+    get_available_dates_options,
+    parse_date_value,
+)
 from liquidity.dashboard.components.fx import create_dxy_chart, create_fx_metrics
 from liquidity.dashboard.components.liquidity import (
     create_global_liquidity_chart,
     create_liquidity_metrics,
     create_net_liquidity_chart,
+)
+from liquidity.dashboard.components.news import (
+    create_news_items_list,
+    get_mock_news_items,
 )
 from liquidity.dashboard.components.quality import (
     create_quality_gauge,
@@ -47,19 +59,6 @@ from liquidity.dashboard.components.regime import (
     create_regime_gauge,
     create_regime_indicator,
     create_regime_metrics,
-)
-from liquidity.dashboard.components.fomc_diff import (
-    create_change_summary,
-    create_diff_view,
-    create_empty_diff_view,
-    create_error_diff_view,
-    get_available_dates_options,
-    parse_date_value,
-)
-from liquidity.dashboard.components.news import (
-    create_news_items_list,
-    get_mock_news_items,
-    news_items_from_newsitem_objects,
 )
 from liquidity.dashboard.components.stress import (
     create_repo_stress_gauge,
@@ -585,14 +584,13 @@ def register_callbacks(app: Dash) -> None:
 
         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-        if trigger_id == "news-filter-fed":
-            return (False, True, False, False)
-        elif trigger_id == "news-filter-ecb":
-            return (False, False, True, False)
-        elif trigger_id == "news-filter-boj":
-            return (False, False, False, True)
-        else:
-            return (True, False, False, False)
+        # Map trigger IDs to button active states (All, Fed, ECB, BoJ)
+        button_states = {
+            "news-filter-fed": (False, True, False, False),
+            "news-filter-ecb": (False, False, True, False),
+            "news-filter-boj": (False, False, False, True),
+        }
+        return button_states.get(trigger_id, (True, False, False, False))
 
     # ==========================================================================
     # FOMC Statement Diff Callbacks (Plan 14-08)
@@ -853,11 +851,8 @@ def _fetch_news_data() -> list[dict]:
         import importlib.util
 
         if importlib.util.find_spec("liquidity.news"):
-            from liquidity.news import NewsPoller, poll_feeds_once
-
-            # Try async fetch (won't work in callback context, so use mock)
-            # In production, this would be fetched from a cache/database
-            # populated by a background task
+            # News module available - in production, data would be fetched
+            # from a cache/database populated by a background NewsPoller task
             logger.debug("News module available, using mock data for now")
 
     except ImportError as e:

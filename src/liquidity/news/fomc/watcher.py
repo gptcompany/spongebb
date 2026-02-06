@@ -10,9 +10,10 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, date, datetime, timedelta
-from typing import Any, Callable
+from datetime import UTC, date, datetime
+from typing import Any
 
 from discord_webhook import DiscordEmbed
 
@@ -234,7 +235,7 @@ class FOMCStatementWatcher:
                     )
                     # Stop event was set
                     break
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     # Normal timeout, continue polling
                     pass
 
