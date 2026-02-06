@@ -8,29 +8,16 @@ Build a FAANG-grade global liquidity monitoring system from the ground up. Start
 
 None
 
-## Phases
+## Completed Milestones
 
-**Phase Numbering:**
-- Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+- ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-02-04
+- ✅ [v2.0 Advanced Analytics](milestones/v2.0-ROADMAP.md) (Phases 11-15) — SHIPPED 2026-02-06
 
-Decimal phases appear between their surrounding integers in numeric order.
+## Phases Summary
 
-- [x] **Phase 1: Foundation & Core Data** - Project setup, FRED API, Fed balance sheet collectors
-- [x] **Phase 2: Global CB Collectors** - ECB, BoJ, PBoC, BoE, SNB, BoC balance sheet collectors
-- [x] **Phase 3: Overnight Rates & FX** - SOFR, €STR, SONIA, CORRA + FX pair collectors
-- [x] **Phase 4: Market Indicators** - Commodities (gold, silver, copper, oil) + ETF flows
-- [x] **Phase 5: Capital Flows & Stress** - TIC data, ETF flows, stress indicators
-- [x] **Phase 6: Credit & BIS Data** - Credit markets, BIS Eurodollar/international banking
-- [x] **Phase 7: Liquidity Calculations** - Net Liquidity, Global Liquidity, Stealth QE Score
-- [x] **Phase 8: Analysis & Correlations** - Regime classifier, correlation engine
-- [x] **Phase 9: Calendar & API** - Calendar effects, FastAPI REST server
-- [x] **Phase 10: Visualization & Alerting** - Plotly dashboards, Discord alerts, QA validation
-- [x] **Phase 11: High-Frequency Data Layer** - TGA daily, NY Fed APIs, China proxies, stablecoins, cross-currency basis
-- [x] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
-- [x] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
-- [x] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
-- [x] **Phase 15: Backtesting Engine** - Historical loader, signal generator, strategy backtester
+**v1.0 MVP (Phases 1-10):** Foundation, Global CB Collectors, Rates & FX, Market Indicators, Capital Flows, Credit & BIS, Liquidity Calculations, Analysis, Calendar & API, Visualization
+
+**v2.0 Advanced Analytics (Phases 11-15):** High-Frequency Data, Nowcasting, Risk Metrics, News Intelligence, Backtesting
 
 ## Phase Details
 
