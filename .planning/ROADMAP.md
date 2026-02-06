@@ -29,7 +29,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: High-Frequency Data Layer** - TGA daily, NY Fed APIs, China proxies, stablecoins, cross-currency basis
 - [x] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
 - [x] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
-- [ ] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
+- [x] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
 - [ ] **Phase 15: Backtesting Engine** - Historical loader, signal generator, strategy backtester
 
 ## Phase Details
@@ -217,15 +217,15 @@ Plans:
 **Research topics**: finBERT financial sentiment, Chinese/German/Japanese translation models, RSS feed parsing, FOMC statement diff analysis
 
 Plans:
-- [ ] 14-01: RSS feed aggregator (PBoC, ECB, Fed, BoJ) | wave:1 | effort:M
-- [ ] 14-02: NLP translation pipeline (CN+DE+JP+FR via Helsinki-NLP) | wave:1 | effort:M
-- [ ] 14-03: CB speech sentiment analyzer (finBERT + Qwen3) | wave:2 | effort:L
-- [ ] 14-04: Breaking news keyword alerts | wave:2 | effort:M
-- [ ] 14-05: News dashboard panel integration | wave:3 | effort:M
-- [ ] 14-06: FOMC Statement Scraper (Fed website + GitHub fallback) | wave:1 | effort:M
-- [ ] 14-07: Statement Diff Engine (word-level, hawkish/dovish scoring) | wave:1 | effort:M
-- [ ] 14-08: Statement Diff UI (Bloomberg-style side-by-side) | wave:2 | effort:M
-- [ ] 14-09: Real-time Statement Webhook (RSS→diff→Discord, <60s latency) | wave:3 | effort:L
+- [x] 14-01: RSS feed aggregator (PBoC, ECB, Fed, BoJ) | wave:1 | effort:M
+- [x] 14-02: NLP translation pipeline (CN+DE+JP+FR via Helsinki-NLP) | wave:1 | effort:M
+- [x] 14-03: CB speech sentiment analyzer (finBERT + Qwen3) | wave:2 | effort:L
+- [x] 14-04: Breaking news keyword alerts | wave:2 | effort:M
+- [x] 14-05: News dashboard panel integration | wave:3 | effort:M
+- [x] 14-06: FOMC Statement Scraper (Fed website + GitHub fallback) | wave:1 | effort:M
+- [x] 14-07: Statement Diff Engine (word-level, hawkish/dovish scoring) | wave:1 | effort:M
+- [x] 14-08: Statement Diff UI (Bloomberg-style side-by-side) | wave:2 | effort:M
+- [x] 14-09: Real-time Statement Webhook (RSS→diff→Discord, <60s latency) | wave:3 | effort:L
 
 ### Phase 15: Backtesting Engine
 **Goal**: Validate signal quality and strategy performance
@@ -262,7 +262,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 11. High-Frequency Data Layer | 6/6 | Complete | 2026-02-05 |
 | 12. Nowcasting & Forecasting | 4/4 | Complete | 2026-02-05 |
 | 13. Risk Metrics | 5/5 | Complete | 2026-02-05 |
-| 14. News Intelligence | 0/9 | Planned | - |
+| 14. News Intelligence | 9/9 | Complete | 2026-02-06 |
 | 15. Backtesting Engine | 0/6 | Planned | - |
 
 ---
