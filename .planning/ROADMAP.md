@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 12: Nowcasting & Forecasting** - Kalman filters, HMM regime detection, PBoC estimator
 - [x] **Phase 13: Risk Metrics** - VaR, CVaR, Expected Shortfall, Regime VaR
 - [x] **Phase 14: News Intelligence** - RSS aggregation, NLP translation, CB sentiment analysis
-- [ ] **Phase 15: Backtesting Engine** - Historical loader, signal generator, strategy backtester
+- [x] **Phase 15: Backtesting Engine** - Historical loader, signal generator, strategy backtester
 
 ## Phase Details
 
@@ -235,12 +235,12 @@ Plans:
 **Research topics**: Backtesting frameworks, Monte Carlo simulation, regime-based P&L attribution
 
 Plans:
-- [ ] 15-01: Historical data loader (2010-present via FRED/archives) | wave:1 | effort:L
-- [ ] 15-02: Signal generator (regime-based long/short signals) | wave:1 | effort:M
-- [ ] 15-03: Strategy backtester (equity, BTC, multi-asset) | wave:2 | effort:L
-- [ ] 15-04: Performance metrics (Sharpe, Sortino, MaxDD, Calmar) | wave:2 | effort:M
-- [ ] 15-05: Monte Carlo simulation (distribution of outcomes) | wave:3 | effort:L
-- [ ] 15-06: Regime transition P&L analysis | wave:3 | effort:M
+- [x] 15-01: Historical data loader (2010-present via FRED/archives) | wave:1 | effort:L
+- [x] 15-02: Signal generator (regime-based long/short signals) | wave:1 | effort:M
+- [x] 15-03: Strategy backtester (equity, BTC, multi-asset) | wave:2 | effort:L
+- [x] 15-04: Performance metrics (Sharpe, Sortino, MaxDD, Calmar) | wave:2 | effort:M
+- [x] 15-05: Monte Carlo simulation (distribution of outcomes) | wave:3 | effort:L
+- [x] 15-06: Regime transition P&L analysis | wave:3 | effort:M
 
 ## Progress
 
@@ -263,7 +263,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 12. Nowcasting & Forecasting | 4/4 | Complete | 2026-02-05 |
 | 13. Risk Metrics | 5/5 | Complete | 2026-02-05 |
 | 14. News Intelligence | 9/9 | Complete | 2026-02-06 |
-| 15. Backtesting Engine | 0/6 | Planned | - |
+| 15. Backtesting Engine | 6/6 | Complete | 2026-02-06 |
 
 ---
 *Created: 2026-01-21*

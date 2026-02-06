@@ -1,0 +1,374 @@
+"""Monte Carlo simulation for strategy stress testing."""
+
+from dataclasses import dataclass, field
+
+import numpy as np
+import pandas as pd
+
+
+@dataclass
+class MonteCarloResult:
+    """Results from Monte Carlo simulation."""
+
+    n_simulations: int
+
+    # Drawdown distribution
+    max_drawdown_5th: float  # 5th percentile (worst case)
+    max_drawdown_median: float  # 50th percentile
+    max_drawdown_95th: float  # 95th percentile (best case)
+
+    # Final equity distribution
+    final_equity_5th: float
+    final_equity_median: float
+    final_equity_95th: float
+
+    # Return distribution
+    total_return_5th: float
+    total_return_median: float
+    total_return_95th: float
+
+    # Sharpe distribution
+    sharpe_5th: float
+    sharpe_median: float
+    sharpe_95th: float
+
+    # Probability metrics
+    prob_positive_return: float  # P(return > 0)
+    prob_beat_benchmark: float | None = None  # P(return > benchmark)
+
+    # Raw distributions for plotting
+    drawdown_dist: np.ndarray = field(repr=False, default_factory=lambda: np.array([]))
+    equity_dist: np.ndarray = field(repr=False, default_factory=lambda: np.array([]))
+    return_dist: np.ndarray = field(repr=False, default_factory=lambda: np.array([]))
+    sharpe_dist: np.ndarray = field(repr=False, default_factory=lambda: np.array([]))
+
+
+class MonteCarloSimulator:
+    """Monte Carlo simulator for backtesting stress testing.
+
+    Supports:
+    - Trade sequence shuffling (tests path dependency)
+    - Skip rate (tests execution risk)
+    - Regime-aware bootstrap (preserves regime correlations)
+    """
+
+    def __init__(
+        self,
+        n_simulations: int = 10_000,
+        skip_rate: float = 0.10,
+        random_seed: int | None = None,
+        n_workers: int = 1,
+    ):
+        """Initialize simulator.
+
+        Args:
+            n_simulations: Number of Monte Carlo iterations
+            skip_rate: Probability of skipping each trade (execution risk)
+            random_seed: Random seed for reproducibility
+            n_workers: Number of parallel workers (1 = sequential)
+        """
+        self.n_simulations = n_simulations
+        self.skip_rate = skip_rate
+        self.random_seed = random_seed
+        self.n_workers = n_workers
+
+        if random_seed is not None:
+            np.random.seed(random_seed)
+
+    def run_shuffle_simulation(
+        self,
+        trade_returns: np.ndarray,
+        initial_capital: float = 100000,
+    ) -> MonteCarloResult:
+        """Run Monte Carlo via trade sequence shuffling.
+
+        Shuffles the order of trades to test path dependency.
+        Applies skip rate to simulate missed trades.
+
+        Args:
+            trade_returns: Array of per-trade returns
+            initial_capital: Starting capital
+
+        Returns:
+            MonteCarloResult with distribution of outcomes
+        """
+        drawdowns = []
+        final_equities = []
+        total_returns = []
+        sharpes = []
+
+        for _ in range(self.n_simulations):
+            # Shuffle trade order
+            shuffled = np.random.permutation(trade_returns)
+
+            # Apply skip rate
+            mask = np.random.random(len(shuffled)) > self.skip_rate
+            filtered = shuffled[mask]
+
+            if len(filtered) == 0:
+                continue
+
+            # Calculate equity curve
+            equity_curve = initial_capital * np.cumprod(1 + filtered)
+
+            # Max drawdown
+            running_max = np.maximum.accumulate(equity_curve)
+            drawdown = (equity_curve - running_max) / running_max
+            max_dd = drawdown.min()
+
+            # Metrics
+            final_equity = equity_curve[-1]
+            total_return = (final_equity / initial_capital - 1) * 100
+            sharpe = (
+                (np.mean(filtered) / np.std(filtered)) * np.sqrt(252)
+                if np.std(filtered) > 0
+                else 0
+            )
+
+            drawdowns.append(max_dd * 100)
+            final_equities.append(final_equity)
+            total_returns.append(total_return)
+            sharpes.append(sharpe)
+
+        # Convert to arrays
+        drawdowns = np.array(drawdowns)
+        final_equities = np.array(final_equities)
+        total_returns = np.array(total_returns)
+        sharpes = np.array(sharpes)
+
+        return MonteCarloResult(
+            n_simulations=len(drawdowns),
+            max_drawdown_5th=np.percentile(drawdowns, 5),
+            max_drawdown_median=np.median(drawdowns),
+            max_drawdown_95th=np.percentile(drawdowns, 95),
+            final_equity_5th=np.percentile(final_equities, 5),
+            final_equity_median=np.median(final_equities),
+            final_equity_95th=np.percentile(final_equities, 95),
+            total_return_5th=np.percentile(total_returns, 5),
+            total_return_median=np.median(total_returns),
+            total_return_95th=np.percentile(total_returns, 95),
+            sharpe_5th=np.percentile(sharpes, 5),
+            sharpe_median=np.median(sharpes),
+            sharpe_95th=np.percentile(sharpes, 95),
+            prob_positive_return=float((total_returns > 0).mean() * 100),
+            drawdown_dist=drawdowns,
+            equity_dist=final_equities,
+            return_dist=total_returns,
+            sharpe_dist=sharpes,
+        )
+
+    def run_regime_bootstrap(
+        self,
+        returns: pd.Series,
+        regimes: pd.Series,
+        initial_capital: float = 100000,
+    ) -> MonteCarloResult:
+        """Run Monte Carlo with regime-aware bootstrap.
+
+        Samples returns separately from each regime, preserving
+        regime-specific distributions.
+
+        Args:
+            returns: Daily return series
+            regimes: Regime classification series (aligned with returns)
+            initial_capital: Starting capital
+
+        Returns:
+            MonteCarloResult with distribution of outcomes
+        """
+        # Separate returns by regime
+        regime_returns: dict[str, np.ndarray] = {}
+        for regime in regimes.unique():
+            mask = regimes == regime
+            regime_returns[regime] = returns[mask].values
+
+        drawdowns = []
+        final_equities = []
+        total_returns = []
+        sharpes = []
+
+        for _ in range(self.n_simulations):
+            # Bootstrap from each regime
+            simulated_returns = []
+            for regime in regimes:
+                # Sample from same regime
+                available = regime_returns[regime]
+                sampled = np.random.choice(available)
+                simulated_returns.append(sampled)
+
+            simulated_returns_arr = np.array(simulated_returns)
+
+            # Apply skip rate
+            mask = np.random.random(len(simulated_returns_arr)) > self.skip_rate
+            filtered = simulated_returns_arr[mask]
+
+            if len(filtered) == 0:
+                continue
+
+            # Metrics
+            equity_curve = initial_capital * np.cumprod(1 + filtered)
+            running_max = np.maximum.accumulate(equity_curve)
+            drawdown = (equity_curve - running_max) / running_max
+
+            drawdowns.append(drawdown.min() * 100)
+            final_equities.append(equity_curve[-1])
+            total_returns.append((equity_curve[-1] / initial_capital - 1) * 100)
+            sharpes.append(
+                (np.mean(filtered) / np.std(filtered)) * np.sqrt(252)
+                if np.std(filtered) > 0
+                else 0
+            )
+
+        drawdowns = np.array(drawdowns)
+        final_equities = np.array(final_equities)
+        total_returns = np.array(total_returns)
+        sharpes = np.array(sharpes)
+
+        return MonteCarloResult(
+            n_simulations=len(drawdowns),
+            max_drawdown_5th=np.percentile(drawdowns, 5),
+            max_drawdown_median=np.median(drawdowns),
+            max_drawdown_95th=np.percentile(drawdowns, 95),
+            final_equity_5th=np.percentile(final_equities, 5),
+            final_equity_median=np.median(final_equities),
+            final_equity_95th=np.percentile(final_equities, 95),
+            total_return_5th=np.percentile(total_returns, 5),
+            total_return_median=np.median(total_returns),
+            total_return_95th=np.percentile(total_returns, 95),
+            sharpe_5th=np.percentile(sharpes, 5),
+            sharpe_median=np.median(sharpes),
+            sharpe_95th=np.percentile(sharpes, 95),
+            prob_positive_return=float((total_returns > 0).mean() * 100),
+            drawdown_dist=drawdowns,
+            equity_dist=final_equities,
+            return_dist=total_returns,
+            sharpe_dist=sharpes,
+        )
+
+    def run_block_bootstrap(
+        self,
+        returns: pd.Series,
+        block_size: int = 20,
+        initial_capital: float = 100000,
+    ) -> MonteCarloResult:
+        """Run Monte Carlo with block bootstrap.
+
+        Preserves autocorrelation by sampling blocks of consecutive returns.
+
+        Args:
+            returns: Daily return series
+            block_size: Size of blocks to sample
+            initial_capital: Starting capital
+
+        Returns:
+            MonteCarloResult
+        """
+        returns_arr = returns.values
+        n_blocks = len(returns_arr) // block_size
+
+        drawdowns = []
+        final_equities = []
+        total_returns = []
+        sharpes = []
+
+        for _ in range(self.n_simulations):
+            # Sample blocks with replacement
+            block_starts = np.random.randint(
+                0, len(returns_arr) - block_size, n_blocks
+            )
+            simulated = np.concatenate(
+                [returns_arr[start : start + block_size] for start in block_starts]
+            )
+
+            # Apply skip rate
+            mask = np.random.random(len(simulated)) > self.skip_rate
+            filtered = simulated[mask]
+
+            if len(filtered) == 0:
+                continue
+
+            # Metrics
+            equity_curve = initial_capital * np.cumprod(1 + filtered)
+            running_max = np.maximum.accumulate(equity_curve)
+            drawdown = (equity_curve - running_max) / running_max
+
+            drawdowns.append(drawdown.min() * 100)
+            final_equities.append(equity_curve[-1])
+            total_returns.append((equity_curve[-1] / initial_capital - 1) * 100)
+            sharpes.append(
+                (np.mean(filtered) / np.std(filtered)) * np.sqrt(252)
+                if np.std(filtered) > 0
+                else 0
+            )
+
+        drawdowns = np.array(drawdowns)
+        final_equities = np.array(final_equities)
+        total_returns = np.array(total_returns)
+        sharpes = np.array(sharpes)
+
+        return MonteCarloResult(
+            n_simulations=len(drawdowns),
+            max_drawdown_5th=np.percentile(drawdowns, 5),
+            max_drawdown_median=np.median(drawdowns),
+            max_drawdown_95th=np.percentile(drawdowns, 95),
+            final_equity_5th=np.percentile(final_equities, 5),
+            final_equity_median=np.median(final_equities),
+            final_equity_95th=np.percentile(final_equities, 95),
+            total_return_5th=np.percentile(total_returns, 5),
+            total_return_median=np.median(total_returns),
+            total_return_95th=np.percentile(total_returns, 95),
+            sharpe_5th=np.percentile(sharpes, 5),
+            sharpe_median=np.median(sharpes),
+            sharpe_95th=np.percentile(sharpes, 95),
+            prob_positive_return=float((total_returns > 0).mean() * 100),
+            drawdown_dist=drawdowns,
+            equity_dist=final_equities,
+            return_dist=total_returns,
+            sharpe_dist=sharpes,
+        )
+
+    def validate_backtest(
+        self,
+        actual_result: dict,
+        mc_result: MonteCarloResult,
+    ) -> dict:
+        """Validate backtest results against Monte Carlo distribution.
+
+        Checks if actual results are statistically plausible.
+
+        Args:
+            actual_result: Dict with 'total_return', 'max_drawdown', 'sharpe'
+            mc_result: Monte Carlo simulation result
+
+        Returns:
+            Dict with validation results
+        """
+        # Calculate percentiles of actual values
+        actual_return = actual_result.get("total_return", 0)
+        actual_dd = actual_result.get("max_drawdown", 0)
+        actual_sharpe = actual_result.get("sharpe", 0)
+
+        return_percentile = float((mc_result.return_dist < actual_return).mean() * 100)
+        dd_percentile = float(
+            (mc_result.drawdown_dist > actual_dd).mean() * 100
+        )  # Worse DD
+        sharpe_percentile = float(
+            (mc_result.sharpe_dist < actual_sharpe).mean() * 100
+        )
+
+        # Flag suspicious results (>99th or <1st percentile)
+        warnings = []
+        if return_percentile > 99:
+            warnings.append("Return suspiciously high (>99th percentile)")
+        if dd_percentile > 99:
+            warnings.append("Drawdown suspiciously low (<1st percentile)")
+        if sharpe_percentile > 99:
+            warnings.append("Sharpe ratio suspiciously high (>99th percentile)")
+
+        return {
+            "return_percentile": return_percentile,
+            "drawdown_percentile": dd_percentile,
+            "sharpe_percentile": sharpe_percentile,
+            "is_suspicious": len(warnings) > 0,
+            "warnings": warnings,
+        }

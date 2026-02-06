@@ -1172,6 +1172,18 @@ wheels = [
 ]
 
 [[package]]
+name = "fredapi"
+version = "0.5.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pandas" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6f/3c/e9281ecda4c6ee5c7d50a4bcf00dc5df1a7ff325e604c9b9510c5bdd8514/fredapi-0.5.2.tar.gz", hash = "sha256:405ca048abed4207d93dbc9b7ee8c46d6b473483650323e2f1c094af83d4b247", size = 14735, upload-time = "2024-05-05T11:42:11.444Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/73/64/1db43417cf7ed430f104a347126b5260a1724ee9a1b7d0b1622262c9c4df/fredapi-0.5.2-py3-none-any.whl", hash = "sha256:961817ec8d70e58886ff7302d3dda908614ad99f77831a59833c4fc3f6150155", size = 11854, upload-time = "2024-05-05T11:42:09.559Z" },
+]
+
+[[package]]
 name = "frozendict"
 version = "2.4.7"
 source = { registry = "https://pypi.org/simple" }
@@ -1916,6 +1928,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "feedparser" },
     { name = "filterpy" },
+    { name = "fredapi" },
     { name = "hmmlearn" },
     { name = "holidays" },
     { name = "httpx" },
@@ -1927,6 +1940,7 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "python-dateutil" },
     { name = "pyvalet" },
+    { name = "quantstats" },
     { name = "questdb" },
     { name = "redis", extra = ["hiredis"] },
     { name = "riskfolio-lib" },
@@ -1938,6 +1952,7 @@ dependencies = [
     { name = "torch" },
     { name = "transformers" },
     { name = "uvicorn" },
+    { name = "vectorbt" },
     { name = "yfinance" },
 ]
 
@@ -1972,6 +1987,7 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115.0" },
     { name = "feedparser", specifier = ">=6.0.0" },
     { name = "filterpy", specifier = ">=1.4.5" },
+    { name = "fredapi", specifier = ">=0.5.2" },
     { name = "hmmlearn", specifier = ">=0.3.3" },
     { name = "holidays", specifier = ">=0.40" },
     { name = "httpx", specifier = ">=0.27.0" },
@@ -1987,6 +2003,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "python-dateutil", specifier = ">=2.8" },
     { name = "pyvalet", specifier = ">=1.1" },
+    { name = "quantstats", specifier = ">=0.0.81" },
     { name = "questdb", specifier = ">=2.0.0" },
     { name = "redis", extras = ["hiredis"], specifier = ">=5.0.0" },
     { name = "riskfolio-lib", specifier = ">=7.0.0" },
@@ -2000,6 +2017,7 @@ requires-dist = [
     { name = "transformers", specifier = ">=4.40.0" },
     { name = "types-redis", marker = "extra == 'dev'", specifier = ">=4.6.0" },
     { name = "uvicorn", specifier = ">=0.30.0" },
+    { name = "vectorbt", specifier = ">=0.28.2" },
     { name = "yfinance", specifier = ">=0.2.66" },
 ]
 provides-extras = ["dev"]
@@ -4054,6 +4072,25 @@ wheels = [
 ]
 
 [[package]]
+name = "quantstats"
+version = "0.0.81"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "python-dateutil" },
+    { name = "scipy" },
+    { name = "seaborn" },
+    { name = "tabulate" },
+    { name = "yfinance" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/68/a8/33f31a0d179b6c4ffefa1a4318a78075ea96f7ace7292663f1a99acebdd6/quantstats-0.0.81.tar.gz", hash = "sha256:91f44895e4481167255384c2297193233255b427e3a09a3fa111a5ce77e9b44a", size = 87569, upload-time = "2026-01-13T18:18:20.005Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1a/d4/484041d5c5a5d3ec8df5c74fef3054fec004dab554f6c3c00187888f8cc1/quantstats-0.0.81-py3-none-any.whl", hash = "sha256:6af2b501f61917c8c960faaf8007eb858d970ab02a3cf0d7dc19f048953e15f3", size = 90067, upload-time = "2026-01-13T18:18:18.451Z" },
+]
+
+[[package]]
 name = "questdb"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -4529,6 +4566,20 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/98/eb/2c07015938c50f46e9323e379e9799c3e28e0d07c9bae8b6735a6ecf1b6c/scs-3.2.11-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:2c166768dc87c389b2d000b5dcd472bb0ba40f96b4cf0e63c0fb603a4a5c80db", size = 12080259, upload-time = "2026-01-09T17:53:38.897Z" },
     { url = "https://files.pythonhosted.org/packages/f2/1b/d52e3b17554791726ba788abff053f4b27df157a49438f01134fec3c859d/scs-3.2.11-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:f51a14a5315974fae4ca4e1b4dc8926f872eca7e66b42e070dbdcfa6904b7860", size = 11974311, upload-time = "2026-01-09T17:53:41.003Z" },
     { url = "https://files.pythonhosted.org/packages/cb/d7/023ba290cfaf97b21c710b675b8a860b97d8226f62e35d7a08e37ddbb6d3/scs-3.2.11-cp314-cp314t-win_amd64.whl", hash = "sha256:7fe26e8a0efc96232f4c5b7649817e48dae04a61be911417e925071091b8cbf6", size = 7570221, upload-time = "2026-01-09T17:53:42.845Z" },
+]
+
+[[package]]
+name = "seaborn"
+version = "0.13.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/86/59/a451d7420a77ab0b98f7affa3a1d78a313d2f7281a57afb1a34bae8ab412/seaborn-0.13.2.tar.gz", hash = "sha256:93e60a40988f4d65e9f4885df477e2fdaff6b73a9ded434c1ab356dd57eefff7", size = 1457696, upload-time = "2024-01-25T13:21:52.551Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/83/11/00d3c3dfc25ad54e731d91449895a79e4bf2384dc3ac01809010ba88f6d5/seaborn-0.13.2-py3-none-any.whl", hash = "sha256:636f8336facf092165e27924f223d3c62ca560b1f2bb5dff7ab7fad265361987", size = 294914, upload-time = "2024-01-25T13:21:49.598Z" },
 ]
 
 [[package]]

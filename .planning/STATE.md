@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 
 ## Current Position
 
-Phase: 14 of 15 (News Intelligence) - COMPLETE
-Plan: 9 of 9 in current phase
-Status: Phase 14 complete, ready for Phase 15
-Last activity: 2026-02-06 — Completed Phase 14 (News Intelligence via /pipeline.gsd)
+Phase: 15 of 15 (Backtesting Engine) - COMPLETE
+Plan: 6 of 6 in current phase
+Status: Phase 15 complete, v2.0 Milestone DONE
+Last activity: 2026-02-06 — Completed Phase 15 (Backtesting Engine via /pipeline.gsd)
 
-Progress: ██████████████░ 93% (14/15 phases)
+Progress: ███████████████ 100% (15/15 phases)
 
 ## Performance Metrics
 
@@ -80,8 +80,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Phase 14 UAT complete
-Resume command: /pipeline:gsd 15
+Stopped at: Phase 15 COMPLETE - v2.0 Milestone finished
+Resume command: /gsd:complete-milestone
 
 ### Project Summary
 - Phase 1 Foundation: uv project, collectors, QuestDB storage
@@ -94,10 +94,15 @@ Resume command: /pipeline:gsd 15
 - Phase 8 Analysis: RegimeClassifier, CorrelationEngine, AlertEngine
 - Phase 9 Calendar & API: Calendar module, FastAPI server, Docker
 - Phase 10 Visualization: Plotly Dash dashboard, Discord alerts, QA validation
+- Phase 11 High-Frequency: TGA daily, NY Fed APIs, China proxies, stablecoins
+- Phase 12 Nowcasting: Kalman filters, HMM regime detection, PBoC estimator
+- Phase 13 Risk Metrics: VaR, CVaR, Expected Shortfall, Regime VaR
+- Phase 14 News Intelligence: RSS aggregation, NLP translation, CB sentiment
+- Phase 15 Backtesting: Historical loader, signals, VectorBT, Monte Carlo
 
 ### Final Stats
-- Total LOC: ~15,000+
-- Total Tests: 650+
+- Total LOC: ~18,000+
+- Total Tests: 700+
 - API Endpoints: 12
 - Dashboard Panels: 10
 - Alert Types: 4
@@ -109,3 +114,5 @@ Resume command: /pipeline:gsd 15
 - Alert threshold: 0.3 absolute change OR 2σ deviation
 - Collectors with robust multi-tier fallbacks
 - Full data quality validation system
+- Backtesting with VectorBT + Monte Carlo validation
+- Point-in-time data (ALFRED) to avoid look-ahead bias
