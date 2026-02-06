@@ -75,6 +75,14 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("LIQUIDITY_FRED_API_KEY", "FRED_API_KEY"),
     )
 
+    # EIA API key for petroleum data
+    # Accepts both LIQUIDITY_EIA_API_KEY and EIA_API_KEY
+    eia_api_key: SecretStr = Field(
+        default=SecretStr(""),
+        description="EIA API key for petroleum data fetching",
+        validation_alias=AliasChoices("LIQUIDITY_EIA_API_KEY", "EIA_API_KEY"),
+    )
+
     # QuestDB configuration
     questdb_host: str = Field(
         default="localhost",

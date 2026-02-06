@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-06)
 
 ## Current Position
 
-Phase: 16 of 21 (EIA Oil Data)
+Phase: 17 of 21 (CFTC Positioning)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-02-06 — Milestone v3.0 created
+Last activity: 2026-02-06 — Phase 16 complete
 
-Progress: ███████████████░░░░░░ 71% (15/21 phases, 56/80 plans)
+Progress: ████████████████░░░░░ 76% (16/21 phases, 60/80 plans)
 
 ## Milestones
 
@@ -30,7 +30,7 @@ Progress: ███████████████░░░░░░ 71% (1
 
 | Phase | Name | Plans | Status |
 |-------|------|-------|--------|
-| 16 | EIA Oil Data | 4 | Not started |
+| 16 | EIA Oil Data | 4 | ✅ Complete |
 | 17 | CFTC Positioning | 4 | Not started |
 | 18 | Oil Term Structure | 4 | Not started |
 | 19 | Real Rates | 4 | Not started |

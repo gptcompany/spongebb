@@ -246,10 +246,10 @@ Plans:
 **Research topics**: EIA FiscalData API, petroleum status report structure, DPROUST/WTISPLC series
 
 Plans:
-- [ ] 16-01: EIA Weekly Petroleum collector (inventory, production) | wave:1 | effort:M
-- [ ] 16-02: Cushing storage tracker (WTI delivery point) | wave:1 | effort:S
-- [ ] 16-03: Refinery utilization collector | wave:1 | effort:S
-- [ ] 16-04: Dashboard panel integration | wave:2 | effort:M
+- [x] 16-01: EIA Weekly Petroleum collector (inventory, production) | wave:1 | effort:M
+- [x] 16-02: Cushing storage tracker (WTI delivery point) | wave:1 | effort:S
+- [x] 16-03: Refinery utilization collector | wave:1 | effort:S
+- [x] 16-04: Dashboard panel integration | wave:2 | effort:M
 
 ### Phase 17: CFTC Positioning
 **Goal**: Commitment of Traders reports for WTI, copper, gold positioning
@@ -338,7 +338,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 13. Risk Metrics | 5/5 | Complete | 2026-02-05 |
 | 14. News Intelligence | 9/9 | Complete | 2026-02-06 |
 | 15. Backtesting Engine | 6/6 | Complete | 2026-02-06 |
-| 16. EIA Oil Data | 0/4 | Not started | - |
+| 16. EIA Oil Data | 4/4 | Complete | 2026-02-06 |
 | 17. CFTC Positioning | 0/4 | Not started | - |
 | 18. Oil Term Structure | 0/4 | Not started | - |
 | 19. Real Rates | 0/4 | Not started | - |

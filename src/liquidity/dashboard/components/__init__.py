@@ -14,6 +14,7 @@ This package contains individual UI components:
 - bounds: Sanity bounds for charts (QA-10)
 - news: Central bank news panel (Phase 14)
 - fomc_diff: FOMC statement diff panel (Plan 14-08)
+- eia_panel: EIA Weekly Petroleum panel (Phase 16)
 """
 
 from liquidity.dashboard.components.bounds import (
@@ -60,6 +61,12 @@ from liquidity.dashboard.components.fx import (
     create_fx_panel,
 )
 from liquidity.dashboard.components.header import create_header, create_status_bar
+from liquidity.dashboard.components.liquidity import (
+    create_global_liquidity_chart,
+    create_liquidity_metrics,
+    create_liquidity_panel,
+    create_net_liquidity_chart,
+)
 from liquidity.dashboard.components.news import (
     create_news_item,
     create_news_items_list,
@@ -67,12 +74,6 @@ from liquidity.dashboard.components.news import (
     format_time_ago,
     get_mock_news_items,
     news_items_from_newsitem_objects,
-)
-from liquidity.dashboard.components.liquidity import (
-    create_global_liquidity_chart,
-    create_liquidity_metrics,
-    create_liquidity_panel,
-    create_net_liquidity_chart,
 )
 from liquidity.dashboard.components.quality import (
     create_freshness_indicators,
@@ -97,6 +98,14 @@ from liquidity.dashboard.components.stress import (
     create_stress_panel,
     create_stress_status,
     get_overall_regime,
+)
+from liquidity.dashboard.components.eia_panel import (
+    create_cushing_chart,
+    create_cushing_utilization_badge,
+    create_eia_panel,
+    create_refinery_chart,
+    create_refinery_signal_badge,
+    create_supply_chart,
 )
 
 __all__ = [
@@ -172,4 +181,11 @@ __all__ = [
     "format_date_option",
     "get_available_dates_options",
     "parse_date_value",
+    # EIA Panel (Phase 16)
+    "create_eia_panel",
+    "create_cushing_chart",
+    "create_refinery_chart",
+    "create_supply_chart",
+    "create_cushing_utilization_badge",
+    "create_refinery_signal_badge",
 ]

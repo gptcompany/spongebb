@@ -42,6 +42,24 @@ from liquidity.collectors.credit import (
     SLOOS_SERIES,
     CreditCollector,
 )
+from liquidity.collectors.eia import (
+    CUSHING_CAPACITY_KB as EIA_CUSHING_CAPACITY_KB,
+)
+from liquidity.collectors.eia import (
+    ROUTE_MAP as EIA_ROUTE_MAP,
+)
+from liquidity.collectors.eia import (
+    SERIES_MAP as EIA_SERIES_MAP,
+)
+from liquidity.collectors.eia import (
+    UNIT_MAP as EIA_UNIT_MAP,
+)
+from liquidity.collectors.eia import (
+    UTILIZATION_THRESHOLDS as EIA_UTILIZATION_THRESHOLDS,
+)
+from liquidity.collectors.eia import (
+    EIACollector,
+)
 from liquidity.collectors.etf_flows import (
     ETF_TICKERS,
     ETF_UNDERLYING,
@@ -182,4 +200,11 @@ __all__ = [
     "XCCY_STRESS_THRESHOLDS",
     # TGA Daily (Phase 11)
     "TGADailyCollector",
+    # EIA Petroleum (Phase 16)
+    "EIACollector",
+    "EIA_SERIES_MAP",
+    "EIA_UNIT_MAP",
+    "EIA_ROUTE_MAP",
+    "EIA_CUSHING_CAPACITY_KB",
+    "EIA_UTILIZATION_THRESHOLDS",
 ]
