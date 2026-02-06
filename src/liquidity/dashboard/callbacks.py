@@ -48,6 +48,19 @@ from liquidity.dashboard.components.regime import (
     create_regime_indicator,
     create_regime_metrics,
 )
+from liquidity.dashboard.components.fomc_diff import (
+    create_change_summary,
+    create_diff_view,
+    create_empty_diff_view,
+    create_error_diff_view,
+    get_available_dates_options,
+    parse_date_value,
+)
+from liquidity.dashboard.components.news import (
+    create_news_items_list,
+    get_mock_news_items,
+    news_items_from_newsitem_objects,
+)
 from liquidity.dashboard.components.stress import (
     create_repo_stress_gauge,
     create_sofr_ois_gauge,
@@ -481,6 +494,377 @@ def register_callbacks(app: Dash) -> None:
         icon_class = "bi bi-chevron-up ms-2" if new_is_open else "bi bi-chevron-down ms-2"
 
         return new_is_open, icon_class
+
+    # News panel update callback
+    @app.callback(
+        Output("news-items-container", "children"),
+        [
+            Input("refresh-interval", "n_intervals"),
+            Input("news-filter-all", "n_clicks"),
+            Input("news-filter-fed", "n_clicks"),
+            Input("news-filter-ecb", "n_clicks"),
+            Input("news-filter-boj", "n_clicks"),
+        ],
+        prevent_initial_call=False,
+    )
+    def update_news_panel(
+        n_intervals: int,  # noqa: ARG001
+        all_clicks: int,  # noqa: ARG001
+        fed_clicks: int,  # noqa: ARG001
+        ecb_clicks: int,  # noqa: ARG001
+        boj_clicks: int,  # noqa: ARG001
+    ) -> Any:
+        """Update news panel with latest items and apply filter.
+
+        Triggered by auto-refresh interval or filter button clicks.
+
+        Returns:
+            Div containing filtered news items.
+        """
+        ctx = callback_context
+
+        # Determine which filter is active based on trigger
+        filter_source = "all"
+        if ctx.triggered:
+            trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+            if trigger_id == "news-filter-fed":
+                filter_source = "fed"
+            elif trigger_id == "news-filter-ecb":
+                filter_source = "ecb"
+            elif trigger_id == "news-filter-boj":
+                filter_source = "boj"
+
+        try:
+            # Fetch news data
+            news_items = _fetch_news_data()
+
+            # Create news items list with filter
+            return create_news_items_list(news_items, filter_source=filter_source)
+
+        except Exception as e:
+            logger.error("News panel update failed: %s", e)
+            from dash import html
+
+            return html.Div(
+                html.Small("News unavailable", className="text-muted"),
+                className="text-center py-3",
+            )
+
+    # News filter button active state callback
+    @app.callback(
+        [
+            Output("news-filter-all", "active"),
+            Output("news-filter-fed", "active"),
+            Output("news-filter-ecb", "active"),
+            Output("news-filter-boj", "active"),
+        ],
+        [
+            Input("news-filter-all", "n_clicks"),
+            Input("news-filter-fed", "n_clicks"),
+            Input("news-filter-ecb", "n_clicks"),
+            Input("news-filter-boj", "n_clicks"),
+        ],
+        prevent_initial_call=False,
+    )
+    def update_news_filter_active(
+        all_clicks: int,  # noqa: ARG001
+        fed_clicks: int,  # noqa: ARG001
+        ecb_clicks: int,  # noqa: ARG001
+        boj_clicks: int,  # noqa: ARG001
+    ) -> tuple[bool, bool, bool, bool]:
+        """Update active state of filter buttons.
+
+        Returns:
+            Tuple of active states for (All, Fed, ECB, BoJ) buttons.
+        """
+        ctx = callback_context
+
+        # Default: All is active
+        if not ctx.triggered:
+            return (True, False, False, False)
+
+        trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+        if trigger_id == "news-filter-fed":
+            return (False, True, False, False)
+        elif trigger_id == "news-filter-ecb":
+            return (False, False, True, False)
+        elif trigger_id == "news-filter-boj":
+            return (False, False, False, True)
+        else:
+            return (True, False, False, False)
+
+    # ==========================================================================
+    # FOMC Statement Diff Callbacks (Plan 14-08)
+    # ==========================================================================
+
+    # Load available FOMC statement dates on startup
+    @app.callback(
+        [
+            Output("fomc-date-1", "options"),
+            Output("fomc-date-2", "options"),
+            Output("fomc-dates-store", "data"),
+        ],
+        Input("refresh-interval", "n_intervals"),
+        prevent_initial_call=False,
+    )
+    def load_fomc_dates(n_intervals: int) -> tuple:  # noqa: ARG001
+        """Load available FOMC statement dates.
+
+        Triggered on startup and by refresh interval.
+
+        Returns:
+            Tuple of (date1_options, date2_options, dates_store).
+        """
+        try:
+            dates = _fetch_fomc_statement_dates()
+            options = get_available_dates_options(dates)
+
+            # Store dates as ISO strings
+            dates_store = [d.isoformat() for d in dates]
+
+            return options, options, dates_store
+
+        except Exception as e:
+            logger.error("Failed to load FOMC dates: %s", e)
+            return [], [], []
+
+    # FOMC diff comparison callback
+    @app.callback(
+        [
+            Output("fomc-change-summary", "children"),
+            Output("fomc-diff-view", "children"),
+        ],
+        Input("fomc-compare-btn", "n_clicks"),
+        [
+            State("fomc-date-1", "value"),
+            State("fomc-date-2", "value"),
+        ],
+        prevent_initial_call=True,
+    )
+    def compare_fomc_statements(
+        n_clicks: int | None,
+        date1_value: str | None,
+        date2_value: str | None,
+    ) -> tuple:
+        """Compare two FOMC statements and display diff.
+
+        Args:
+            n_clicks: Number of compare button clicks.
+            date1_value: First date ISO string.
+            date2_value: Second date ISO string.
+
+        Returns:
+            Tuple of (change_summary, diff_view) components.
+        """
+        from dash import html
+
+        if not n_clicks:
+            return (
+                html.Div(),
+                create_empty_diff_view(),
+            )
+
+        # Parse dates
+        date1 = parse_date_value(date1_value)
+        date2 = parse_date_value(date2_value)
+
+        if not date1 or not date2:
+            return (
+                html.Div("Please select both dates", className="text-warning"),
+                create_empty_diff_view("Select two statement dates to compare"),
+            )
+
+        if date1 == date2:
+            return (
+                html.Div("Please select different dates", className="text-warning"),
+                create_empty_diff_view("Select two different statement dates"),
+            )
+
+        try:
+            # Fetch statements and compute diff
+            diff = _fetch_and_diff_statements(date1, date2)
+
+            if diff is None:
+                return (
+                    html.Div("Failed to load statements", className="text-danger"),
+                    create_error_diff_view("Could not fetch FOMC statements"),
+                )
+
+            # Create summary and diff view
+            change_summary = create_change_summary(diff.change_score, diff.phrase_shifts)
+            diff_view = create_diff_view(diff)
+
+            return change_summary, diff_view
+
+        except Exception as e:
+            logger.error("FOMC diff comparison failed: %s", e)
+            return (
+                html.Div(f"Error: {e}", className="text-danger"),
+                create_error_diff_view(str(e)),
+            )
+
+
+def _fetch_fomc_statement_dates() -> list[date]:
+    """Fetch available FOMC statement dates.
+
+    Returns:
+        List of dates for which statements are available.
+    """
+    try:
+        import importlib.util
+
+        if importlib.util.find_spec("liquidity.news.fomc"):
+            from liquidity.news.fomc import FOMCStatementScraper
+
+            # Get cached dates from scraper
+            scraper = FOMCStatementScraper()
+            cached_dates = scraper.list_cached()
+
+            if cached_dates:
+                return cached_dates
+
+    except ImportError as e:
+        logger.warning("Could not import FOMC scraper: %s", e)
+
+    # Return mock dates for demo
+    return _get_mock_fomc_dates()
+
+
+def _get_mock_fomc_dates() -> list[date]:
+    """Get mock FOMC statement dates for testing.
+
+    Returns:
+        List of sample FOMC meeting dates.
+    """
+    # Sample FOMC meeting dates (2024)
+    return [
+        date(2024, 12, 18),
+        date(2024, 11, 7),
+        date(2024, 9, 18),
+        date(2024, 7, 31),
+        date(2024, 6, 12),
+        date(2024, 5, 1),
+        date(2024, 3, 20),
+        date(2024, 1, 31),
+        date(2023, 12, 13),
+        date(2023, 11, 1),
+    ]
+
+
+def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
+    """Fetch two FOMC statements and compute diff.
+
+    Args:
+        old_date: Date of older statement.
+        new_date: Date of newer statement.
+
+    Returns:
+        StatementDiff object or None if fetch fails.
+    """
+    try:
+        import importlib.util
+
+        if importlib.util.find_spec("liquidity.news.fomc"):
+            from liquidity.news.fomc import FOMCStatementScraper, StatementDiffEngine
+
+            # Try to fetch from scraper (sync wrapper)
+            try:
+                scraper = FOMCStatementScraper()
+
+                # Load from cache if available
+                old_statement = scraper._load_from_cache(old_date)
+                new_statement = scraper._load_from_cache(new_date)
+
+                if old_statement and new_statement:
+                    engine = StatementDiffEngine()
+                    return engine.diff(
+                        old_text=old_statement.raw_text,
+                        new_text=new_statement.raw_text,
+                        old_date=old_date,
+                        new_date=new_date,
+                    )
+
+            except Exception as e:
+                logger.warning("Failed to fetch statements from scraper: %s", e)
+
+    except ImportError as e:
+        logger.warning("Could not import FOMC modules: %s", e)
+
+    # Return mock diff for demo
+    return _get_mock_fomc_diff(old_date, new_date)
+
+
+def _get_mock_fomc_diff(old_date: date, new_date: date) -> Any:
+    """Get mock FOMC statement diff for testing.
+
+    Args:
+        old_date: Date of older statement.
+        new_date: Date of newer statement.
+
+    Returns:
+        StatementDiff with sample data.
+    """
+    from liquidity.news.fomc.diff import StatementDiffEngine
+
+    # Sample FOMC statement excerpts
+    old_text = """
+    The Committee seeks to achieve maximum employment and inflation at the rate of 2 percent
+    over the longer run. The Committee judges that the risks to achieving its employment and
+    inflation goals are moving into better balance. The economic outlook is uncertain, and the
+    Committee remains highly attentive to inflation risks.
+
+    In support of its goals, the Committee decided to maintain the target range for the federal
+    funds rate at 5-1/4 to 5-1/2 percent. In considering any adjustments to the target range for
+    the federal funds rate, the Committee will carefully assess incoming data, the evolving
+    outlook, and the balance of risks.
+    """
+
+    new_text = """
+    The Committee seeks to achieve maximum employment and inflation at the rate of 2 percent
+    over the longer run. The Committee judges that the risks to achieving its employment and
+    inflation goals are moving into better balance. The economic outlook is uncertain, and the
+    Committee remains attentive to inflation risks.
+
+    In support of its goals, the Committee decided to maintain the target range for the federal
+    funds rate at 5-1/4 to 5-1/2 percent. In considering any adjustments to the target range for
+    the federal funds rate, the Committee will carefully assess incoming data, the evolving
+    outlook, and the balance of risks. The Committee does not expect it will be appropriate to
+    reduce the target range until it has gained greater confidence that inflation is moving
+    sustainably toward 2 percent.
+    """
+
+    engine = StatementDiffEngine()
+    return engine.diff(
+        old_text=old_text,
+        new_text=new_text,
+        old_date=old_date,
+        new_date=new_date,
+    )
+
+
+def _fetch_news_data() -> list[dict]:
+    """Fetch news data from the news module.
+
+    Returns:
+        List of news item dictionaries.
+    """
+    try:
+        import importlib.util
+
+        if importlib.util.find_spec("liquidity.news"):
+            from liquidity.news import NewsPoller, poll_feeds_once
+
+            # Try async fetch (won't work in callback context, so use mock)
+            # In production, this would be fetched from a cache/database
+            # populated by a background task
+            logger.debug("News module available, using mock data for now")
+
+    except ImportError as e:
+        logger.warning("Could not import news module: %s", e)
+
+    # Return mock news data
+    return get_mock_news_items()
 
 
 def _fetch_quality_data() -> dict[str, Any]:

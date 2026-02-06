@@ -12,6 +12,8 @@ This package contains individual UI components:
 - calendar: Calendar events strip and overlay
 - quality: Data quality indicators (QA-08, QA-09)
 - bounds: Sanity bounds for charts (QA-10)
+- news: Central bank news panel (Phase 14)
+- fomc_diff: FOMC statement diff panel (Plan 14-08)
 """
 
 from liquidity.dashboard.components.bounds import (
@@ -41,12 +43,31 @@ from liquidity.dashboard.components.flows import (
     create_flows_summary,
     create_tic_chart,
 )
+from liquidity.dashboard.components.fomc_diff import (
+    create_change_summary,
+    create_diff_view,
+    create_empty_diff_view,
+    create_error_diff_view,
+    create_fomc_diff_panel,
+    create_loading_diff_view,
+    format_date_option,
+    get_available_dates_options,
+    parse_date_value,
+)
 from liquidity.dashboard.components.fx import (
     create_dxy_chart,
     create_fx_metrics,
     create_fx_panel,
 )
 from liquidity.dashboard.components.header import create_header, create_status_bar
+from liquidity.dashboard.components.news import (
+    create_news_item,
+    create_news_items_list,
+    create_news_panel,
+    format_time_ago,
+    get_mock_news_items,
+    news_items_from_newsitem_objects,
+)
 from liquidity.dashboard.components.liquidity import (
     create_global_liquidity_chart,
     create_liquidity_metrics,
@@ -134,4 +155,21 @@ __all__ = [
     "SanityBounds",
     "BoundInfo",
     "BoundStatus",
+    # News (Phase 14)
+    "create_news_panel",
+    "create_news_item",
+    "create_news_items_list",
+    "format_time_ago",
+    "get_mock_news_items",
+    "news_items_from_newsitem_objects",
+    # FOMC Diff (Plan 14-08)
+    "create_fomc_diff_panel",
+    "create_change_summary",
+    "create_diff_view",
+    "create_empty_diff_view",
+    "create_loading_diff_view",
+    "create_error_diff_view",
+    "format_date_option",
+    "get_available_dates_options",
+    "parse_date_value",
 ]

@@ -63,6 +63,10 @@ dependencies = [
     "torch>=2.0.0",              # LSTM forecasting (CPU)
     # Phase 13: Risk Metrics
     "riskfolio-lib>=7.0.0",      # Portfolio risk analytics (VaR, CVaR)
+    # Phase 14: News Intelligence
+    "feedparser>=6.0.0",         # RSS feed parsing
+    "transformers>=4.40.0",      # NLP translation (OPUS-MT, Qwen)
+    "sentencepiece>=0.2.0",      # Required by some OPUS models
 ]
 
 [project.optional-dependencies]
@@ -172,6 +176,10 @@ module = [
     "torch.*",
     "statsmodels",
     "statsmodels.*",
+    "transformers",
+    "transformers.*",
+    "sentencepiece",
+    "sentencepiece.*",
 ]
 ignore_missing_imports = true
 

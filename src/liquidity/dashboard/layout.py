@@ -6,6 +6,8 @@ Assembles all components into the complete dashboard layout:
 - Liquidity panels (Net + Global)
 - Analysis panels (Regime + Correlations)
 - Extended panels (FX, Stress, Commodities, Flows)
+- News panel (Central Bank communications)
+- FOMC Statement Diff panel (Phase 14)
 - Calendar strip
 - Auto-refresh interval
 """
@@ -17,9 +19,11 @@ from liquidity.dashboard.components.calendar import create_calendar_strip
 from liquidity.dashboard.components.commodities import create_commodities_panel
 from liquidity.dashboard.components.correlations import create_correlation_panel
 from liquidity.dashboard.components.flows import create_flows_panel
+from liquidity.dashboard.components.fomc_diff import create_fomc_diff_panel
 from liquidity.dashboard.components.fx import create_fx_panel
 from liquidity.dashboard.components.header import create_header, create_status_bar
 from liquidity.dashboard.components.liquidity import create_liquidity_panel
+from liquidity.dashboard.components.news import create_news_panel
 from liquidity.dashboard.components.quality import create_quality_detail_panel
 from liquidity.dashboard.components.regime import create_regime_panel
 from liquidity.dashboard.components.stress import create_stress_panel
@@ -48,6 +52,12 @@ def create_layout() -> html.Div:
     | |  FX    | | Stress | | Cmdty  | | Flows  |              |
     | | [DXY]  | | [SOFR] | | [Gold] | | [TIC]  |              |
     | +--------+ +--------+ +--------+ +--------+              |
+    +---------------------------------------------------------+
+    | +----------------------+ +----------------------+        |
+    | | Central Bank News    | | FOMC Statement Diff  |        |
+    | | [Fed] [ECB] [BoJ]    | | [Dec 2024] [Jan 2025]|        |
+    | | * Headlines...       | | HAWKISH (+0.35)      |        |
+    | +----------------------+ +----------------------+        |
     +---------------------------------------------------------+
     | Calendar: [Treasury Auction Feb 10] [FOMC Feb 28]        |
     +---------------------------------------------------------+
@@ -118,6 +128,24 @@ def create_layout() -> html.Div:
                     ),
                     # Separator
                     html.Hr(className="my-3"),
+                    # News and FOMC Diff row (Phase 14)
+                    dbc.Row(
+                        [
+                            # Central Bank News panel
+                            dbc.Col(
+                                create_news_panel(),
+                                width=6,
+                            ),
+                            # FOMC Statement Diff panel (Plan 14-08)
+                            dbc.Col(
+                                create_fomc_diff_panel(),
+                                width=6,
+                            ),
+                        ],
+                        className="mb-4",
+                    ),
+                    # Separator
+                    html.Hr(className="my-3"),
                     # Calendar strip
                     create_calendar_strip(),
                     # Loading indicator
@@ -139,6 +167,8 @@ def create_layout() -> html.Div:
             ),
             # Store for data caching
             dcc.Store(id="dashboard-data-store"),
+            # Store for FOMC statement dates (Phase 14)
+            dcc.Store(id="fomc-dates-store"),
             # Download component for HTML export
             dcc.Download(id="download-html"),
             # Download component for export button (export-download)
