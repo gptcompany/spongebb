@@ -285,10 +285,10 @@ Plans:
 **Research topics**: DFII10, T10YIE, correlation rolling window
 
 Plans:
-- [ ] 19-01: Real rates collector (10Y TIPS, 5Y TIPS) | wave:1 | effort:S
-- [ ] 19-02: Breakeven inflation calculator | wave:1 | effort:S
-- [ ] 19-03: Oil-real rates correlation engine | wave:1 | effort:M
-- [ ] 19-04: Inflation expectations dashboard | wave:2 | effort:M
+- [x] 19-01: Real rates collector (10Y TIPS, 5Y TIPS) | wave:1 | effort:S
+- [x] 19-02: Breakeven inflation calculator | wave:1 | effort:S
+- [x] 19-03: Oil-real rates correlation engine | wave:1 | effort:M
+- [x] 19-04: Inflation expectations dashboard | wave:2 | effort:M
 
 ### Phase 20: Commodity News
 **Goal**: Oil-specific news intelligence (OPEC, sanctions, weather)
@@ -341,7 +341,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 16. EIA Oil Data | 4/4 | Complete | 2026-02-06 |
 | 17. CFTC Positioning | 4/4 | Complete | 2026-02-06 |
 | 18. Oil Term Structure | 4/4 | Complete | 2026-02-06 |
-| 19. Real Rates | 0/4 | Not started | - |
+| 19. Real Rates | 4/4 | Complete | 2026-02-06 |
 | 20. Commodity News | 0/4 | Not started | - |
 | 21. Supply-Demand Model | 0/4 | Not started | - |
 

@@ -9,6 +9,7 @@ Assembles all components into the complete dashboard layout:
 - News panel (Central Bank communications)
 - FOMC Statement Diff panel (Phase 14)
 - EIA Weekly Petroleum panel (Phase 16)
+- Inflation Expectations panel (Phase 19)
 - Calendar strip
 - Auto-refresh interval
 """
@@ -29,6 +30,7 @@ from liquidity.dashboard.components.quality import create_quality_detail_panel
 from liquidity.dashboard.components.regime import create_regime_panel
 from liquidity.dashboard.components.stress import create_stress_panel
 from liquidity.dashboard.components.eia_panel import create_eia_panel
+from liquidity.dashboard.components.inflation import create_inflation_panel
 
 
 def create_layout() -> html.Div:
@@ -148,12 +150,17 @@ def create_layout() -> html.Div:
                     ),
                     # Separator
                     html.Hr(className="my-3"),
-                    # EIA Weekly Petroleum row (Phase 16)
+                    # EIA Weekly Petroleum and Inflation row (Phase 16, 19)
                     dbc.Row(
                         [
                             # EIA Oil Data panel
                             dbc.Col(
                                 create_eia_panel(),
+                                width=6,
+                            ),
+                            # Inflation Expectations panel (Phase 19)
+                            dbc.Col(
+                                create_inflation_panel(),
                                 width=6,
                             ),
                         ],

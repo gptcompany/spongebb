@@ -89,6 +89,10 @@ SERIES_MAP: dict[str, str] = {
     "pce": "PCE",  # Personal Consumption Expenditures (billions USD, SAAR, monthly)
     "credit_card_loans": "CCLACBW027SBOG",  # Credit Card Loans at Banks (millions USD, weekly)
     "consumer_loans": "CLSACBW027SBOG",  # Consumer Loans at Banks (millions USD, weekly)
+    # Phase 19: Real Rates (TIPS for BEI calculation)
+    "tips_10y": "DFII10",  # 10-Year TIPS Real Yield (percent, daily)
+    "tips_5y": "DFII5",  # 5-Year TIPS Real Yield (percent, daily)
+    "nominal_5y": "DGS5",  # 5-Year Treasury Nominal Yield (percent, daily)
 }
 
 # Unit conversions for standardization
@@ -127,6 +131,10 @@ UNIT_MAP: dict[str, str] = {
     "PCE": "billions_usd_saar",  # Personal Consumption Expenditures
     "CCLACBW027SBOG": "millions_usd",  # Credit Card Loans at Banks
     "CLSACBW027SBOG": "millions_usd",  # Consumer Loans at Banks
+    # Real Rates (Phase 19)
+    "DFII10": "percent",  # 10-Year TIPS Real Yield
+    "DFII5": "percent",  # 5-Year TIPS Real Yield
+    "DGS5": "percent",  # 5-Year Treasury Nominal Yield
 }
 
 
@@ -484,6 +492,32 @@ class FredCollector(BaseCollector[pd.DataFrame]):
         """
         return await self.collect(
             ["WALCL", "ECBASSETSW", "JPNASSETS"], start_date, end_date
+        )
+
+    async def fetch_real_rates(
+        self,
+        start_date: datetime | None = None,
+        end_date: datetime | None = None,
+    ) -> pd.DataFrame:
+        """Fetch real rates data (TIPS yields and nominal 5Y for BEI calculation).
+
+        Fetches:
+        - DFII10: 10-Year TIPS Real Yield (percent, daily)
+        - DFII5: 5-Year TIPS Real Yield (percent, daily)
+        - DGS5: 5-Year Treasury Nominal Yield (percent, daily)
+
+        Breakeven Inflation (BEI) can be calculated as:
+        BEI_5Y = DGS5 - DFII5
+
+        Args:
+            start_date: Start date for data fetch. Defaults to 30 days ago.
+            end_date: End date for data fetch. Defaults to today.
+
+        Returns:
+            DataFrame with real rates data (TIPS and nominal yields in percent).
+        """
+        return await self.collect(
+            ["DFII10", "DFII5", "DGS5"], start_date, end_date
         )
 
 

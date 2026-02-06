@@ -15,6 +15,7 @@ This package contains individual UI components:
 - news: Central bank news panel (Phase 14)
 - fomc_diff: FOMC statement diff panel (Plan 14-08)
 - eia_panel: EIA Weekly Petroleum panel (Phase 16)
+- inflation: Inflation expectations panel (Phase 19)
 """
 
 from liquidity.dashboard.components.bounds import (
@@ -120,6 +121,13 @@ from liquidity.dashboard.components.oil_term_structure import (
     create_price_chart,
     create_roll_yield_bars,
 )
+from liquidity.dashboard.components.inflation import (
+    create_breakeven_chart,
+    create_inflation_panel,
+    create_inflation_summary,
+    create_oil_rates_scatter,
+    create_real_rates_chart,
+)
 
 __all__ = [
     # Header
@@ -212,4 +220,10 @@ __all__ = [
     "create_curve_gauge",
     "create_price_chart",
     "create_roll_yield_bars",
+    # Inflation Panel (Phase 19)
+    "create_inflation_panel",
+    "create_real_rates_chart",
+    "create_breakeven_chart",
+    "create_oil_rates_scatter",
+    "create_inflation_summary",
 ]

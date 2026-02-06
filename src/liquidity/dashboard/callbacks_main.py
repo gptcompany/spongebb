@@ -706,6 +706,10 @@ def register_callbacks(app: Dash) -> None:
     from liquidity.dashboard.callbacks.eia_callbacks import register_eia_callbacks
     register_eia_callbacks(app)
 
+    # Register Inflation panel callbacks (Phase 19)
+    from liquidity.dashboard.callbacks.inflation_callbacks import register_inflation_callbacks
+    register_inflation_callbacks(app)
+
 
 def _fetch_fomc_statement_dates() -> list[date]:
     """Fetch available FOMC statement dates.

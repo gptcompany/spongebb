@@ -39,6 +39,14 @@ from liquidity.analyzers.term_structure import (
     TermStructureAnalyzer,
     TermStructureSignal,
 )
+from liquidity.analyzers.real_rates import (
+    RealRatesAnalyzer,
+    RealRatesState,
+)
+from liquidity.analyzers.oil_real_rates import (
+    OilRealRatesAnalyzer,
+    OilRealRatesCorrelation,
+)
 
 __all__ = [
     # Regime Classification
@@ -64,4 +72,10 @@ __all__ = [
     "RollYieldMetrics",
     "TermStructureAnalyzer",
     "TermStructureSignal",
+    # Real Rates Analysis
+    "RealRatesAnalyzer",
+    "RealRatesState",
+    # Oil-Real Rates Correlation
+    "OilRealRatesAnalyzer",
+    "OilRealRatesCorrelation",
 ]
