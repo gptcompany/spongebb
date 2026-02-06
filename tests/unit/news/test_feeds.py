@@ -11,6 +11,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import httpx
 import pytest
+from pydantic import ValidationError
 
 from liquidity.news.feeds import (
     DeduplicationCache,
@@ -652,7 +653,7 @@ class TestSchemas:
             fetched_at=datetime.now(UTC),
         )
 
-        with pytest.raises((TypeError, AttributeError)):  # Frozen model
+        with pytest.raises((TypeError, AttributeError, ValidationError)):  # Frozen model
             item.title = "Modified"  # type: ignore
 
     def test_feed_config_immutable(self) -> None:
@@ -663,7 +664,7 @@ class TestSchemas:
             name="Test Feed",
         )
 
-        with pytest.raises((TypeError, AttributeError)):  # Frozen
+        with pytest.raises((TypeError, AttributeError, ValidationError)):  # Frozen
             config.name = "Modified"  # type: ignore
 
     def test_feed_config_poll_interval_minimum(self) -> None:
