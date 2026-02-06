@@ -30,7 +30,6 @@ from liquidity.news.schemas import (
     NewsItem,
 )
 
-
 # =============================================================================
 # Fixtures
 # =============================================================================
@@ -653,7 +652,7 @@ class TestSchemas:
             fetched_at=datetime.now(UTC),
         )
 
-        with pytest.raises(Exception):  # ValidationError for frozen model
+        with pytest.raises((TypeError, AttributeError)):  # Frozen model
             item.title = "Modified"  # type: ignore
 
     def test_feed_config_immutable(self) -> None:
@@ -664,12 +663,12 @@ class TestSchemas:
             name="Test Feed",
         )
 
-        with pytest.raises(Exception):
+        with pytest.raises((TypeError, AttributeError)):  # Frozen
             config.name = "Modified"  # type: ignore
 
     def test_feed_config_poll_interval_minimum(self) -> None:
         """Test that poll_interval has minimum of 60s."""
-        with pytest.raises(Exception):  # ValidationError
+        with pytest.raises(ValueError):  # ValidationError
             FeedConfig(
                 source=FeedSource.FED_PRESS,
                 url="https://example.com/feed.xml",

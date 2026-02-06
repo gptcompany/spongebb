@@ -6,9 +6,9 @@ Tests the real-time monitoring and alerting functionality.
 from __future__ import annotations
 
 import asyncio
-from datetime import UTC, date, datetime, timedelta
-from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+import contextlib
+from datetime import UTC, date, datetime
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from discord_webhook import DiscordEmbed
@@ -23,12 +23,10 @@ from liquidity.news.fomc.scraper import (
 )
 from liquidity.news.fomc.watcher import (
     DEFAULT_POLL_INTERVAL,
-    FOMC_ALERT_TYPE,
     FOMCStatementWatcher,
     WatcherError,
     WatcherState,
 )
-
 
 # =============================================================================
 # Fixtures
@@ -455,13 +453,13 @@ class TestAlertCascading:
         # Make full alert fail (by raising exception in embed creation)
         call_count = 0
 
-        async def send_with_failure(embed: DiscordEmbed, alert_type: str) -> bool:
+        async def send_with_failure(
+            _embed: DiscordEmbed, _alert_type: str
+        ) -> bool:
             nonlocal call_count
             call_count += 1
-            if call_count == 1:
-                # First call (full alert) fails
-                return False
-            return True  # Subsequent calls succeed
+            # First call (full alert) fails, subsequent calls succeed
+            return call_count != 1
 
         watcher.discord_client.send_embed_async = AsyncMock(side_effect=send_with_failure)
 
@@ -639,7 +637,7 @@ class TestWatcherIntegration:
 
         # Track callback
         detected_statements: list[FOMCStatement] = []
-        watcher.set_callback(lambda s, d: detected_statements.append(s))
+        watcher.set_callback(lambda s, _d: detected_statements.append(s))
 
         # Initialize baseline
         await watcher._initialize_baseline()
@@ -685,16 +683,12 @@ class TestWatcherIntegration:
         )
 
         # First check - fails
-        try:
+        with contextlib.suppress(FOMCScraperError):
             await watcher._check_for_new_statement()
-        except FOMCScraperError:
-            pass
 
         # Second check - fails
-        try:
+        with contextlib.suppress(FOMCScraperError):
             await watcher._check_for_new_statement()
-        except FOMCScraperError:
-            pass
 
         # Third check - succeeds
         await watcher._check_for_new_statement()

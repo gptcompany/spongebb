@@ -6,7 +6,7 @@ Run with: uv run pytest tests/unit/news/test_alerts.py -v
 """
 
 from datetime import UTC, datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -19,7 +19,6 @@ from liquidity.news.alerts import (
     Priority,
 )
 from liquidity.news.schemas import FeedSource, NewsItem
-
 
 # =============================================================================
 # Fixtures
@@ -218,7 +217,7 @@ class TestNewsAlert:
             matched_keywords=("rate decision",),
         )
 
-        with pytest.raises(Exception):  # FrozenInstanceError
+        with pytest.raises((TypeError, AttributeError)):  # Frozen model cannot be modified
             alert.priority = Priority.LOW  # type: ignore
 
     def test_alert_to_dict(self, sample_news_item: NewsItem) -> None:
@@ -373,8 +372,8 @@ class TestKeywordMatching:
         matches2 = engine.match_keywords(text2)
 
         # Both should match the same keywords
-        keywords1 = set(kw for kw, _ in matches1)
-        keywords2 = set(kw for kw, _ in matches2)
+        keywords1 = {kw for kw, _ in matches1}
+        keywords2 = {kw for kw, _ in matches2}
         assert keywords1 == keywords2
 
     def test_match_word_boundaries(self, engine: NewsAlertEngine) -> None:

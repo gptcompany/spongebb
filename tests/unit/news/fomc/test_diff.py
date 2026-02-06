@@ -19,7 +19,6 @@ from liquidity.news.fomc.diff import (
     diff_statements,
 )
 
-
 # =============================================================================
 # Real FOMC Statement Excerpts for Testing
 # =============================================================================
@@ -382,7 +381,7 @@ class TestStatementDiffIntegration:
 
         # Check specific shifts
         added_phrases = [s.phrase for s in diff.phrase_shifts if s.change == "added"]
-        removed_phrases = [s.phrase for s in diff.phrase_shifts if s.change == "removed"]
+        [s.phrase for s in diff.phrase_shifts if s.change == "removed"]
 
         # Dovish phrases added
         assert any(p in added_phrases for p in ["patient", "subdued", "gradual"])

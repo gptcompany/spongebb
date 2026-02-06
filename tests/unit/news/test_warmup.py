@@ -5,7 +5,7 @@ Tests the warmup functionality without actually loading models.
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -17,7 +17,6 @@ from liquidity.news.warmup import (
     warm_models,
     warm_models_minimal,
 )
-
 
 # =============================================================================
 # WarmupResult Tests
@@ -179,7 +178,7 @@ class TestWarmModels:
             "liquidity.news.warmup._warm_translation_model",
             return_value=WarmupResult("test", True, 0.1),
         ) as mock_warm:
-            summary = await warm_models(
+            await warm_models(
                 include_sentiment=False,
                 include_translation=True,
                 translation_languages=["de"],
@@ -198,7 +197,7 @@ class TestWarmModels:
             "liquidity.news.warmup._warm_translation_model",
             return_value=WarmupResult("test", True, 0.1),
         ) as mock_warm:
-            summary = await warm_models(
+            await warm_models(
                 include_sentiment=False,
                 include_translation=True,
                 translation_languages=None,  # Use defaults
@@ -222,7 +221,7 @@ class TestWarmModelsMinimal:
             "liquidity.news.warmup._warm_translation_model",
             return_value=WarmupResult("opus", True, 0.1),
         ) as mock_opus:
-            summary = await warm_models_minimal()
+            await warm_models_minimal()
 
             # Should call finBERT
             mock_finbert.assert_called_once()
