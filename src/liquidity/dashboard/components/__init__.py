@@ -107,6 +107,19 @@ from liquidity.dashboard.components.eia_panel import (
     create_refinery_signal_badge,
     create_supply_chart,
 )
+from liquidity.dashboard.components.positioning import (
+    COT_COMMODITIES,
+    create_extremes_table,
+    create_positioning_heatmap,
+    create_positioning_panel,
+    create_positioning_timeseries,
+)
+from liquidity.dashboard.components.oil_term_structure import (
+    create_curve_gauge,
+    create_oil_term_structure_panel,
+    create_price_chart,
+    create_roll_yield_bars,
+)
 
 __all__ = [
     # Header
@@ -188,4 +201,15 @@ __all__ = [
     "create_supply_chart",
     "create_cushing_utilization_badge",
     "create_refinery_signal_badge",
+    # Positioning Panel (Phase 17)
+    "create_positioning_panel",
+    "create_positioning_heatmap",
+    "create_positioning_timeseries",
+    "create_extremes_table",
+    "COT_COMMODITIES",
+    # Oil Term Structure Panel (Phase 18)
+    "create_oil_term_structure_panel",
+    "create_curve_gauge",
+    "create_price_chart",
+    "create_roll_yield_bars",
 ]

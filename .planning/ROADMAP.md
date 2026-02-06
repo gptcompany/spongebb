@@ -272,10 +272,10 @@ Plans:
 **Research topics**: WTI futures chain via yfinance, CLF/CLG contract symbols, calendar spread calculation
 
 Plans:
-- [ ] 18-01: Futures curve collector (front 6 contracts) | wave:1 | effort:M
-- [ ] 18-02: Contango/backwardation indicator | wave:1 | effort:M
-- [ ] 18-03: Roll yield calculator | wave:2 | effort:S
-- [ ] 18-04: Term structure visualization | wave:2 | effort:M
+- [x] 18-01: Futures curve collector (front 6 contracts) | wave:1 | effort:M
+- [x] 18-02: Contango/backwardation indicator | wave:1 | effort:M
+- [x] 18-03: Roll yield calculator | wave:2 | effort:S
+- [x] 18-04: Term structure visualization | wave:2 | effort:M
 
 ### Phase 19: Real Rates
 **Goal**: Real rates tracking and oil-rates correlation analysis
@@ -339,8 +339,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 14. News Intelligence | 9/9 | Complete | 2026-02-06 |
 | 15. Backtesting Engine | 6/6 | Complete | 2026-02-06 |
 | 16. EIA Oil Data | 4/4 | Complete | 2026-02-06 |
-| 17. CFTC Positioning | 0/4 | Not started | - |
-| 18. Oil Term Structure | 0/4 | Not started | - |
+| 17. CFTC Positioning | 4/4 | Complete | 2026-02-06 |
+| 18. Oil Term Structure | 4/4 | Complete | 2026-02-06 |
 | 19. Real Rates | 0/4 | Not started | - |
 | 20. Commodity News | 0/4 | Not started | - |
 | 21. Supply-Demand Model | 0/4 | Not started | - |

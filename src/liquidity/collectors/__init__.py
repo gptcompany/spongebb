@@ -110,6 +110,16 @@ from liquidity.collectors.xccy_basis import (
 )
 from liquidity.collectors.yahoo import SYMBOLS as YAHOO_SYMBOLS
 from liquidity.collectors.yahoo import YahooCollector
+from liquidity.collectors.cftc_cot import (
+    COMMODITY_MAP as CFTC_COMMODITY_MAP,
+    POSITION_FIELDS as CFTC_POSITION_FIELDS,
+    CFTCCOTCollector,
+)
+from liquidity.collectors.oil_term_structure import (
+    SERIES_MAP as OIL_TS_SERIES_MAP,
+    UNIT_MAP as OIL_TS_UNIT_MAP,
+    OilTermStructureCollector,
+)
 
 __all__ = [
     # Base
@@ -207,4 +217,12 @@ __all__ = [
     "EIA_ROUTE_MAP",
     "EIA_CUSHING_CAPACITY_KB",
     "EIA_UTILIZATION_THRESHOLDS",
+    # CFTC COT (Phase 17)
+    "CFTCCOTCollector",
+    "CFTC_COMMODITY_MAP",
+    "CFTC_POSITION_FIELDS",
+    # Oil Term Structure (Phase 18)
+    "OilTermStructureCollector",
+    "OIL_TS_SERIES_MAP",
+    "OIL_TS_UNIT_MAP",
 ]

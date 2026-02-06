@@ -27,6 +27,18 @@ from liquidity.analyzers.regime_classifier import (
     RegimeDirection,
     RegimeResult,
 )
+from liquidity.analyzers.positioning import (
+    DEFAULT_COMMODITIES,
+    ExtremeType,
+    PositioningAnalyzer,
+    PositioningMetrics,
+)
+from liquidity.analyzers.term_structure import (
+    CurveShape,
+    RollYieldMetrics,
+    TermStructureAnalyzer,
+    TermStructureSignal,
+)
 
 __all__ = [
     # Regime Classification
@@ -42,4 +54,14 @@ __all__ = [
     "Alert",
     "AlertType",
     "AlertSeverity",
+    # Positioning Analysis
+    "PositioningAnalyzer",
+    "PositioningMetrics",
+    "ExtremeType",
+    "DEFAULT_COMMODITIES",
+    # Term Structure Analysis
+    "CurveShape",
+    "RollYieldMetrics",
+    "TermStructureAnalyzer",
+    "TermStructureSignal",
 ]
