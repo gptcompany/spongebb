@@ -8,16 +8,19 @@ Build a FAANG-grade global liquidity monitoring system from the ground up. Start
 
 None
 
-## Completed Milestones
+## Milestones
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-02-04
 - ✅ [v2.0 Advanced Analytics](milestones/v2.0-ROADMAP.md) (Phases 11-15) — SHIPPED 2026-02-06
+- 🚧 **v3.0 Commodity Intelligence** (Phases 16-21) — IN PROGRESS
 
 ## Phases Summary
 
 **v1.0 MVP (Phases 1-10):** Foundation, Global CB Collectors, Rates & FX, Market Indicators, Capital Flows, Credit & BIS, Liquidity Calculations, Analysis, Calendar & API, Visualization
 
 **v2.0 Advanced Analytics (Phases 11-15):** High-Frequency Data, Nowcasting, Risk Metrics, News Intelligence, Backtesting
+
+**v3.0 Commodity Intelligence (Phases 16-21):** EIA Oil Data, CFTC Positioning, Oil Term Structure, Real Rates, Commodity News, Supply-Demand Model
 
 ## Phase Details
 
@@ -229,6 +232,90 @@ Plans:
 - [x] 15-05: Monte Carlo simulation (distribution of outcomes) | wave:3 | effort:L
 - [x] 15-06: Regime transition P&L analysis | wave:3 | effort:M
 
+---
+
+## 🚧 v3.0 Commodity Intelligence (In Progress)
+
+**Milestone Goal:** Transform oil from "price tracker" to "macro liquidity indicator" with supply fundamentals, positioning data, and market structure analysis.
+
+### Phase 16: EIA Oil Data
+**Goal**: Weekly petroleum supply data (inventory, production, refinery utilization)
+**Depends on**: Phase 15
+**Requirements**: OIL-01 (EIA Weekly), OIL-02 (Cushing inventory), OIL-03 (Refinery runs)
+**Research**: Likely (EIA API structure, FRED fallback series)
+**Research topics**: EIA FiscalData API, petroleum status report structure, DPROUST/WTISPLC series
+
+Plans:
+- [ ] 16-01: EIA Weekly Petroleum collector (inventory, production) | wave:1 | effort:M
+- [ ] 16-02: Cushing storage tracker (WTI delivery point) | wave:1 | effort:S
+- [ ] 16-03: Refinery utilization collector | wave:1 | effort:S
+- [ ] 16-04: Dashboard panel integration | wave:2 | effort:M
+
+### Phase 17: CFTC Positioning
+**Goal**: Commitment of Traders reports for WTI, copper, gold positioning
+**Depends on**: Phase 16
+**Requirements**: POS-01 (COT reports), POS-02 (Commercials vs specs), POS-03 (Extremes detection)
+**Research**: Likely (CFTC API structure, disaggregated reports)
+**Research topics**: CFTC JSON API endpoint, COT report fields, net positioning calculation
+
+Plans:
+- [ ] 17-01: CFTC COT collector (weekly disaggregated) | wave:1 | effort:M
+- [ ] 17-02: Positioning metrics (commercial/non-commercial ratio) | wave:1 | effort:M
+- [ ] 17-03: Extreme positioning alerts (percentile thresholds) | wave:2 | effort:M
+- [ ] 17-04: Dashboard positioning heatmap | wave:2 | effort:M
+
+### Phase 18: Oil Term Structure
+**Goal**: Contango/backwardation signals from futures curve
+**Depends on**: Phase 16
+**Requirements**: STRUCT-01 (Front-back spread), STRUCT-02 (Curve shape), STRUCT-03 (Roll yield)
+**Research**: Likely (CME futures data, yfinance continuous contracts)
+**Research topics**: WTI futures chain via yfinance, CLF/CLG contract symbols, calendar spread calculation
+
+Plans:
+- [ ] 18-01: Futures curve collector (front 6 contracts) | wave:1 | effort:M
+- [ ] 18-02: Contango/backwardation indicator | wave:1 | effort:M
+- [ ] 18-03: Roll yield calculator | wave:2 | effort:S
+- [ ] 18-04: Term structure visualization | wave:2 | effort:M
+
+### Phase 19: Real Rates
+**Goal**: Real rates tracking and oil-rates correlation analysis
+**Depends on**: Phase 16
+**Requirements**: RATES-01 (TIPS yield), RATES-02 (BEI), RATES-03 (Oil correlation)
+**Research**: Unlikely (FRED has all series)
+**Research topics**: DFII10, T10YIE, correlation rolling window
+
+Plans:
+- [ ] 19-01: Real rates collector (10Y TIPS, 5Y TIPS) | wave:1 | effort:S
+- [ ] 19-02: Breakeven inflation calculator | wave:1 | effort:S
+- [ ] 19-03: Oil-real rates correlation engine | wave:1 | effort:M
+- [ ] 19-04: Inflation expectations dashboard | wave:2 | effort:M
+
+### Phase 20: Commodity News
+**Goal**: Oil-specific news intelligence (OPEC, sanctions, weather)
+**Depends on**: Phase 14 (extends news infrastructure)
+**Requirements**: NEWS-10 (Oil RSS), NEWS-11 (OPEC calendar), NEWS-12 (Weather events)
+**Research**: Unlikely (extends Phase 14 patterns)
+**Research topics**: Reuters/Platts RSS feeds, NOAA hurricane API, OPEC meeting calendar
+
+Plans:
+- [ ] 20-01: Oil RSS feeds (Reuters, Platts, Argus, OPEC) | wave:1 | effort:M
+- [ ] 20-02: OPEC meeting calendar integration | wave:1 | effort:S
+- [ ] 20-03: Hurricane/weather impact tracker (NOAA) | wave:2 | effort:M
+- [ ] 20-04: Supply disruption keyword alerts | wave:2 | effort:M
+
+### Phase 21: Supply-Demand Model
+**Goal**: Oil balance calculator with inventory forecasts
+**Depends on**: Phase 16, Phase 17, Phase 20
+**Requirements**: MODEL-01 (Balance calc), MODEL-02 (Forecast), MODEL-03 (Regime integration)
+**Research**: Unlikely (internal calculation logic)
+**Research topics**: EIA supply/demand balance, inventory forecast models
+
+Plans:
+- [ ] 21-01: Supply-demand balance calculator | wave:1 | effort:M
+- [ ] 21-02: Inventory forecast (YoY, seasonal adj) | wave:1 | effort:M
+- [ ] 21-03: Oil regime signals (tight/loose) | wave:2 | effort:M
+- [ ] 21-04: Integration with liquidity regime classifier | wave:2 | effort:L
+
 ## Progress
 
 **Execution Order:**
@@ -251,8 +338,14 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 13. Risk Metrics | 5/5 | Complete | 2026-02-05 |
 | 14. News Intelligence | 9/9 | Complete | 2026-02-06 |
 | 15. Backtesting Engine | 6/6 | Complete | 2026-02-06 |
+| 16. EIA Oil Data | 0/4 | Not started | - |
+| 17. CFTC Positioning | 0/4 | Not started | - |
+| 18. Oil Term Structure | 0/4 | Not started | - |
+| 19. Real Rates | 0/4 | Not started | - |
+| 20. Commodity News | 0/4 | Not started | - |
+| 21. Supply-Demand Model | 0/4 | Not started | - |
 
 ---
 *Created: 2026-01-21*
-*Last updated: 2026-02-05*
-*Milestone 2 (v2.0): Phases 11-15 planned*
+*Last updated: 2026-02-06*
+*Milestone 3 (v3.0): Phases 16-21 - Commodity Intelligence*
