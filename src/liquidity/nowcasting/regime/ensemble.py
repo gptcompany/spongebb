@@ -125,7 +125,7 @@ class RegimeEnsemble:
         features: pd.DataFrame,
         returns: pd.Series,
         labels: pd.Series | None = None,
-    ) -> "RegimeEnsemble":
+    ) -> RegimeEnsemble:
         """Fit all ensemble models.
 
         Args:

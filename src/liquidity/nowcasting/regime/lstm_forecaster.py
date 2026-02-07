@@ -202,7 +202,7 @@ class LSTMRegimeForecaster:
         features: pd.DataFrame,
         labels: pd.Series,
         val_split: float = 0.2,
-    ) -> "LSTMRegimeForecaster":
+    ) -> LSTMRegimeForecaster:
         """Fit LSTM models for all horizons.
 
         Args:

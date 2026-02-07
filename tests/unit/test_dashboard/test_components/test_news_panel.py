@@ -285,9 +285,8 @@ class TestNewsItemConversion:
 
     def test_convert_newsitem_objects(self) -> None:
         """Test converting NewsItem objects to display format."""
-        from liquidity.news.schemas import FeedSource, NewsItem
-
         from liquidity.dashboard.components.news import news_items_from_newsitem_objects
+        from liquidity.news.schemas import FeedSource, NewsItem
 
         # Create a NewsItem object
         now = datetime.now(UTC)
@@ -313,12 +312,11 @@ class TestNewsItemConversion:
 
     def test_convert_with_sentiment_map(self) -> None:
         """Test converting with sentiment mapping."""
-        from liquidity.news.schemas import FeedSource, NewsItem
-
         from liquidity.dashboard.components.news import (
             SENTIMENT_HAWKISH,
             news_items_from_newsitem_objects,
         )
+        from liquidity.news.schemas import FeedSource, NewsItem
 
         now = datetime.now(UTC)
         news_item = NewsItem(

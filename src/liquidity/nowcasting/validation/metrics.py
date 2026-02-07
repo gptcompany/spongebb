@@ -20,6 +20,7 @@ import numpy as np
 
 if TYPE_CHECKING:
     import pandas as pd
+
     from liquidity.nowcasting.kalman import NowcastResult
 
 logger = logging.getLogger(__name__)

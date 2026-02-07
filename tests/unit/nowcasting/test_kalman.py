@@ -16,7 +16,6 @@ import pytest
 from liquidity.nowcasting.kalman import KalmanTuner, LiquidityStateSpace, NowcastResult
 from liquidity.nowcasting.kalman.tuning import NoiseEstimates
 
-
 # ============================================================================
 # Fixtures
 # ============================================================================

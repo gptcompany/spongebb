@@ -14,7 +14,6 @@ import pytest
 
 from liquidity.nowcasting.midas import MIDASFeatures, PBoCEstimate, PBoCEstimator
 
-
 # ============================================================================
 # Fixtures with Realistic Data
 # ============================================================================
@@ -256,7 +255,7 @@ class TestPBoCEstimatorIntegration:
         # CI coverage should be reasonable (target: ~95%)
         assert summary["ci_coverage"] > 70, f"CI coverage too low: {summary['ci_coverage']:.1f}%"
 
-        print(f"\nBacktest Summary:")
+        print("\nBacktest Summary:")
         print(f"  Periods: {summary['n_periods']}")
         print(f"  MAPE: {summary['mape']:.2f}%")
         print(f"  Max Error: {summary['max_error_pct']:.2f}%")

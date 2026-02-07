@@ -28,9 +28,6 @@ from .hmm_classifier import RegimeProbabilities, RegimeState
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
-    from statsmodels.tsa.regime_switching.markov_regression import (
-        MarkovRegressionResults,
-    )
 
 logger = logging.getLogger(__name__)
 

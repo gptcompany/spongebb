@@ -21,7 +21,6 @@ from liquidity.nowcasting.regime import (
     RegimeState,
 )
 
-
 # ============================================================================
 # Fixtures
 # ============================================================================
@@ -47,9 +46,7 @@ def synthetic_ar1_data() -> pd.Series:
             regimes.append(current_regime)
         else:
             # Transition to adjacent regime
-            if current_regime == 0:
-                current_regime = 1
-            elif current_regime == 2:
+            if current_regime == 0 or current_regime == 2:
                 current_regime = 1
             else:
                 current_regime = np.random.choice([0, 2])

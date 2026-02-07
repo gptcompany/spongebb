@@ -7,10 +7,10 @@ This submodule contains:
 
 from liquidity.nowcasting.validation.backtesting import NowcastBacktester
 from liquidity.nowcasting.validation.metrics import (
+    NowcastMetrics,
+    calculate_coverage,
     calculate_mape,
     calculate_rmse,
-    calculate_coverage,
-    NowcastMetrics,
 )
 
 __all__ = [

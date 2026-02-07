@@ -19,14 +19,13 @@ Fed releases using high-frequency proxies.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import timedelta
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 
-from liquidity.nowcasting.kalman import LiquidityStateSpace, NowcastResult
+from liquidity.nowcasting.kalman import LiquidityStateSpace
 from liquidity.nowcasting.validation.metrics import NowcastMetrics, compute_all_metrics
 
 if TYPE_CHECKING:

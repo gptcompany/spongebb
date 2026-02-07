@@ -6,7 +6,6 @@ import pytest
 
 from liquidity.risk.liquidity_adjusted import (
     DEFAULT_LIQUIDITY_PARAMS,
-    LAVaRResult,
     LiquidityAdjustedRisk,
     LiquidityParams,
 )

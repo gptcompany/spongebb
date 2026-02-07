@@ -124,7 +124,7 @@ class CorrelationTrendPredictor:
         self,
         asset_returns: dict[str, pd.Series],
         liquidity_returns: pd.Series,
-    ) -> "CorrelationTrendPredictor":
+    ) -> CorrelationTrendPredictor:
         """Fit prediction models for all assets and horizons.
 
         Args:
