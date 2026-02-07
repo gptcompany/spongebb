@@ -4,12 +4,15 @@ Settings are loaded from environment variables with LIQUIDITY_ prefix,
 or from .env file for local development.
 """
 
+import logging
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 class CircuitBreakerSettings(BaseSettings):
@@ -168,3 +171,58 @@ def get_settings() -> Settings:
         Settings instance with configuration values.
     """
     return Settings()
+
+
+# OpenBB credentials configuration
+_openbb_configured = False
+
+
+def configure_openbb_credentials() -> bool:
+    """Configure OpenBB with API credentials from environment.
+
+    Reads API keys from environment variables and sets them in OpenBB.
+    Call this once at application startup.
+
+    Environment variables:
+        FRED_API_KEY: FRED API key
+        EIA_API_KEY: EIA API key (optional)
+
+    Returns:
+        True if credentials were configured successfully.
+    """
+    global _openbb_configured
+
+    if _openbb_configured:
+        return True
+
+    try:
+        from openbb import obb
+
+        settings = get_settings()
+
+        # FRED API key
+        fred_key = settings.fred_api_key
+        if fred_key:
+            obb.user.credentials.fred_api_key = fred_key
+            logger.info("FRED API key configured in OpenBB")
+        else:
+            logger.warning("FRED_API_KEY not found in settings")
+            return False
+
+        # EIA API key (optional)
+        eia_key = settings.eia_api_key
+        if eia_key:
+            obb.user.credentials.eia_api_key = eia_key
+            logger.info("EIA API key configured in OpenBB")
+
+        _openbb_configured = True
+        return True
+
+    except Exception as e:
+        logger.error("Failed to configure OpenBB credentials: %s", e)
+        return False
+
+
+def is_openbb_configured() -> bool:
+    """Check if OpenBB credentials are configured."""
+    return _openbb_configured

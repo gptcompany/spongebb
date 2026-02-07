@@ -1062,6 +1062,12 @@ async def _fetch_data_async() -> dict[str, Any]:
     from liquidity.analyzers.regime_classifier import RegimeClassifier
     from liquidity.calculators.global_liquidity import GlobalLiquidityCalculator
     from liquidity.calculators.net_liquidity import NetLiquidityCalculator
+    from liquidity.config import configure_openbb_credentials
+
+    # Configure OpenBB credentials before using calculators
+    if not configure_openbb_credentials():
+        logger.warning("OpenBB credentials not configured, using mock data")
+        raise RuntimeError("OpenBB credentials not configured")
 
     # Initialize calculators
     net_calc = NetLiquidityCalculator()
