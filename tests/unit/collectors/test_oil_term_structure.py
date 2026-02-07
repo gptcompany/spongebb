@@ -1,6 +1,6 @@
 """Unit tests for OilTermStructureCollector."""
 
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 import pandas as pd
@@ -8,9 +8,9 @@ import pytest
 
 from liquidity.collectors.oil_term_structure import (
     DEFAULT_MOMENTUM_WINDOWS,
-    OilTermStructureCollector,
     SERIES_MAP,
     UNIT_MAP,
+    OilTermStructureCollector,
 )
 from liquidity.collectors.registry import registry
 

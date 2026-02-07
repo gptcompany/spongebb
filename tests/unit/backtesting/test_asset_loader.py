@@ -1,10 +1,10 @@
 """Tests for asset price loader."""
 
-import pandas as pd
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-from liquidity.backtesting.data.asset_loader import AssetLoader, ASSET_TICKERS
+import pandas as pd
+
+from liquidity.backtesting.data.asset_loader import ASSET_TICKERS, AssetLoader
 
 
 class TestAssetLoader:

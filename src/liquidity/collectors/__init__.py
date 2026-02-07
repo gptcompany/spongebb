@@ -18,6 +18,15 @@ from liquidity.collectors.bis import (
 from liquidity.collectors.boc import SERIES_MAP as BOC_SERIES_MAP
 from liquidity.collectors.boc import BOCCollector
 from liquidity.collectors.boe import BOECollector
+from liquidity.collectors.cftc_cot import (
+    COMMODITY_MAP as CFTC_COMMODITY_MAP,
+)
+from liquidity.collectors.cftc_cot import (
+    POSITION_FIELDS as CFTC_POSITION_FIELDS,
+)
+from liquidity.collectors.cftc_cot import (
+    CFTCCOTCollector,
+)
 from liquidity.collectors.china_rates import (
     SHIBOR_TENORS,
     ChinaRatesCollector,
@@ -72,6 +81,15 @@ from liquidity.collectors.fed_custody import (
 from liquidity.collectors.fred import SERIES_MAP, FredCollector
 from liquidity.collectors.fx import FX_SYMBOLS, FXCollector
 from liquidity.collectors.nyfed import NYFedCollector
+from liquidity.collectors.oil_term_structure import (
+    SERIES_MAP as OIL_TS_SERIES_MAP,
+)
+from liquidity.collectors.oil_term_structure import (
+    UNIT_MAP as OIL_TS_UNIT_MAP,
+)
+from liquidity.collectors.oil_term_structure import (
+    OilTermStructureCollector,
+)
 from liquidity.collectors.overnight_rates import (
     CORRACollector,
     ESTRCollector,
@@ -110,16 +128,6 @@ from liquidity.collectors.xccy_basis import (
 )
 from liquidity.collectors.yahoo import SYMBOLS as YAHOO_SYMBOLS
 from liquidity.collectors.yahoo import YahooCollector
-from liquidity.collectors.cftc_cot import (
-    COMMODITY_MAP as CFTC_COMMODITY_MAP,
-    POSITION_FIELDS as CFTC_POSITION_FIELDS,
-    CFTCCOTCollector,
-)
-from liquidity.collectors.oil_term_structure import (
-    SERIES_MAP as OIL_TS_SERIES_MAP,
-    UNIT_MAP as OIL_TS_UNIT_MAP,
-    OilTermStructureCollector,
-)
 
 __all__ = [
     # Base

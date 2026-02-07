@@ -35,11 +35,11 @@ def realistic_shibor(realistic_date_range: pd.DatetimeIndex) -> pd.Series:
     - 2024: Stable low rates (1.5-1.8%)
     """
     np.random.seed(42)
-    n = len(realistic_date_range)
+    len(realistic_date_range)
 
     # Phase-dependent mean rates
     rates = []
-    for i, date in enumerate(realistic_date_range):
+    for _i, date in enumerate(realistic_date_range):
         if date.year == 2022:
             base = 2.1
         elif date.year == 2023:
@@ -71,7 +71,7 @@ def realistic_dr007(realistic_date_range: pd.DatetimeIndex) -> pd.Series:
     weekly_dates = realistic_date_range[::5]
     rates = []
 
-    for i, date in enumerate(weekly_dates):
+    for _i, date in enumerate(weekly_dates):
         if date.year == 2022:
             base = 2.0
         elif date.year == 2023:
@@ -100,10 +100,10 @@ def realistic_spread(realistic_date_range: pd.DatetimeIndex) -> pd.Series:
     - Negative spread: CNH appreciation pressure
     """
     np.random.seed(44)
-    n = len(realistic_date_range)
+    len(realistic_date_range)
 
     spread = []
-    for i, date in enumerate(realistic_date_range):
+    for _i, date in enumerate(realistic_date_range):
         # Event-driven spikes
         if date.month == 8 and date.year == 2023:  # August 2023 stress
             base = 200
@@ -380,7 +380,7 @@ class TestMIDASFeaturesIntegration:
         assert not X.index.has_duplicates, "Index has duplicates"
 
         # Features should have correct count
-        expected_features = 30 + 4 + 1 + 1 + 1 + 1 + 5 + 1  # lags + weighted sums + spread + changes
+        30 + 4 + 1 + 1 + 1 + 1 + 5 + 1  # lags + weighted sums + spread + changes
         assert len(names) >= 30, f"Expected at least 30 features, got {len(names)}"
 
     @pytest.mark.integration

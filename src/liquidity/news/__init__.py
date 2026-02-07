@@ -27,6 +27,14 @@ from liquidity.news.feeds import (
     parse_feed_entry,
     poll_feeds_once,
 )
+from liquidity.news.lexicons import (
+    DOVISH_KEYWORDS,
+    HAWKISH_KEYWORDS,
+    NEUTRAL_KEYWORDS,
+    classify_keyword,
+    get_all_keywords,
+    get_keyword_weight,
+)
 from liquidity.news.oil_alerts import (
     SUPPLY_KEYWORDS,
     AlertPriority,
@@ -37,14 +45,6 @@ from liquidity.news.oil_feeds import (
     OIL_FEEDS,
     OilNewsPoller,
     poll_oil_feeds_once,
-)
-from liquidity.news.lexicons import (
-    DOVISH_KEYWORDS,
-    HAWKISH_KEYWORDS,
-    NEUTRAL_KEYWORDS,
-    classify_keyword,
-    get_all_keywords,
-    get_keyword_weight,
 )
 from liquidity.news.schemas import (
     BACKOFF_BASE_SECONDS,

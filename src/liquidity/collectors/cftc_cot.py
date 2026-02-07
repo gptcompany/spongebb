@@ -14,7 +14,7 @@ Reference: https://publicreporting.cftc.gov/stories/s/Commitments-of-Traders/r4w
 """
 
 import logging
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, timedelta
 from typing import Any
 
 import httpx

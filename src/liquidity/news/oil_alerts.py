@@ -19,7 +19,6 @@ import logging
 import re
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +55,7 @@ class KeywordMatch:
 
 
 # Default supply disruption keywords with categories and priorities
-SUPPLY_KEYWORDS: Dict[str, Dict] = {
+SUPPLY_KEYWORDS: dict[str, dict] = {
     # HIGH priority - Immediate market impact
     "sanctions": {"category": "sanctions", "priority": AlertPriority.HIGH},
     "embargo": {"category": "sanctions", "priority": AlertPriority.HIGH},
@@ -130,7 +129,7 @@ class SupplyDisruptionMatcher:
         keywords: Dictionary of keyword configurations.
     """
 
-    def __init__(self, keywords: Dict[str, Dict] | None = None) -> None:
+    def __init__(self, keywords: dict[str, dict] | None = None) -> None:
         """Initialize the matcher.
 
         Args:
@@ -140,7 +139,7 @@ class SupplyDisruptionMatcher:
             self.keywords = dict(keywords)
         else:
             self.keywords = dict(SUPPLY_KEYWORDS)
-        self._patterns: Dict[str, re.Pattern[str]] = {}
+        self._patterns: dict[str, re.Pattern[str]] = {}
         self._compile_patterns()
 
     def _compile_patterns(self) -> None:
@@ -258,7 +257,7 @@ class SupplyDisruptionMatcher:
 
         return context
 
-    def match(self, text: str) -> List[KeywordMatch]:
+    def match(self, text: str) -> list[KeywordMatch]:
         """Find all keyword matches in text.
 
         Args:
@@ -267,7 +266,7 @@ class SupplyDisruptionMatcher:
         Returns:
             List of KeywordMatch objects for all matches found.
         """
-        matches: List[KeywordMatch] = []
+        matches: list[KeywordMatch] = []
 
         for keyword, pattern in self._patterns.items():
             m = pattern.search(text)
@@ -284,7 +283,7 @@ class SupplyDisruptionMatcher:
 
         return matches
 
-    def get_highest_priority(self, matches: List[KeywordMatch]) -> AlertPriority:
+    def get_highest_priority(self, matches: list[KeywordMatch]) -> AlertPriority:
         """Get the highest priority from a list of matches.
 
         Priority order: HIGH > MEDIUM > LOW
@@ -307,8 +306,8 @@ class SupplyDisruptionMatcher:
         return max(matches, key=lambda m: priority_order[m.priority]).priority
 
     def get_matches_by_priority(
-        self, matches: List[KeywordMatch], priority: AlertPriority
-    ) -> List[KeywordMatch]:
+        self, matches: list[KeywordMatch], priority: AlertPriority
+    ) -> list[KeywordMatch]:
         """Filter matches by priority level.
 
         Args:
@@ -321,8 +320,8 @@ class SupplyDisruptionMatcher:
         return [m for m in matches if m.priority == priority]
 
     def get_matches_by_category(
-        self, matches: List[KeywordMatch], category: str
-    ) -> List[KeywordMatch]:
+        self, matches: list[KeywordMatch], category: str
+    ) -> list[KeywordMatch]:
         """Filter matches by category.
 
         Args:
@@ -334,15 +333,15 @@ class SupplyDisruptionMatcher:
         """
         return [m for m in matches if m.category == category]
 
-    def get_categories(self) -> List[str]:
+    def get_categories(self) -> list[str]:
         """Get all unique categories.
 
         Returns:
             List of category names.
         """
-        return list(set(cfg["category"] for cfg in self.keywords.values()))
+        return list({cfg["category"] for cfg in self.keywords.values()})
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Get matcher statistics.
 
         Returns:

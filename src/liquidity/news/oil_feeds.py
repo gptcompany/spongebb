@@ -15,7 +15,6 @@ from liquidity.news.feeds import NewsPoller
 from liquidity.news.schemas import (
     FeedConfig,
     FeedSource,
-    FeedState,
     NewsItem,
 )
 

@@ -257,10 +257,7 @@ class LiquidityStateSpace:
 
         # Get innovation (prediction error) from last observation
         forecasts_error = filter_results.forecasts_error
-        if forecasts_error.size > 0:
-            innovation = float(forecasts_error[0, -1])
-        else:
-            innovation = 0.0
+        innovation = float(forecasts_error[0, -1]) if forecasts_error.size > 0 else 0.0
 
         # Get filtered state
         filtered_state = filter_results.filtered_state[:, -1].copy()

@@ -67,7 +67,7 @@ class TestRegimeConditionalVaR:
         segments = calc.segment_by_regime(returns, regimes)
 
         assert len(segments) > 0
-        for regime, regime_returns in segments.items():
+        for _regime, regime_returns in segments.items():
             assert len(regime_returns) >= 30  # min_observations
 
     def test_calculate_by_regime(self, sample_data: tuple[pd.Series, pd.Series]) -> None:
@@ -77,7 +77,7 @@ class TestRegimeConditionalVaR:
         results = calc.calculate_by_regime(returns, regimes)
 
         assert len(results) > 0
-        for regime, result in results.items():
+        for _regime, result in results.items():
             assert isinstance(result, RegimeVaRResult)
             assert result.var_95 > 0
             assert result.cvar_95 >= result.var_95

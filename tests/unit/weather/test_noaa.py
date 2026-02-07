@@ -1,21 +1,20 @@
 """Unit tests for NOAA hurricane tracker and impact assessment."""
 
 from datetime import datetime
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from liquidity.weather.noaa import (
-    StormCategory,
-    ActiveStorm,
-    NOAAHurricaneTracker,
-)
 from liquidity.weather.impact import (
+    GOM_TOTAL_PRODUCTION_BPD,
     ImpactSeverity,
-    OilProductionImpact,
     assess_gom_impact,
     format_impact_summary,
-    GOM_TOTAL_PRODUCTION_BPD,
+)
+from liquidity.weather.noaa import (
+    ActiveStorm,
+    NOAAHurricaneTracker,
+    StormCategory,
 )
 
 

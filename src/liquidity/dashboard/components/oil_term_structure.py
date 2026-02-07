@@ -6,7 +6,6 @@ Provides visualization for:
 - Roll yield bar chart by horizon
 """
 
-from datetime import datetime, UTC
 
 import dash_bootstrap_components as dbc
 import pandas as pd

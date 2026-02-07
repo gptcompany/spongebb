@@ -4,15 +4,14 @@ Tracks active storms from the National Hurricane Center (NHC) RSS feed
 to assess potential disruptions to Gulf of Mexico oil production.
 """
 
+import logging
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
-import logging
-import re
 
-import httpx
 import feedparser
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +71,7 @@ class ActiveStorm:
     max_wind_mph: int
     movement: str
     pressure_mb: int
-    forecast_track: List[dict] = field(default_factory=list)
+    forecast_track: list[dict] = field(default_factory=list)
     last_updated: datetime = field(default_factory=datetime.utcnow)
 
     @property
@@ -104,7 +103,7 @@ class ActiveStorm:
         return in_lat_range and in_lon_range
 
     @property
-    def gom_proximity_km(self) -> Optional[float]:
+    def gom_proximity_km(self) -> float | None:
         """Approximate distance to GOM center if outside the box.
 
         Returns None if already in GOM, otherwise approximate km to center.
@@ -151,7 +150,7 @@ class NOAAHurricaneTracker:
             timeout: HTTP request timeout in seconds
         """
         self.timeout = timeout
-        self._client: Optional[httpx.AsyncClient] = None
+        self._client: httpx.AsyncClient | None = None
 
     async def _get_client(self) -> httpx.AsyncClient:
         """Get or create async HTTP client."""
@@ -169,7 +168,7 @@ class NOAAHurricaneTracker:
         if self._client is not None and not self._client.is_closed:
             await self._client.aclose()
 
-    async def get_active_storms(self) -> List[ActiveStorm]:
+    async def get_active_storms(self) -> list[ActiveStorm]:
         """Fetch active storms from NHC RSS feed.
 
         Returns:
@@ -200,7 +199,7 @@ class NOAAHurricaneTracker:
         logger.info(f"Found {len(storms)} active storms")
         return storms
 
-    def _parse_entry(self, entry: dict) -> Optional[ActiveStorm]:
+    def _parse_entry(self, entry: dict) -> ActiveStorm | None:
         """Parse RSS entry into ActiveStorm if it contains storm data.
 
         Args:
@@ -242,10 +241,7 @@ class NOAAHurricaneTracker:
 
         # Parse timestamp
         published = entry.get("published_parsed")
-        if published:
-            last_updated = datetime(*published[:6])
-        else:
-            last_updated = datetime.utcnow()
+        last_updated = datetime(*published[:6]) if published else datetime.utcnow()
 
         return ActiveStorm(
             id=storm_id,
@@ -260,7 +256,7 @@ class NOAAHurricaneTracker:
             last_updated=last_updated,
         )
 
-    def _extract_storm_id(self, link: str) -> Optional[str]:
+    def _extract_storm_id(self, link: str) -> str | None:
         """Extract storm ID from NHC link.
 
         Example link: https://www.nhc.noaa.gov/text/refresh/MIATCPAT1+shtml/...
@@ -281,7 +277,7 @@ class NOAAHurricaneTracker:
 
         return None
 
-    def _extract_storm_name(self, title: str) -> Optional[str]:
+    def _extract_storm_name(self, title: str) -> str | None:
         """Extract storm name from title.
 
         Examples:
@@ -305,7 +301,7 @@ class NOAAHurricaneTracker:
 
         return None
 
-    def _extract_coordinates(self, text: str) -> tuple[Optional[float], Optional[float]]:
+    def _extract_coordinates(self, text: str) -> tuple[float | None, float | None]:
         """Extract latitude and longitude from advisory text.
 
         Examples:
@@ -329,7 +325,7 @@ class NOAAHurricaneTracker:
 
         return None, None
 
-    def _extract_max_wind(self, text: str) -> Optional[int]:
+    def _extract_max_wind(self, text: str) -> int | None:
         """Extract maximum sustained wind speed from advisory text.
 
         Examples:
@@ -349,7 +345,7 @@ class NOAAHurricaneTracker:
 
         return None
 
-    def _extract_pressure(self, text: str) -> Optional[int]:
+    def _extract_pressure(self, text: str) -> int | None:
         """Extract central pressure from advisory text.
 
         Examples:
@@ -369,7 +365,7 @@ class NOAAHurricaneTracker:
 
         return None
 
-    def _extract_movement(self, text: str) -> Optional[str]:
+    def _extract_movement(self, text: str) -> str | None:
         """Extract storm movement from advisory text.
 
         Examples:
@@ -388,7 +384,7 @@ class NOAAHurricaneTracker:
 
         return None
 
-    async def check_gom_threats(self) -> List[ActiveStorm]:
+    async def check_gom_threats(self) -> list[ActiveStorm]:
         """Get storms currently threatening Gulf of Mexico.
 
         Returns:
@@ -407,7 +403,7 @@ class NOAAHurricaneTracker:
 
     async def get_approaching_storms(
         self, max_distance_km: float = 1000.0
-    ) -> List[tuple[ActiveStorm, float]]:
+    ) -> list[tuple[ActiveStorm, float]]:
         """Get storms approaching the Gulf of Mexico.
 
         Args:

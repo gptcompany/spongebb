@@ -1,6 +1,6 @@
 """Integration tests for OilTermStructureCollector with live data."""
 
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 
 import pandas as pd
 import pytest

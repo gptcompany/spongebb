@@ -1,7 +1,6 @@
 """Unit tests for positioning dashboard component."""
 
 import pandas as pd
-import pytest
 from dash import html
 
 from liquidity.dashboard.components.positioning import (

@@ -40,7 +40,7 @@ from liquidity.calculators.stealth_qe import StealthQECalculator
 from liquidity.config import Settings, get_settings
 
 if TYPE_CHECKING:
-    from liquidity.oil.regime import OilRegime, OilRegimeClassifier
+    from liquidity.oil.regime import OilRegimeClassifier
 
 logger = logging.getLogger(__name__)
 

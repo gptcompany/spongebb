@@ -14,7 +14,6 @@ from liquidity.news.oil_alerts import (
     SupplyDisruptionMatcher,
 )
 
-
 # =============================================================================
 # AlertPriority Enum Tests
 # =============================================================================

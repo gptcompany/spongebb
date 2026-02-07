@@ -1,6 +1,6 @@
 """Unit tests for oil term structure dashboard component."""
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 import dash_bootstrap_components as dbc
 import pandas as pd

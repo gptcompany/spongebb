@@ -127,10 +127,7 @@ class PositioningAnalyzer:
         spec_net = spec_long - spec_short
 
         # Handle division by zero for ratios
-        if spec_net != 0:
-            comm_spec_ratio = comm_net / spec_net
-        else:
-            comm_spec_ratio = 0.0
+        comm_spec_ratio = comm_net / spec_net if spec_net != 0 else 0.0
 
         if spec_short > 0:
             spec_long_short_ratio = spec_long / spec_short

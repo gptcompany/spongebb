@@ -35,17 +35,17 @@ from liquidity.alerts.config import (
 from liquidity.alerts.discord import DiscordClient, DiscordConfig, create_discord_client
 from liquidity.alerts.formatter import AlertColors, AlertFormatter, LiquidityMetrics
 from liquidity.alerts.handlers import AlertHandlers, AlertState
-from liquidity.alerts.scheduler import AlertScheduler, FullAlertScheduler
-from liquidity.alerts.positioning_alerts import (
-    PositioningAlert,
-    PositioningAlertEngine,
-    PositioningAlertType,
-)
 from liquidity.alerts.oil_term_structure_alerts import (
     TermStructureAlert,
     TermStructureAlertEngine,
     TermStructureAlertType,
 )
+from liquidity.alerts.positioning_alerts import (
+    PositioningAlert,
+    PositioningAlertEngine,
+    PositioningAlertType,
+)
+from liquidity.alerts.scheduler import AlertScheduler, FullAlertScheduler
 
 
 class AlertManager:

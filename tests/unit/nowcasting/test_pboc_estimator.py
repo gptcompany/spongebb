@@ -557,7 +557,6 @@ class TestPBoCEstimator:
         estimator = PBoCEstimator(n_daily_lags=10, n_weekly_lags=2)
 
         # Initial alpha
-        initial_alpha = estimator.alpha
 
         estimator.fit(
             shibor_daily=synthetic_shibor,

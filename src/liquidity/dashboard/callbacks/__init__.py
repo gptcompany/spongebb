@@ -6,14 +6,14 @@ Contains callback modules for different dashboard panels:
 - inflation_callbacks: Inflation expectations panel callbacks (Phase 19)
 """
 
+from liquidity.dashboard.callbacks.eia_callbacks import register_eia_callbacks
+from liquidity.dashboard.callbacks.inflation_callbacks import register_inflation_callbacks
 from liquidity.dashboard.callbacks_main import (
-    register_callbacks,
     _get_error_response,
     _get_mock_data,
     _get_mock_extended_data,
+    register_callbacks,
 )
-from liquidity.dashboard.callbacks.eia_callbacks import register_eia_callbacks
-from liquidity.dashboard.callbacks.inflation_callbacks import register_inflation_callbacks
 
 __all__ = [
     "register_callbacks",

@@ -42,6 +42,11 @@ from liquidity.calendar.holidays import (
     US_MARKET_HOLIDAYS_2026,
     USMarketHolidays,
 )
+from liquidity.calendar.opec import (
+    OPEC_MEETINGS_2026,
+    OPECCalendar,
+    OPECMeeting,
+)
 from liquidity.calendar.registry import (
     CalendarRegistry,
     calendar_registry,
@@ -53,11 +58,6 @@ from liquidity.calendar.tax_dates import (
 from liquidity.calendar.treasury import (
     TREASURY_AUCTIONS_2026,
     TreasuryAuctionCalendar,
-)
-from liquidity.calendar.opec import (
-    OPEC_MEETINGS_2026,
-    OPECCalendar,
-    OPECMeeting,
 )
 
 __all__ = [

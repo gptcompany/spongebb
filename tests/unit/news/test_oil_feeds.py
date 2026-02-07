@@ -6,7 +6,6 @@ with mocked feedparser responses.
 Run with: uv run pytest tests/unit/news/test_oil_feeds.py -v
 """
 
-from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -21,7 +20,6 @@ from liquidity.news.schemas import (
     FeedSource,
     NewsItem,
 )
-
 
 # =============================================================================
 # Fixtures

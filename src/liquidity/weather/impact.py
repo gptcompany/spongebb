@@ -4,11 +4,10 @@ Estimates production disruptions based on storm characteristics and
 historical evacuation patterns.
 """
 
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
-import logging
 
 from .noaa import ActiveStorm, StormCategory
 

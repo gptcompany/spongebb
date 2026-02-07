@@ -1,6 +1,6 @@
 """Unit tests for RealRatesAnalyzer."""
 
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import numpy as np

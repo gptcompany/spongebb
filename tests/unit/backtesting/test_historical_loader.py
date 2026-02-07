@@ -1,13 +1,13 @@
 """Tests for historical data loader."""
 
-import pandas as pd
-import pytest
 from unittest.mock import Mock, patch
 
+import pandas as pd
+
 from liquidity.backtesting.data.historical_loader import (
+    PUBLICATION_LAGS,
     HistoricalLoader,
     PointInTimeData,
-    PUBLICATION_LAGS,
 )
 
 

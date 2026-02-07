@@ -1,6 +1,6 @@
 """Unit tests for TermStructureAnalyzer."""
 
-from datetime import datetime, timedelta, UTC
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -10,7 +10,6 @@ from liquidity.analyzers.term_structure import (
     CurveShape,
     RollYieldMetrics,
     TermStructureAnalyzer,
-    TermStructureSignal,
 )
 
 

@@ -20,17 +20,17 @@ from dash import dcc, html
 from liquidity.dashboard.components.calendar import create_calendar_strip
 from liquidity.dashboard.components.commodities import create_commodities_panel
 from liquidity.dashboard.components.correlations import create_correlation_panel
+from liquidity.dashboard.components.eia_panel import create_eia_panel
 from liquidity.dashboard.components.flows import create_flows_panel
 from liquidity.dashboard.components.fomc_diff import create_fomc_diff_panel
 from liquidity.dashboard.components.fx import create_fx_panel
 from liquidity.dashboard.components.header import create_header, create_status_bar
+from liquidity.dashboard.components.inflation import create_inflation_panel
 from liquidity.dashboard.components.liquidity import create_liquidity_panel
 from liquidity.dashboard.components.news import create_news_panel
 from liquidity.dashboard.components.quality import create_quality_detail_panel
 from liquidity.dashboard.components.regime import create_regime_panel
 from liquidity.dashboard.components.stress import create_stress_panel
-from liquidity.dashboard.components.eia_panel import create_eia_panel
-from liquidity.dashboard.components.inflation import create_inflation_panel
 
 
 def create_layout() -> html.Div:

@@ -10,7 +10,6 @@ OPEC+ meetings significantly impact oil prices and energy sector liquidity.
 
 from dataclasses import dataclass
 from datetime import date, timedelta
-from typing import Optional
 
 from liquidity.calendar.base import BaseCalendar, CalendarEvent, EventType, ImpactLevel
 
@@ -37,7 +36,7 @@ class OPECMeeting:
     date: date
     meeting_type: str  # "JMMC", "Ministerial", "Extraordinary"
     description: str
-    location: Optional[str] = None
+    location: str | None = None
     is_confirmed: bool = True
 
 
@@ -139,7 +138,7 @@ class OPECCalendar(BaseCalendar):
         >>> is_soon = calendar.is_meeting_soon(days=7)
     """
 
-    def __init__(self, meetings: Optional[list[OPECMeeting]] = None) -> None:
+    def __init__(self, meetings: list[OPECMeeting] | None = None) -> None:
         """Initialize the OPEC calendar.
 
         Args:
@@ -201,8 +200,8 @@ class OPECCalendar(BaseCalendar):
 
     def get_next_meeting(
         self,
-        from_date: Optional[date] = None,
-    ) -> Optional[OPECMeeting]:
+        from_date: date | None = None,
+    ) -> OPECMeeting | None:
         """Get the next upcoming OPEC meeting.
 
         Args:
@@ -240,7 +239,7 @@ class OPECCalendar(BaseCalendar):
     def is_meeting_soon(
         self,
         days: int = 7,
-        from_date: Optional[date] = None,
+        from_date: date | None = None,
     ) -> bool:
         """Check if an OPEC meeting is happening within the specified days.
 
@@ -305,8 +304,8 @@ class OPECCalendar(BaseCalendar):
 
     def days_until_next_meeting(
         self,
-        from_date: Optional[date] = None,
-    ) -> Optional[int]:
+        from_date: date | None = None,
+    ) -> int | None:
         """Get the number of days until the next OPEC meeting.
 
         Args:

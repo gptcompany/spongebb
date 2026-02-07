@@ -462,7 +462,7 @@ class TestKalmanIntegration:
         """Test complete nowcasting workflow."""
         # 1. Tune parameters
         tuner = KalmanTuner()
-        estimates = tuner.estimate_from_data(sample_liquidity_series)
+        tuner.estimate_from_data(sample_liquidity_series)
 
         # 2. Create and fit model
         model = LiquidityStateSpace()
