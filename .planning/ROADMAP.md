@@ -12,7 +12,7 @@ None
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-02-04
 - ✅ [v2.0 Advanced Analytics](milestones/v2.0-ROADMAP.md) (Phases 11-15) — SHIPPED 2026-02-06
-- 🚧 **v3.0 Commodity Intelligence** (Phases 16-21) — IN PROGRESS
+- ✅ [v3.0 Commodity Intelligence](milestones/v3.0-ROADMAP.md) (Phases 16-21) — SHIPPED 2026-02-07
 
 ## Phases Summary
 
@@ -234,7 +234,7 @@ Plans:
 
 ---
 
-## 🚧 v3.0 Commodity Intelligence (In Progress)
+## ✅ v3.0 Commodity Intelligence (Complete)
 
 **Milestone Goal:** Transform oil from "price tracker" to "macro liquidity indicator" with supply fundamentals, positioning data, and market structure analysis.
 
@@ -311,10 +311,10 @@ Plans:
 **Research topics**: EIA supply/demand balance, inventory forecast models
 
 Plans:
-- [ ] 21-01: Supply-demand balance calculator | wave:1 | effort:M
-- [ ] 21-02: Inventory forecast (YoY, seasonal adj) | wave:1 | effort:M
-- [ ] 21-03: Oil regime signals (tight/loose) | wave:2 | effort:M
-- [ ] 21-04: Integration with liquidity regime classifier | wave:2 | effort:L
+- [x] 21-01: Supply-demand balance calculator | wave:1 | effort:M
+- [x] 21-02: Inventory forecast (YoY, seasonal adj) | wave:1 | effort:M
+- [x] 21-03: Oil regime signals (tight/loose) | wave:2 | effort:M
+- [x] 21-04: Integration with liquidity regime classifier | wave:2 | effort:L
 
 ## Progress
 
@@ -343,9 +343,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 18. Oil Term Structure | 4/4 | Complete | 2026-02-06 |
 | 19. Real Rates | 4/4 | Complete | 2026-02-06 |
 | 20. Commodity News | 4/4 | Complete | 2026-02-07 |
-| 21. Supply-Demand Model | 0/4 | Not started | - |
+| 21. Supply-Demand Model | 4/4 | Complete | 2026-02-07 |
 
 ---
 *Created: 2026-01-21*
-*Last updated: 2026-02-06*
-*Milestone 3 (v3.0): Phases 16-21 - Commodity Intelligence*
+*Last updated: 2026-02-07*
+*Milestone 3 (v3.0): Phases 16-21 - Commodity Intelligence - SHIPPED*
