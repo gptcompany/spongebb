@@ -35,4 +35,11 @@ def run_server(debug: bool = False, port: int = 8050, host: str = "0.0.0.0") -> 
     app.run(debug=debug, port=port, host=host)
 
 
-__all__ = ["app", "server", "run_server", "HTMLExporter"]
+__all__ = [
+    "app",
+    "server",
+    "run_server",
+    "HTMLExporter",
+    "register_callbacks",
+    "create_layout",
+]

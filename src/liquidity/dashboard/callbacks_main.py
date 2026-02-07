@@ -254,10 +254,11 @@ def register_callbacks(app: Dash) -> None:
             gold_fig = create_commodity_chart(data.get("gold_df"), "gold")
             copper_fig = create_commodity_chart(data.get("copper_df"), "copper")
             oil_fig = create_oil_chart(data.get("wti_df"), data.get("brent_df"))
+            commodities_dict = data.get("commodities", {})
             commodity_summary = create_commodity_summary(
-                gold_price=data.get("commodities", {}).get("gold"),
-                copper_price=data.get("commodities", {}).get("copper"),
-                wti_price=data.get("commodities", {}).get("wti"),
+                gold_price=commodities_dict.get("gold"),
+                copper_price=commodities_dict.get("copper"),
+                wti_price=commodities_dict.get("wti"),
             )
 
             # Stress panel
