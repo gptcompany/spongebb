@@ -74,6 +74,24 @@ class RegimeResponse(BaseModel):
     metadata: APIMetadata = Field(description="Response metadata")
 
 
+class CombinedRegimeResponse(BaseModel):
+    """Response model for /regime/combined endpoint.
+
+    Combined liquidity-oil regime classification for macro signals.
+    """
+
+    liquidity_regime: str = Field(description="Liquidity regime: EXPANSION or CONTRACTION")
+    oil_regime: str = Field(description="Oil supply-demand regime: TIGHT, BALANCED, or LOOSE")
+    combined_regime: str = Field(
+        description="Combined regime: very_bullish, bullish, neutral, bearish, very_bearish"
+    )
+    confidence: float = Field(ge=0, le=1, description="Combined confidence score (0-1)")
+    commodity_signal: str = Field(description="Trading signal: long, short, or neutral")
+    drivers: list[str] = Field(description="Factors driving the current regime")
+    as_of_date: datetime = Field(description="Classification timestamp")
+    metadata: APIMetadata = Field(description="Response metadata")
+
+
 class StealthQEResponse(BaseModel):
     """Response model for /metrics/stealth-qe endpoint.
 

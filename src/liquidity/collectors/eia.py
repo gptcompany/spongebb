@@ -27,6 +27,8 @@ SERIES_MAP: dict[str, str] = {
     "crude_stocks_total": "WCESTUS1",  # US crude stocks (thousand barrels)
     "crude_production": "WCRFPUS2",  # US crude production (thousand b/d)
     "crude_imports": "WCRIMUS2",  # US crude imports (thousand b/d)
+    "crude_exports": "WCREXUS2",  # US crude exports (thousand b/d)
+    "refinery_inputs": "WCRRIUS2",  # US refinery crude inputs (thousand b/d)
     # Refinery Utilization (percent, weekly)
     "refinery_utilization_us": "WPULEUS3",  # US total refinery utilization
     "refinery_utilization_padd1": "W_NA_YUP_R10_PER",  # PADD 1 (East Coast)
@@ -41,6 +43,8 @@ UNIT_MAP: dict[str, str] = {
     "WCESTUS1": "thousand_barrels",
     "WCRFPUS2": "thousand_bpd",
     "WCRIMUS2": "thousand_bpd",
+    "WCREXUS2": "thousand_bpd",
+    "WCRRIUS2": "thousand_bpd",
     # Refinery Utilization
     "WPULEUS3": "percent",
     "W_NA_YUP_R10_PER": "percent",
@@ -56,6 +60,8 @@ ROUTE_MAP: dict[str, str] = {
     "WCESTUS1": "/petroleum/stoc/wstk/data",  # Weekly Stocks
     "WCRFPUS2": "/petroleum/sum/sndw/data",  # Weekly Supply Estimates
     "WCRIMUS2": "/petroleum/sum/sndw/data",  # Weekly Supply Estimates
+    "WCREXUS2": "/petroleum/sum/sndw/data",  # Weekly Supply Estimates (exports)
+    "WCRRIUS2": "/petroleum/sum/sndw/data",  # Weekly Supply Estimates (refinery inputs)
     # Refinery Utilization
     "WPULEUS3": "/petroleum/sum/sndw/data",  # Weekly Supply Estimates
     "W_NA_YUP_R10_PER": "/petroleum/sum/sndw/data",  # PADD 1

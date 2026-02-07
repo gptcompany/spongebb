@@ -2,6 +2,7 @@
 
 Provides:
 - GET /regime/current - Current liquidity regime (EXPANSION/CONTRACTION)
+- GET /regime/combined - Combined liquidity-oil regime for macro signals
 """
 
 import logging
@@ -9,8 +10,9 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, HTTPException
 
+from liquidity.analyzers import CombinedRegimeAnalyzer
 from liquidity.api.deps import RegimeClassifierDep
-from liquidity.api.schemas import APIMetadata, RegimeResponse
+from liquidity.api.schemas import APIMetadata, CombinedRegimeResponse, RegimeResponse
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +70,63 @@ async def get_current_regime(
         ) from e
     except Exception as e:
         logger.exception("Unexpected error in get_current_regime")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {e}",
+        ) from e
+
+
+@router.get(
+    "/combined",
+    response_model=CombinedRegimeResponse,
+    summary="Get Combined Liquidity-Oil Regime",
+    description="Classifies the combined liquidity-oil environment for macro commodity signals. "
+    "Combines liquidity regime (EXPANSION/CONTRACTION) with oil supply-demand regime "
+    "(TIGHT/BALANCED/LOOSE) to produce a unified signal.",
+)
+async def get_combined_regime() -> CombinedRegimeResponse:
+    """Get combined liquidity-oil regime classification.
+
+    The combined regime analyzer merges two signals:
+    - Liquidity regime: EXPANSION (favorable) vs CONTRACTION (unfavorable)
+    - Oil supply-demand regime: TIGHT (bullish) vs LOOSE (bearish)
+
+    Regime Matrix:
+    - EXPANSION + TIGHT = VERY_BULLISH (commodities rally)
+    - EXPANSION + BALANCED = BULLISH (selective longs)
+    - EXPANSION + LOOSE = NEUTRAL (cross currents)
+    - CONTRACTION + TIGHT = NEUTRAL (cross currents)
+    - CONTRACTION + BALANCED = BEARISH (risk-off)
+    - CONTRACTION + LOOSE = VERY_BEARISH (commodities sell-off)
+
+    Returns:
+        CombinedRegimeResponse with unified classification.
+
+    Raises:
+        HTTPException: If classification fails.
+    """
+    try:
+        analyzer = CombinedRegimeAnalyzer()
+        state = await analyzer.get_combined_regime()
+
+        return CombinedRegimeResponse(
+            liquidity_regime=state.liquidity_regime,
+            oil_regime=state.oil_regime.value,
+            combined_regime=state.combined_regime.value,
+            confidence=state.confidence,
+            commodity_signal=state.commodity_signal,
+            drivers=state.drivers,
+            as_of_date=state.timestamp,
+            metadata=APIMetadata(timestamp=datetime.now(UTC)),
+        )
+    except ValueError as e:
+        logger.warning("Combined regime classification failed: %s", e)
+        raise HTTPException(
+            status_code=503,
+            detail=f"Unable to classify combined regime: {e}",
+        ) from e
+    except Exception as e:
+        logger.exception("Unexpected error in get_combined_regime")
         raise HTTPException(
             status_code=500,
             detail=f"Internal server error: {e}",

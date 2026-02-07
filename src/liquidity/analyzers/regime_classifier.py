@@ -13,13 +13,24 @@ Binary Classification:
     - CONTRACTION: Composite <= 0.5 (unfavorable liquidity environment)
 
 No NEUTRAL state - forces decisive regime classification.
+
+Combined Regime Analysis:
+    CombinedRegimeAnalyzer merges liquidity regime with oil supply-demand
+    regime to produce a unified macro signal:
+    - VERY_BULLISH: Expansion + Tight oil = commodities rally
+    - BULLISH: Favorable cross-currents
+    - NEUTRAL: Mixed signals
+    - BEARISH: Unfavorable cross-currents
+    - VERY_BEARISH: Contraction + Loose oil = commodities sell-off
 """
+
+from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import Enum
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
@@ -27,6 +38,9 @@ from liquidity.calculators.global_liquidity import GlobalLiquidityCalculator
 from liquidity.calculators.net_liquidity import NetLiquidityCalculator
 from liquidity.calculators.stealth_qe import StealthQECalculator
 from liquidity.config import Settings, get_settings
+
+if TYPE_CHECKING:
+    from liquidity.oil.regime import OilRegime, OilRegimeClassifier
 
 logger = logging.getLogger(__name__)
 
@@ -487,3 +501,205 @@ class RegimeClassifier:
             f"RegimeClassifier(lookback={self._lookback_days}, "
             f"weights={self._weights})"
         )
+
+
+# =============================================================================
+# Combined Regime Analysis (Liquidity + Oil)
+# =============================================================================
+
+
+class CombinedRegime(str, Enum):
+    """Combined liquidity-oil regime classification.
+
+    Maps the combination of liquidity regime (EXPANSION/CONTRACTION) and
+    oil supply-demand regime (TIGHT/BALANCED/LOOSE) into a unified signal.
+    """
+
+    VERY_BULLISH = "very_bullish"
+    BULLISH = "bullish"
+    NEUTRAL = "neutral"
+    BEARISH = "bearish"
+    VERY_BEARISH = "very_bearish"
+
+
+@dataclass
+class CombinedRegimeState:
+    """Combined liquidity and oil regime state.
+
+    Attributes:
+        timestamp: Timestamp of the analysis.
+        liquidity_regime: Liquidity regime direction (EXPANSION/CONTRACTION).
+        oil_regime: Oil supply-demand regime (TIGHT/BALANCED/LOOSE).
+        combined_regime: Combined regime classification.
+        confidence: Average confidence from both classifiers (0-1).
+        commodity_signal: Trading signal (long/short/neutral).
+        drivers: List of factors driving the current regime.
+    """
+
+    timestamp: datetime
+    liquidity_regime: str  # EXPANSION or CONTRACTION
+    oil_regime: Any  # OilRegime enum (avoid circular import)
+    combined_regime: CombinedRegime
+    confidence: float
+    commodity_signal: str  # "long", "short", "neutral"
+    drivers: list[str]
+
+
+class CombinedRegimeAnalyzer:
+    """Combines liquidity and oil regime for macro signals.
+
+    The analyzer produces a unified regime classification by combining:
+    - Liquidity regime: EXPANSION (favorable) vs CONTRACTION (unfavorable)
+    - Oil supply-demand regime: TIGHT (bullish) vs LOOSE (bearish)
+
+    The REGIME_MATRIX maps all 6 combinations to 5 output states.
+
+    Example:
+        analyzer = CombinedRegimeAnalyzer()
+        state = await analyzer.get_combined_regime()
+        print(f"Combined: {state.combined_regime.value}")
+        print(f"Signal: {state.commodity_signal}")
+    """
+
+    # Regime combination matrix
+    # Maps (liquidity_regime, oil_regime) -> combined_regime
+    REGIME_MATRIX: dict[tuple[str, str], CombinedRegime] = {}
+
+    @classmethod
+    def _init_regime_matrix(cls) -> None:
+        """Initialize the regime matrix lazily to avoid circular imports."""
+        if cls.REGIME_MATRIX:
+            return
+
+        from liquidity.oil.regime import OilRegime
+
+        cls.REGIME_MATRIX = {
+            ("EXPANSION", OilRegime.TIGHT): CombinedRegime.VERY_BULLISH,
+            ("EXPANSION", OilRegime.BALANCED): CombinedRegime.BULLISH,
+            ("EXPANSION", OilRegime.LOOSE): CombinedRegime.NEUTRAL,
+            ("NEUTRAL", OilRegime.TIGHT): CombinedRegime.BULLISH,
+            ("NEUTRAL", OilRegime.BALANCED): CombinedRegime.NEUTRAL,
+            ("NEUTRAL", OilRegime.LOOSE): CombinedRegime.BEARISH,
+            ("CONTRACTION", OilRegime.TIGHT): CombinedRegime.NEUTRAL,
+            ("CONTRACTION", OilRegime.BALANCED): CombinedRegime.BEARISH,
+            ("CONTRACTION", OilRegime.LOOSE): CombinedRegime.VERY_BEARISH,
+        }
+
+    def __init__(
+        self,
+        liquidity_classifier: RegimeClassifier | None = None,
+        oil_classifier: OilRegimeClassifier | None = None,
+        settings: Settings | None = None,
+    ) -> None:
+        """Initialize the Combined Regime Analyzer.
+
+        Args:
+            liquidity_classifier: Optional pre-configured liquidity classifier.
+            oil_classifier: Optional pre-configured oil regime classifier.
+            settings: Optional settings override.
+        """
+        self._settings = settings or get_settings()
+
+        # Lazy import to avoid circular dependency
+        from liquidity.oil.regime import OilRegimeClassifier
+
+        self._init_regime_matrix()
+
+        self._liquidity = liquidity_classifier or RegimeClassifier(
+            settings=self._settings
+        )
+        self._oil = oil_classifier or OilRegimeClassifier()
+
+    async def get_combined_regime(self) -> CombinedRegimeState:
+        """Get combined liquidity-oil regime.
+
+        Fetches both liquidity and oil regime classifications and combines
+        them using the REGIME_MATRIX.
+
+        Returns:
+            CombinedRegimeState with unified classification.
+
+        Raises:
+            ValueError: If either classifier fails to produce a result.
+        """
+        # Get individual regimes
+        liquidity_result = await self._liquidity.classify()
+        oil_state = await self._oil.classify()
+
+        # Map liquidity direction to string for matrix lookup
+        liquidity_regime = liquidity_result.direction.value
+
+        # Combine regimes
+        combined = self._combine_regimes(liquidity_regime, oil_state.regime)
+
+        # Calculate confidence (average, normalized to 0-1)
+        # Liquidity confidence is categorical (HIGH/MEDIUM/LOW), convert to numeric
+        liq_conf_map = {"HIGH": 1.0, "MEDIUM": 0.66, "LOW": 0.33}
+        liq_conf = liq_conf_map.get(liquidity_result.confidence, 0.5)
+        # Oil confidence is 0-100, normalize to 0-1
+        oil_conf = oil_state.confidence / 100.0
+        confidence = (liq_conf + oil_conf) / 2
+
+        # Generate trading signal
+        signal = self._regime_to_signal(combined)
+
+        # Collect drivers
+        drivers = [
+            f"Liquidity: {liquidity_regime} (intensity {liquidity_result.intensity:.0f})",
+            f"Oil: {oil_state.regime.value}",
+            *oil_state.drivers,
+        ]
+
+        return CombinedRegimeState(
+            timestamp=datetime.now(UTC),
+            liquidity_regime=liquidity_regime,
+            oil_regime=oil_state.regime,
+            combined_regime=combined,
+            confidence=confidence,
+            commodity_signal=signal,
+            drivers=drivers,
+        )
+
+    def _combine_regimes(
+        self,
+        liquidity: str,
+        oil_regime: Any,
+    ) -> CombinedRegime:
+        """Combine liquidity and oil regimes using the matrix.
+
+        Args:
+            liquidity: Liquidity regime (EXPANSION/CONTRACTION).
+            oil_regime: Oil regime (OilRegime enum).
+
+        Returns:
+            Combined regime classification.
+        """
+        # Handle liquidity NEUTRAL (not in original binary classifier but
+        # may be added for 3-state classification)
+        if liquidity not in ("EXPANSION", "CONTRACTION", "NEUTRAL"):
+            logger.warning("Unknown liquidity regime: %s, defaulting to NEUTRAL", liquidity)
+            liquidity = "NEUTRAL"
+
+        return self.REGIME_MATRIX.get(
+            (liquidity, oil_regime),
+            CombinedRegime.NEUTRAL,
+        )
+
+    def _regime_to_signal(self, regime: CombinedRegime) -> str:
+        """Convert combined regime to trading signal.
+
+        Args:
+            regime: Combined regime classification.
+
+        Returns:
+            Trading signal: "long", "short", or "neutral".
+        """
+        if regime in (CombinedRegime.VERY_BULLISH, CombinedRegime.BULLISH):
+            return "long"
+        elif regime in (CombinedRegime.VERY_BEARISH, CombinedRegime.BEARISH):
+            return "short"
+        return "neutral"
+
+    def __repr__(self) -> str:
+        """Return string representation of the analyzer."""
+        return f"CombinedRegimeAnalyzer(liquidity={self._liquidity}, oil={self._oil})"

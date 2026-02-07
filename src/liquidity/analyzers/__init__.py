@@ -23,6 +23,9 @@ from liquidity.analyzers.correlation_engine import (
     CorrelationResult,
 )
 from liquidity.analyzers.regime_classifier import (
+    CombinedRegime,
+    CombinedRegimeAnalyzer,
+    CombinedRegimeState,
     RegimeClassifier,
     RegimeDirection,
     RegimeResult,
@@ -53,6 +56,10 @@ __all__ = [
     "RegimeClassifier",
     "RegimeDirection",
     "RegimeResult",
+    # Combined Regime (Liquidity + Oil)
+    "CombinedRegime",
+    "CombinedRegimeAnalyzer",
+    "CombinedRegimeState",
     # Correlation Analysis
     "CorrelationEngine",
     "CorrelationResult",
