@@ -25,6 +25,7 @@ class TestEventType:
         assert EventType.ECB_MEETING.value == "ecb_meeting"
         assert EventType.BOJ_MEETING.value == "boj_meeting"
         assert EventType.BOE_MEETING.value == "boe_meeting"
+        assert EventType.OPEC_MEETING.value == "opec_meeting"
         assert EventType.TAX_DATE.value == "tax_date"
         assert EventType.QUARTER_END.value == "quarter_end"
         assert EventType.MONTH_END.value == "month_end"
@@ -32,7 +33,7 @@ class TestEventType:
 
     def test_all_event_types_count(self) -> None:
         """Test total number of event types."""
-        assert len(EventType) == 9
+        assert len(EventType) == 10
 
 
 class TestImpactLevel:

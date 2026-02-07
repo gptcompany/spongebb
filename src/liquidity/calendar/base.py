@@ -16,6 +16,7 @@ class EventType(Enum):
     ECB_MEETING = "ecb_meeting"
     BOJ_MEETING = "boj_meeting"
     BOE_MEETING = "boe_meeting"
+    OPEC_MEETING = "opec_meeting"
     TAX_DATE = "tax_date"
     QUARTER_END = "quarter_end"
     MONTH_END = "month_end"

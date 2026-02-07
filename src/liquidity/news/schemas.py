@@ -13,8 +13,9 @@ from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 
 class FeedSource(str, Enum):
-    """Central bank feed source identifiers."""
+    """Central bank and commodity feed source identifiers."""
 
+    # Central bank feeds
     FED_PRESS = "fed_press"
     FED_SPEECHES = "fed_speeches"
     ECB_PRESS = "ecb_press"
@@ -23,6 +24,11 @@ class FeedSource(str, Enum):
     SNB_NEWS = "snb_news"
     BOC_NEWS = "boc_news"
     PBOC_NEWS = "pboc_news"
+
+    # Oil and energy feeds
+    OILPRICE_NEWS = "oilprice_news"
+    EIA_TWIP = "eia_twip"
+    RIGZONE_NEWS = "rigzone_news"
 
 
 class NewsItem(BaseModel):

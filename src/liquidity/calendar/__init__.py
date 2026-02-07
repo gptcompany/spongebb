@@ -54,6 +54,11 @@ from liquidity.calendar.treasury import (
     TREASURY_AUCTIONS_2026,
     TreasuryAuctionCalendar,
 )
+from liquidity.calendar.opec import (
+    OPEC_MEETINGS_2026,
+    OPECCalendar,
+    OPECMeeting,
+)
 
 __all__ = [
     # Base classes
@@ -66,11 +71,14 @@ __all__ = [
     "CBMeetingCalendar",
     "TaxDateCalendar",
     "USMarketHolidays",
+    "OPECCalendar",
+    "OPECMeeting",
     # Registry
     "CalendarRegistry",
     "calendar_registry",
     # Static data
     "TREASURY_AUCTIONS_2026",
+    "OPEC_MEETINGS_2026",
     "FOMC_MEETINGS_2026",
     "ECB_MEETINGS_2026",
     "BOJ_MEETINGS_2026",

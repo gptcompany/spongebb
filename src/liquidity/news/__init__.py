@@ -27,6 +27,17 @@ from liquidity.news.feeds import (
     parse_feed_entry,
     poll_feeds_once,
 )
+from liquidity.news.oil_alerts import (
+    SUPPLY_KEYWORDS,
+    AlertPriority,
+    KeywordMatch,
+    SupplyDisruptionMatcher,
+)
+from liquidity.news.oil_feeds import (
+    OIL_FEEDS,
+    OilNewsPoller,
+    poll_oil_feeds_once,
+)
 from liquidity.news.lexicons import (
     DOVISH_KEYWORDS,
     HAWKISH_KEYWORDS,
@@ -84,6 +95,15 @@ __all__ = [
     "compute_item_id",
     "parse_feed_entry",
     "poll_feeds_once",
+    # Oil feeds
+    "OIL_FEEDS",
+    "OilNewsPoller",
+    "poll_oil_feeds_once",
+    # Oil alerts
+    "SUPPLY_KEYWORDS",
+    "AlertPriority",
+    "KeywordMatch",
+    "SupplyDisruptionMatcher",
     # Translation
     "TranslationPipeline",
     "TranslationResult",

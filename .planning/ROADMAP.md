@@ -298,10 +298,10 @@ Plans:
 **Research topics**: Reuters/Platts RSS feeds, NOAA hurricane API, OPEC meeting calendar
 
 Plans:
-- [ ] 20-01: Oil RSS feeds (Reuters, Platts, Argus, OPEC) | wave:1 | effort:M
-- [ ] 20-02: OPEC meeting calendar integration | wave:1 | effort:S
-- [ ] 20-03: Hurricane/weather impact tracker (NOAA) | wave:2 | effort:M
-- [ ] 20-04: Supply disruption keyword alerts | wave:2 | effort:M
+- [x] 20-01: Oil RSS feeds (OilPrice, EIA, Rigzone) | wave:1 | effort:M
+- [x] 20-02: OPEC meeting calendar integration | wave:1 | effort:S
+- [x] 20-03: Hurricane/weather impact tracker (NOAA) | wave:2 | effort:M
+- [x] 20-04: Supply disruption keyword alerts | wave:2 | effort:M
 
 ### Phase 21: Supply-Demand Model
 **Goal**: Oil balance calculator with inventory forecasts
@@ -342,7 +342,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 17. CFTC Positioning | 4/4 | Complete | 2026-02-06 |
 | 18. Oil Term Structure | 4/4 | Complete | 2026-02-06 |
 | 19. Real Rates | 4/4 | Complete | 2026-02-06 |
-| 20. Commodity News | 0/4 | Not started | - |
+| 20. Commodity News | 4/4 | Complete | 2026-02-07 |
 | 21. Supply-Demand Model | 0/4 | Not started | - |
 
 ---
