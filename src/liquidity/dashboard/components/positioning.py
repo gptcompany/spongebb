@@ -138,10 +138,7 @@ def create_positioning_heatmap(data: pd.DataFrame | None = None) -> go.Figure:
             for suffix in ["spec", "comm"]:
                 series_id = f"cot_{commodity.lower()}_{suffix}_pctl"
                 series_data = data[data["series_id"] == series_id]
-                if not series_data.empty:
-                    val = series_data.iloc[-1]["value"]
-                else:
-                    val = 50  # Default to neutral
+                val = series_data.iloc[-1]["value"] if not series_data.empty else 50
                 row.append(val)
             z.append(row)
 

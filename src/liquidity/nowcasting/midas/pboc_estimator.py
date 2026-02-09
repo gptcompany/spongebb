@@ -473,7 +473,7 @@ class PBoCEstimator:
 
     def _estimate_uncertainty(
         self,
-        X_scaled: NDArray[np.float64],
+        _X_scaled: NDArray[np.float64],
         X_raw: pd.DataFrame,
     ) -> float:
         """Estimate prediction uncertainty.

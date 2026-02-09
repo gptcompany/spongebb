@@ -10,8 +10,6 @@ from liquidity.dashboard.callbacks.eia_callbacks import register_eia_callbacks
 from liquidity.dashboard.callbacks.inflation_callbacks import register_inflation_callbacks
 from liquidity.dashboard.callbacks_main import (
     _get_error_response,
-    _get_mock_data,
-    _get_mock_extended_data,
     register_callbacks,
 )
 
@@ -20,6 +18,4 @@ __all__ = [
     "register_eia_callbacks",
     "register_inflation_callbacks",
     "_get_error_response",
-    "_get_mock_data",
-    "_get_mock_extended_data",
 ]

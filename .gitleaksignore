@@ -1,0 +1,6 @@
+# dotenvx encryption keys (not secrets - public/private keys for ECIES encryption)
+.env.keys:generic-api-key:8
+.env:generic-api-key:5
+
+# ECB SDMX series identifiers (false positive - not API keys)
+.planning/phases/11-high-frequency-data-layer/11-04-PLAN.md:generic-api-key:429

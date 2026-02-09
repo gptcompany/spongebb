@@ -281,7 +281,7 @@ class NowcastEngine:
         self,
         tga: pd.DataFrame,
         rrp: pd.DataFrame,
-        sofr: pd.DataFrame,
+        _sofr: pd.DataFrame,
     ) -> pd.Series:
         """Combine high-frequency proxies into observation for Kalman filter.
 

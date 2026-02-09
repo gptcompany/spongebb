@@ -10,7 +10,6 @@ import asyncio
 import logging
 from typing import Any
 
-import pandas as pd
 from dash import Dash, Input, Output
 
 from liquidity.dashboard.components.eia_panel import (
@@ -93,11 +92,7 @@ def _fetch_eia_data() -> dict[str, Any]:
     Returns:
         Dictionary with EIA data for all panel components.
     """
-    try:
-        return asyncio.run(_fetch_eia_data_async())
-    except Exception as e:
-        logger.warning("EIA async fetch failed: %s, using mock data", e)
-        return _get_mock_eia_data()
+    return asyncio.run(_fetch_eia_data_async())
 
 
 async def _fetch_eia_data_async() -> dict[str, Any]:
@@ -153,111 +148,7 @@ async def _fetch_eia_data_async() -> dict[str, Any]:
         except Exception as e:
             logger.warning("EIA collector failed: %s", e)
 
-    # Merge with mock data for any missing fields
-    mock_data = _get_mock_eia_data()
-    return {**mock_data, **data}
-
-
-def _get_mock_eia_data() -> dict[str, Any]:
-    """Get mock EIA data for testing/demo.
-
-    Returns:
-        Dictionary with sample EIA data.
-    """
-    from datetime import UTC, datetime
-
-    import numpy as np
-
-    # Generate 52 weeks of data
-    dates = pd.date_range(
-        end=datetime.now(UTC),
-        periods=52,
-        freq="W",
-    )
-
-    # Cushing inventory (thousand barrels)
-    # Normal range: 20,000 - 50,000 KB
-    cushing_base = 35000
-    cushing_values = cushing_base + np.cumsum(np.random.randn(52) * 500)
-    cushing_values = np.clip(cushing_values, 20000, 60000)
-
-    cushing_df = pd.DataFrame({
-        "timestamp": dates,
-        "series_id": "W_EPC0_SAX_YCUOK_MBBL",
-        "source": "mock",
-        "value": cushing_values,
-        "unit": "thousand_barrels",
-    })
-
-    # Refinery utilization (percent)
-    # Generate for US total and PADDs
-    refinery_data = []
-    for series_id, base_util in [
-        ("WPULEUS3", 92),  # US total
-        ("W_NA_YUP_R10_PER", 88),  # PADD 1
-        ("W_NA_YUP_R30_PER", 95),  # PADD 3
-        ("W_NA_YUP_R50_PER", 90),  # PADD 5
-    ]:
-        util_values = base_util + np.random.randn(52) * 2
-        util_values = np.clip(util_values, 75, 100)
-        for i, dt in enumerate(dates):
-            refinery_data.append({
-                "timestamp": dt,
-                "series_id": series_id,
-                "source": "mock",
-                "value": util_values[i],
-                "unit": "percent",
-            })
-
-    refinery_df = pd.DataFrame(refinery_data)
-
-    # Production (thousand b/d)
-    production_base = 13000
-    production_values = production_base + np.cumsum(np.random.randn(52) * 50)
-
-    production_df = pd.DataFrame({
-        "timestamp": dates,
-        "series_id": "WCRFPUS2",
-        "source": "mock",
-        "value": production_values,
-        "unit": "thousand_bpd",
-    })
-
-    # Imports (thousand b/d)
-    imports_base = 6000
-    imports_values = imports_base + np.random.randn(52) * 200
-
-    imports_df = pd.DataFrame({
-        "timestamp": dates,
-        "series_id": "WCRIMUS2",
-        "source": "mock",
-        "value": imports_values,
-        "unit": "thousand_bpd",
-    })
-
-    # Calculate utilization percentage
-    latest_cushing = cushing_values[-1]
-    cushing_utilization_pct = (latest_cushing / 70800) * 100
-
-    # Calculate refinery signal based on US total
-    us_util = refinery_df[refinery_df["series_id"] == "WPULEUS3"]["value"].iloc[-1]
-    if us_util > 95:
-        refinery_signal = "TIGHT"
-    elif us_util > 90:
-        refinery_signal = "NORMAL"
-    elif us_util > 85:
-        refinery_signal = "SOFT"
-    else:
-        refinery_signal = "WEAK"
-
-    return {
-        "cushing_df": cushing_df,
-        "cushing_utilization_pct": cushing_utilization_pct,
-        "refinery_df": refinery_df,
-        "refinery_signal": refinery_signal,
-        "production_df": production_df,
-        "imports_df": imports_df,
-    }
+    return data
 
 
 def _get_eia_error_response() -> tuple:

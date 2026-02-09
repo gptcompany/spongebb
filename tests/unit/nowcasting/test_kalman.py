@@ -137,7 +137,7 @@ class TestNowcastResult:
             filtered_state=np.array([5.5]),
         )
 
-        with pytest.raises(Exception):  # FrozenInstanceError
+        with pytest.raises(AttributeError):  # FrozenInstanceError
             result.mean = 6.0  # type: ignore[misc]
 
     def test_nowcast_result_repr(self) -> None:

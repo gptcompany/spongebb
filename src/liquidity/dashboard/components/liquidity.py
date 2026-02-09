@@ -290,10 +290,25 @@ def create_liquidity_panel() -> dbc.Row:
     )
 
 
+def _delta_col(label: str, value: float, width: int = 2) -> dbc.Col:
+    """Create a single delta column."""
+    sign = "+" if value >= 0 else ""
+    cls = "metric-delta-positive" if value >= 0 else "metric-delta-negative"
+    return dbc.Col(
+        [
+            html.Small(label, className="text-muted d-block"),
+            html.Span(f"{sign}${value:,.0f}B", className=cls),
+        ],
+        width=width,
+    )
+
+
 def create_liquidity_metrics(
     current_value: float,
     weekly_delta: float,
     monthly_delta: float,
+    delta_60d: float = 0.0,
+    delta_90d: float = 0.0,
     label: str = "Current",
 ) -> html.Div:
     """Create metrics display for liquidity values.
@@ -302,14 +317,13 @@ def create_liquidity_metrics(
         current_value: Current liquidity value in billions.
         weekly_delta: Weekly change in billions.
         monthly_delta: Monthly change in billions.
+        delta_60d: 60-day change in billions.
+        delta_90d: 90-day change in billions.
         label: Label for the current value.
 
     Returns:
         Div with formatted metrics.
     """
-    delta_class = "metric-delta-positive" if weekly_delta >= 0 else "metric-delta-negative"
-    delta_sign = "+" if weekly_delta >= 0 else ""
-
     return html.Div(
         [
             dbc.Row(
@@ -324,30 +338,10 @@ def create_liquidity_metrics(
                         ],
                         width=4,
                     ),
-                    dbc.Col(
-                        [
-                            html.Small("7d Change", className="text-muted d-block"),
-                            html.Span(
-                                f"{delta_sign}${weekly_delta:,.0f}B",
-                                className=delta_class,
-                            ),
-                        ],
-                        width=4,
-                    ),
-                    dbc.Col(
-                        [
-                            html.Small("30d Change", className="text-muted d-block"),
-                            html.Span(
-                                f"{'+' if monthly_delta >= 0 else ''}${monthly_delta:,.0f}B",
-                                className=(
-                                    "metric-delta-positive"
-                                    if monthly_delta >= 0
-                                    else "metric-delta-negative"
-                                ),
-                            ),
-                        ],
-                        width=4,
-                    ),
+                    _delta_col("7d Δ", weekly_delta),
+                    _delta_col("30d Δ", monthly_delta),
+                    _delta_col("60d Δ", delta_60d),
+                    _delta_col("90d Δ", delta_90d),
                 ]
             ),
         ]

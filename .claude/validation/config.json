@@ -1,5 +1,6 @@
 {
   "domain": "finance",
+  "scan_path": "src",
   "commands": {
     "python": "uv run python",
     "pyright": "uv run pyright",
@@ -27,6 +28,19 @@
       "simple_fix",
       "plotly_chart"
     ]
+  },
+  "timeouts": {
+    "code_quality": 60,
+    "type_safety": 300,
+    "security": 300,
+    "coverage": 600,
+    "default": 120
+  },
+  "dimensions": {
+    "code_quality": {"enabled": true, "tier": 1},
+    "type_safety": {"enabled": true, "tier": 2},
+    "security": {"enabled": true, "tier": 1},
+    "coverage": {"enabled": true, "tier": 1}
   },
   "quality_gates": {
     "min_test_coverage": 80,

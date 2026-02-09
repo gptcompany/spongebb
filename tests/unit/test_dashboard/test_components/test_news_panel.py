@@ -264,22 +264,6 @@ class TestSourceLabel:
         assert _get_source_label("boj_other") == "BoJ"
 
 
-class TestMockNewsItems:
-    """Test mock news items generation."""
-
-    def test_get_mock_items(self) -> None:
-        """Test getting mock news items."""
-        from liquidity.dashboard.components.news import get_mock_news_items
-
-        items = get_mock_news_items()
-
-        assert len(items) > 0
-        assert all("title" in item for item in items)
-        assert all("source" in item for item in items)
-        assert all("sentiment" in item for item in items)
-        assert all("published" in item for item in items)
-
-
 class TestNewsItemConversion:
     """Test NewsItem object to dict conversion."""
 

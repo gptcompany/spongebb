@@ -448,7 +448,7 @@ class LSTMRegimeForecaster:
         self,
         train_loader: DataLoader[tuple[torch.Tensor, ...]],
         val_loader: DataLoader[tuple[torch.Tensor, ...]],
-        horizon: int,
+        _horizon: int,
     ) -> tuple[RegimeLSTM, LSTMDiagnostics]:
         """Train a single LSTM model.
 

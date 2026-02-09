@@ -47,7 +47,7 @@ class TestHistoricalLoader:
         mock_fred = Mock()
         mock_fred_class.return_value = mock_fred
 
-        def mock_get_series(series_id, **kwargs):
+        def mock_get_series(series_id, **_kwargs):
             dates = pd.date_range("2024-01-01", periods=5, freq="B")
             if series_id == "WALCL":
                 return pd.Series([100, 100, 100, 100, 100], index=dates)

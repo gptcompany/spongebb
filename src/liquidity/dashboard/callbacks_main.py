@@ -48,7 +48,6 @@ from liquidity.dashboard.components.liquidity import (
 )
 from liquidity.dashboard.components.news import (
     create_news_items_list,
-    get_mock_news_items,
 )
 from liquidity.dashboard.components.quality import (
     create_quality_gauge,
@@ -159,6 +158,8 @@ def register_callbacks(app: Dash) -> None:
                 current_value=net_metrics.get("current", 0),
                 weekly_delta=net_metrics.get("weekly_delta", 0),
                 monthly_delta=net_metrics.get("monthly_delta", 0),
+                delta_60d=net_metrics.get("delta_60d", 0),
+                delta_90d=net_metrics.get("delta_90d", 0),
                 label="Current",
             )
 
@@ -167,6 +168,8 @@ def register_callbacks(app: Dash) -> None:
                 current_value=global_metrics.get("current", 0),
                 weekly_delta=global_metrics.get("weekly_delta", 0),
                 monthly_delta=global_metrics.get("monthly_delta", 0),
+                delta_60d=global_metrics.get("delta_60d", 0),
+                delta_90d=global_metrics.get("delta_90d", 0),
                 label="Current",
             )
 
@@ -734,29 +737,7 @@ def _fetch_fomc_statement_dates() -> list[date]:
     except ImportError as e:
         logger.warning("Could not import FOMC scraper: %s", e)
 
-    # Return mock dates for demo
-    return _get_mock_fomc_dates()
-
-
-def _get_mock_fomc_dates() -> list[date]:
-    """Get mock FOMC statement dates for testing.
-
-    Returns:
-        List of sample FOMC meeting dates.
-    """
-    # Sample FOMC meeting dates (2024)
-    return [
-        date(2024, 12, 18),
-        date(2024, 11, 7),
-        date(2024, 9, 18),
-        date(2024, 7, 31),
-        date(2024, 6, 12),
-        date(2024, 5, 1),
-        date(2024, 3, 20),
-        date(2024, 1, 31),
-        date(2023, 12, 13),
-        date(2023, 11, 1),
-    ]
+    return []
 
 
 def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
@@ -798,56 +779,7 @@ def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
     except ImportError as e:
         logger.warning("Could not import FOMC modules: %s", e)
 
-    # Return mock diff for demo
-    return _get_mock_fomc_diff(old_date, new_date)
-
-
-def _get_mock_fomc_diff(old_date: date, new_date: date) -> Any:
-    """Get mock FOMC statement diff for testing.
-
-    Args:
-        old_date: Date of older statement.
-        new_date: Date of newer statement.
-
-    Returns:
-        StatementDiff with sample data.
-    """
-    from liquidity.news.fomc.diff import StatementDiffEngine
-
-    # Sample FOMC statement excerpts
-    old_text = """
-    The Committee seeks to achieve maximum employment and inflation at the rate of 2 percent
-    over the longer run. The Committee judges that the risks to achieving its employment and
-    inflation goals are moving into better balance. The economic outlook is uncertain, and the
-    Committee remains highly attentive to inflation risks.
-
-    In support of its goals, the Committee decided to maintain the target range for the federal
-    funds rate at 5-1/4 to 5-1/2 percent. In considering any adjustments to the target range for
-    the federal funds rate, the Committee will carefully assess incoming data, the evolving
-    outlook, and the balance of risks.
-    """
-
-    new_text = """
-    The Committee seeks to achieve maximum employment and inflation at the rate of 2 percent
-    over the longer run. The Committee judges that the risks to achieving its employment and
-    inflation goals are moving into better balance. The economic outlook is uncertain, and the
-    Committee remains attentive to inflation risks.
-
-    In support of its goals, the Committee decided to maintain the target range for the federal
-    funds rate at 5-1/4 to 5-1/2 percent. In considering any adjustments to the target range for
-    the federal funds rate, the Committee will carefully assess incoming data, the evolving
-    outlook, and the balance of risks. The Committee does not expect it will be appropriate to
-    reduce the target range until it has gained greater confidence that inflation is moving
-    sustainably toward 2 percent.
-    """
-
-    engine = StatementDiffEngine()
-    return engine.diff(
-        old_text=old_text,
-        new_text=new_text,
-        old_date=old_date,
-        new_date=new_date,
-    )
+    return None
 
 
 def _fetch_news_data() -> list[dict]:
@@ -860,15 +792,12 @@ def _fetch_news_data() -> list[dict]:
         import importlib.util
 
         if importlib.util.find_spec("liquidity.news"):
-            # News module available - in production, data would be fetched
-            # from a cache/database populated by a background NewsPoller task
-            logger.debug("News module available, using mock data for now")
+            logger.debug("News module available but no live feed configured")
 
     except ImportError as e:
         logger.warning("Could not import news module: %s", e)
 
-    # Return mock news data
-    return get_mock_news_items()
+    return []
 
 
 def _fetch_quality_data() -> dict[str, Any]:
@@ -880,128 +809,47 @@ def _fetch_quality_data() -> dict[str, Any]:
     try:
         import importlib.util
 
-        if importlib.util.find_spec("liquidity.validation"):
-            from liquidity.validation import ValidationEngine
+        if not importlib.util.find_spec("liquidity.validation"):
+            raise ImportError("Validation module not available")
 
-            # Try to get real data
-            try:
-                engine = ValidationEngine()
+        from liquidity.validation import ValidationEngine
 
-                # Get last updates from collectors (mock for now)
-                last_updates = _get_mock_last_updates()
+        engine = ValidationEngine()
 
-                # Create mock data for validation
-                data = _get_mock_validation_data()
+        # Get real last updates from dashboard data store
+        # For now use empty dict — real freshness comes from collectors
+        last_updates: dict[str, datetime] = {}
+        data: dict[str, pd.DataFrame] = {}
 
-                # Run validation
-                report = engine.validate_all(data, last_updates)
+        report = engine.validate_all(data, last_updates)
 
-                # Get freshness status
-                freshness_results = engine.freshness.check_all(last_updates)
-                freshness_status = {
-                    source: result.status
-                    for source, result in freshness_results.items()
-                }
+        freshness_results = engine.freshness.check_all(last_updates)
+        freshness_status = {
+            source: result.status
+            for source, result in freshness_results.items()
+        }
 
-                return {
-                    "quality_report": report,
-                    "freshness_score": report.freshness_score,
-                    "completeness_score": report.completeness_score,
-                    "validation_score": report.validation_score,
-                    "last_updates": last_updates,
-                    "freshness_status": freshness_status,
-                }
+        return {
+            "quality_report": report,
+            "freshness_score": report.freshness_score,
+            "completeness_score": report.completeness_score,
+            "validation_score": report.validation_score,
+            "last_updates": last_updates,
+            "freshness_status": freshness_status,
+        }
 
-            except Exception as e:
-                logger.warning("Validation engine failed: %s, using mock data", e)
+    except (ImportError, Exception) as e:
+        logger.error("Quality data unavailable: %s", e)
+        return {
+            "quality_report": None,
+            "freshness_score": 0.0,
+            "completeness_score": 0.0,
+            "validation_score": 0.0,
+            "last_updates": {},
+            "freshness_status": {},
+            "error": str(e),
+        }
 
-    except ImportError as e:
-        logger.warning("Could not import validation module: %s", e)
-
-    # Return mock quality data
-    return _get_mock_quality_data()
-
-
-def _get_mock_last_updates() -> dict[str, datetime]:
-    """Get mock last update timestamps.
-
-    Returns:
-        Dictionary of source names to timestamps.
-    """
-    now = datetime.now(UTC)
-    return {
-        "fed_balance_sheet": now - timedelta(hours=12),
-        "sofr": now - timedelta(hours=6),
-        "tga": now - timedelta(hours=18),
-        "rrp": now - timedelta(hours=4),
-        "dxy": now - timedelta(hours=2),
-        "ecb": now - timedelta(hours=36),
-        "boj": now - timedelta(hours=48),
-        "pboc": now - timedelta(hours=72),
-    }
-
-
-def _get_mock_validation_data() -> dict[str, pd.DataFrame]:
-    """Get mock data for validation.
-
-    Returns:
-        Dictionary of source names to DataFrames.
-    """
-    import numpy as np
-
-    dates = pd.date_range(end=datetime.now(UTC), periods=30, freq="D")
-
-    return {
-        "fed_balance_sheet": pd.DataFrame({
-            "date": dates,
-            "value": 7800 + np.random.randn(30) * 50,
-        }),
-        "sofr": pd.DataFrame({
-            "date": dates,
-            "value": 5.3 + np.random.randn(30) * 0.1,
-        }),
-        "tga": pd.DataFrame({
-            "date": dates,
-            "value": 800 + np.random.randn(30) * 30,
-        }),
-        "rrp": pd.DataFrame({
-            "date": dates,
-            "value": 500 + np.random.randn(30) * 20,
-        }),
-    }
-
-
-def _get_mock_quality_data() -> dict[str, Any]:
-    """Get mock quality data when validation module unavailable.
-
-    Returns:
-        Dictionary with mock quality metrics.
-    """
-
-    last_updates = _get_mock_last_updates()
-
-    # Mock freshness status
-    from liquidity.validation import FreshnessStatus
-
-    freshness_status = {
-        "fed_balance_sheet": FreshnessStatus.FRESH,
-        "sofr": FreshnessStatus.FRESH,
-        "tga": FreshnessStatus.FRESH,
-        "rrp": FreshnessStatus.FRESH,
-        "dxy": FreshnessStatus.FRESH,
-        "ecb": FreshnessStatus.STALE,
-        "boj": FreshnessStatus.STALE,
-        "pboc": FreshnessStatus.CRITICAL,
-    }
-
-    return {
-        "quality_report": None,
-        "freshness_score": 85.0,
-        "completeness_score": 92.0,
-        "validation_score": 100.0,
-        "last_updates": last_updates,
-        "freshness_status": freshness_status,
-    }
 
 
 def _get_quality_error_response() -> tuple:
@@ -1043,15 +891,10 @@ def _fetch_dashboard_data() -> dict[str, Any]:
         ):
             raise ImportError("Calculator modules not available")
     except ImportError as e:
-        logger.warning("Could not import calculators: %s", e)
-        return _get_mock_data()
+        logger.error("Could not import calculators: %s", e)
+        raise
 
-    # Try async data fetch
-    try:
-        return asyncio.run(_fetch_data_async())
-    except Exception as e:
-        logger.warning("Async data fetch failed: %s, using mock data", e)
-        return _get_mock_data()
+    return asyncio.run(_fetch_data_async())
 
 
 async def _fetch_data_async() -> dict[str, Any]:
@@ -1099,11 +942,15 @@ async def _fetch_data_async() -> dict[str, Any]:
             "current": net_result.net_liquidity,
             "weekly_delta": net_result.weekly_delta,
             "monthly_delta": net_result.monthly_delta,
+            "delta_60d": net_result.delta_60d,
+            "delta_90d": net_result.delta_90d,
         },
         "global_metrics": {
             "current": global_result.total_usd,
             "weekly_delta": global_result.weekly_delta,
             "monthly_delta": global_result.delta_30d,
+            "delta_60d": global_result.delta_60d,
+            "delta_90d": global_result.delta_90d,
         },
         "quality_score": 100,
         "calendar_events": [],
@@ -1116,12 +963,7 @@ def _fetch_extended_data() -> dict[str, Any]:
     Returns:
         Dictionary with extended panel data.
     """
-    # Try async fetch
-    try:
-        return asyncio.run(_fetch_extended_async())
-    except Exception as e:
-        logger.warning("Extended data fetch failed: %s, using mock data", e)
-        return _get_mock_extended_data()
+    return asyncio.run(_fetch_extended_async())
 
 
 async def _fetch_extended_async() -> dict[str, Any]:
@@ -1244,7 +1086,7 @@ async def _fetch_extended_async() -> dict[str, Any]:
         except Exception as e:
             logger.warning("Calendar registry failed: %s", e)
 
-    return {**_get_mock_extended_data(), **data}
+    return data
 
 
 def _get_latest_value(df: pd.DataFrame, series_id: str) -> float | None:
@@ -1268,174 +1110,6 @@ def _get_latest_value(df: pd.DataFrame, series_id: str) -> float | None:
         series_df = series_df.sort_values("timestamp")
 
     return float(series_df["value"].iloc[-1])
-
-
-def _get_mock_data() -> dict[str, Any]:
-    """Get mock data for testing/demo when calculators unavailable.
-
-    Returns:
-        Dictionary with sample data.
-    """
-    import numpy as np
-
-    # Generate sample time series
-    dates = pd.date_range(end=datetime.now(UTC), periods=90, freq="D")
-
-    # Sample Net Liquidity data
-    base_net = 5800
-    net_values = base_net + np.cumsum(np.random.randn(90) * 20)
-
-    net_df = pd.DataFrame(
-        {
-            "timestamp": dates,
-            "net_liquidity": net_values,
-            "walcl": net_values + 2000 + np.random.randn(90) * 10,
-            "tga": 800 + np.random.randn(90) * 50,
-            "rrp": 1400 + np.random.randn(90) * 30,
-        }
-    )
-
-    # Sample Global Liquidity data
-    base_global = 28000
-    global_values = base_global + np.cumsum(np.random.randn(90) * 50)
-
-    global_df = pd.DataFrame(
-        {
-            "timestamp": dates,
-            "global_liquidity": global_values,
-            "fed_usd": global_values * 0.3,
-            "ecb_usd": global_values * 0.25,
-            "boj_usd": global_values * 0.25,
-            "pboc_usd": global_values * 0.2,
-        }
-    )
-
-    return {
-        "net_liquidity_df": net_df,
-        "global_liquidity_df": global_df,
-        "regime": {
-            "direction": "EXPANSION",
-            "intensity": 65,
-            "confidence": "MEDIUM",
-            "net_liq_percentile": 0.68,
-            "global_liq_percentile": 0.72,
-            "stealth_qe_score": 0.45,
-        },
-        "net_metrics": {
-            "current": net_values[-1],
-            "weekly_delta": net_values[-1] - net_values[-7],
-            "monthly_delta": net_values[-1] - net_values[-30],
-        },
-        "global_metrics": {
-            "current": global_values[-1],
-            "weekly_delta": global_values[-1] - global_values[-7],
-            "monthly_delta": global_values[-1] - global_values[-30],
-        },
-        "quality_score": 95,
-        "calendar_events": [],
-    }
-
-
-def _get_mock_extended_data() -> dict[str, Any]:
-    """Get mock data for extended panels.
-
-    Returns:
-        Dictionary with sample extended panel data.
-    """
-    import numpy as np
-
-    dates = pd.date_range(end=datetime.now(UTC), periods=30, freq="D")
-
-    # DXY data
-    dxy_values = 103 + np.cumsum(np.random.randn(30) * 0.3)
-    dxy_df = pd.DataFrame(
-        {
-            "timestamp": dates,
-            "series_id": "DX-Y.NYB",
-            "value": dxy_values,
-            "source": "mock",
-        }
-    )
-
-    # Commodity data
-    gold_values = 2000 + np.cumsum(np.random.randn(30) * 10)
-    copper_values = 4.2 + np.cumsum(np.random.randn(30) * 0.05)
-    wti_values = 75 + np.cumsum(np.random.randn(30) * 1)
-    brent_values = 80 + np.cumsum(np.random.randn(30) * 1)
-
-    gold_df = pd.DataFrame(
-        {"timestamp": dates, "series_id": "GC=F", "value": gold_values}
-    )
-    copper_df = pd.DataFrame(
-        {"timestamp": dates, "series_id": "HG=F", "value": copper_values}
-    )
-    wti_df = pd.DataFrame({"timestamp": dates, "series_id": "CL=F", "value": wti_values})
-    brent_df = pd.DataFrame(
-        {"timestamp": dates, "series_id": "BZ=F", "value": brent_values}
-    )
-
-    # TIC data
-    tic_df = pd.DataFrame(
-        {
-            "timestamp": [datetime.now(UTC)] * 5,
-            "series_id": [
-                "tic_japan_holdings",
-                "tic_china_holdings",
-                "tic_uk_holdings",
-                "tic_cayman_holdings",
-                "tic_luxembourg_holdings",
-            ],
-            "value": [1100, 850, 700, 350, 300],
-            "source": "mock",
-        }
-    )
-
-    # ETF data
-    etf_dates = pd.date_range(end=datetime.now(UTC), periods=30, freq="D")
-    etf_df = pd.DataFrame(
-        {
-            "timestamp": list(etf_dates) * 3,
-            "etf": ["GLD"] * 30 + ["SLV"] * 30 + ["USO"] * 30,
-            "close": list(180 + np.cumsum(np.random.randn(30) * 1))
-            + list(22 + np.cumsum(np.random.randn(30) * 0.2))
-            + list(70 + np.cumsum(np.random.randn(30) * 0.5)),
-        }
-    )
-
-    # Correlation matrix (mock)
-    assets = ["BTC", "SPX", "GOLD", "TLT", "DXY", "COPPER", "HYG"]
-    corr_values = np.random.rand(7, 7)
-    corr_values = (corr_values + corr_values.T) / 2
-    np.fill_diagonal(corr_values, 1.0)
-    corr_values = corr_values * 2 - 1  # Scale to [-1, 1]
-    correlation_matrix = pd.DataFrame(
-        corr_values, index=pd.Index(assets), columns=pd.Index(assets)
-    )
-
-    # Calendar events (mock)
-    today = date.today()
-    calendar_events = [
-        {"title": "Treasury Auction", "date": (today + timedelta(days=3)).isoformat(), "impact": "high"},
-        {"title": "FOMC Meeting", "date": (today + timedelta(days=7)).isoformat(), "impact": "high"},
-        {"title": "ECB Meeting", "date": (today + timedelta(days=10)).isoformat(), "impact": "medium"},
-        {"title": "BoJ Meeting", "date": (today + timedelta(days=14)).isoformat(), "impact": "medium"},
-        {"title": "Tax Date", "date": (today + timedelta(days=20)).isoformat(), "impact": "low"},
-    ]
-
-    return {
-        "dxy_df": dxy_df,
-        "fx": {"eurusd": 1.0850, "usdjpy": 148.50, "usdcny": 7.15},
-        "gold_df": gold_df,
-        "copper_df": copper_df,
-        "wti_df": wti_df,
-        "brent_df": brent_df,
-        "commodities": {"gold": gold_values[-1], "copper": copper_values[-1], "wti": wti_values[-1]},
-        "stress": {"sofr_ois": 5.0, "repo_stress": 0.5},
-        "tic_df": tic_df,
-        "etf_df": etf_df,
-        "correlation_matrix": correlation_matrix,
-        "calendar_events": calendar_events,
-    }
 
 
 def _get_error_response(error_msg: str) -> tuple:

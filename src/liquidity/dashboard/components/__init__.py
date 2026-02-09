@@ -88,7 +88,6 @@ from liquidity.dashboard.components.news import (
     create_news_items_list,
     create_news_panel,
     format_time_ago,
-    get_mock_news_items,
     news_items_from_newsitem_objects,
 )
 from liquidity.dashboard.components.oil_term_structure import (
@@ -190,7 +189,6 @@ __all__ = [
     "create_news_item",
     "create_news_items_list",
     "format_time_ago",
-    "get_mock_news_items",
     "news_items_from_newsitem_objects",
     # FOMC Diff (Plan 14-08)
     "create_fomc_diff_panel",

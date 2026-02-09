@@ -120,8 +120,7 @@ class TermStructureAlertEngine:
             alerts.append(self._create_intensity_alert(signal, "WARNING"))
 
         # 3. Check for extreme roll yield
-        if roll_yield is not None:
-            if abs(roll_yield.annual_yield) > self.ROLL_YIELD_THRESHOLD:
+        if roll_yield is not None and abs(roll_yield.annual_yield) > self.ROLL_YIELD_THRESHOLD:
                 alerts.append(self._create_roll_yield_alert(signal, roll_yield))
 
         # Update state

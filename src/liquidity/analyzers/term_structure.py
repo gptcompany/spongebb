@@ -245,7 +245,7 @@ class TermStructureAnalyzer:
     def _classify_curve(
         self,
         momentum_5d: float,
-        momentum_20d: float,
+        _momentum_20d: float,
         eia_data: pd.DataFrame | None,
     ) -> tuple[CurveShape, float]:
         """Classify term structure based on momentum.
@@ -279,8 +279,7 @@ class TermStructureAnalyzer:
             if inventory_signal > 0:  # Build
                 if base_shape == CurveShape.BACKWARDATION:
                     base_intensity *= 0.8
-            elif inventory_signal < 0:  # Draw
-                if base_shape == CurveShape.CONTANGO:
+            elif inventory_signal < 0 and base_shape == CurveShape.CONTANGO:  # Draw
                     base_intensity *= 0.8
 
         return base_shape, max(0, min(100, base_intensity))

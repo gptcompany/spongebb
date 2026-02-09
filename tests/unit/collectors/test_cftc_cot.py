@@ -340,7 +340,7 @@ class TestMultipleCommodities:
     ) -> None:
         """Test collecting multiple commodities in one call."""
 
-        def mock_get_response(url: str, params: dict):
+        def mock_get_response(_url: str, params: dict):
             mock_resp = MagicMock()
             mock_resp.status_code = 200
             mock_resp.raise_for_status = MagicMock()

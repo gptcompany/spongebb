@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
+from liquidity.collectors.base import CollectorFetchError
 from liquidity.collectors.oil_term_structure import (
     DEFAULT_MOMENTUM_WINDOWS,
     SERIES_MAP,
@@ -126,9 +127,8 @@ class TestCollect:
     async def test_collect_empty_on_api_failure(self):
         collector = OilTermStructureCollector()
 
-        with patch("yfinance.download", side_effect=Exception("API error")):
-            with pytest.raises(Exception):
-                await collector.collect(["wti_front"])
+        with patch("yfinance.download", side_effect=Exception("API error")), pytest.raises(CollectorFetchError):
+            await collector.collect(["wti_front"])
 
     @pytest.mark.asyncio
     async def test_collect_empty_on_no_data(self):
