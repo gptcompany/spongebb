@@ -24,6 +24,7 @@ Aggiungere un layer dedicato al consumer credit risk con:
 | Plan | Description | Effort | Wave |
 |------|-------------|--------|------|
 | 22-01 | Consumer Credit Risk Collector + Dashboard Panel | M | 1 |
+| 22-02 | Runtime Operationalization (Container + Test Execution Strategy) | S | 2 |
 
 ## Technical Approach
 
@@ -48,6 +49,21 @@ Aggiungere un layer dedicato al consumer credit risk con:
    - unit test component dashboard
    - update test layout
 
+### Plan 22-02
+
+1. Definire modello operativo runtime:
+   - scelta `container diretto` come default per esecuzione riproducibile
+   - uso host/escalated per test runtime bloccati nel sandbox
+
+2. Formalizzare strategia test:
+   - Python runtime test fuori sandbox
+   - Playwright Test per regressione visuale locale/CI
+   - Playwright MCP per debug interattivo browser-based
+
+3. Chiarire boundary OpenBB:
+   - OpenBB SDK come libreria dati
+   - dashboard non "inside OpenBB service" ma app separata integrata via SDK
+
 ## Dependencies
 
 - Phase 6 (Credit & BIS data) per serie e concetti credit market
@@ -68,6 +84,14 @@ Aggiungere un layer dedicato al consumer credit risk con:
 | CREATE | `tests/unit/collectors/test_consumer_credit_risk.py` |
 | CREATE | `tests/unit/test_dashboard/test_components/test_consumer_credit.py` |
 | MODIFY | `tests/unit/test_dashboard/test_layout.py` |
+| CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-02-PLAN.md` |
+| CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-02-SUMMARY.md` |
+| MODIFY | `.planning/phases/phase-22-consumer-credit-risk/CONTEXT.md` |
+| MODIFY | `.planning/phases/phase-22-consumer-credit-risk/SUMMARY.md` |
+| MODIFY | `.planning/STATE.md` |
+| MODIFY | `.planning/ROADMAP.md` |
+| MODIFY | `.planning/MILESTONES.md` |
+| MODIFY | `.planning/milestones/v4.0-ROADMAP.md` |
 
 ## Validation Criteria
 
@@ -77,3 +101,4 @@ Aggiungere un layer dedicato al consumer credit risk con:
 - [x] Chart XLP/XLY e AXP-IGV visibili in dashboard
 - [x] Ranking stock sensitive disponibile
 - [x] Lint e compile check pass
+- [x] Runbook operativo container/test documentato in GSD

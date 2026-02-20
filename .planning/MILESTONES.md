@@ -4,7 +4,7 @@
 
 **Delivered:** Consumer-credit-risk intelligence layer integrated into data collection and dashboard.
 
-**Phases completed:** 22 (1 plan total)
+**Phases completed:** 22 (2 plans total)
 
 **Key accomplishments:**
 
@@ -15,16 +15,17 @@
 - USD liquidity proxy index (Bloomberg-like)
 - Dashboard panel dedicato (XLP/XLY, AXP vs IGV, sensitive stocks)
 - Playwright visual regression baseline (desktop/mobile) + CI workflow
+- Operational runbook GSD (container-first execution + runtime test strategy host/escalated)
 
 **Stats:**
 
-- 1 phase, 1 plan
+- 1 phase, 2 plans
 - 2 nuovi moduli core
 - 2 nuovi file test dedicati
 - Commit release (core): `9a229d7`
 - Commit hardening (visual regression): `4d363d4`, `37d6ede`
 
-**What's next:** definizione v5.0 scope
+**What's next:** implementazione workflow container diretto o definizione v5.0 scope
 
 ---
 
@@ -104,4 +105,4 @@
 
 ---
 
-*Last updated: 2026-02-20 — v4.0 Consumer Credit Risk shipped*
+*Last updated: 2026-02-20 — v4.0 Consumer Credit Risk + Plan 22-02 operational runbook*

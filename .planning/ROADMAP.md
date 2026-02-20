@@ -23,7 +23,7 @@ None
 
 **v3.0 Commodity Intelligence (Phases 16-21):** EIA Oil Data, CFTC Positioning, Oil Term Structure, Real Rates, Commodity News, Supply-Demand Model
 
-**v4.0 Consumer Credit Risk (Phase 22):** Consumer credit stress tracking, relative market panels, credit-sensitive stock ranking
+**v4.0 Consumer Credit Risk (Phase 22):** Consumer credit stress tracking, relative market panels, credit-sensitive stock ranking, runtime/test operational runbook
 
 ## Phase Details
 
@@ -329,12 +329,13 @@ Plans:
 ### Phase 22: Consumer Credit Risk Intelligence
 **Goal**: Consumer credit stress tracking + dashboard panel (XLP/XLY, AXP vs IGV) + sensitivity ranking
 **Depends on**: Phase 6, Phase 10, Phase 11
-**Requirements**: CCR-01 (Credit ex-student), CCR-02 (Default proxy), CCR-03 (Mortgage losses + reserves), CCR-04 (Relative charts), CCR-05 (Sensitivity ranking)
+**Requirements**: CCR-01 (Credit ex-student), CCR-02 (Default proxy), CCR-03 (Mortgage losses + reserves), CCR-04 (Relative charts), CCR-05 (Sensitivity ranking), OPS-05 (Runtime testing strategy)
 **Research**: Unlikely (extends existing FRED/Yahoo + dashboard patterns)
-**Research topics**: FRED series coverage for credit stress, robust proxy construction, relative-performance visualization
+**Research topics**: FRED series coverage for credit stress, robust proxy construction, relative-performance visualization, sandbox/runtime test constraints
 
 Plans:
 - [x] 22-01: Consumer credit risk collector + dashboard integration + stock sensitivity ranking | wave:1 | effort:M
+- [x] 22-02: Runtime operationalization docs (container-first + host/escalated test workflow) | wave:2 | effort:S
 
 ## Progress
 
@@ -364,9 +365,9 @@ Phases execute in numeric order: 1 → 2 → ... → 21 → 22
 | 19. Real Rates | 4/4 | Complete | 2026-02-06 |
 | 20. Commodity News | 4/4 | Complete | 2026-02-07 |
 | 21. Supply-Demand Model | 4/4 | Complete | 2026-02-07 |
-| 22. Consumer Credit Risk Intelligence | 1/1 | Complete | 2026-02-20 |
+| 22. Consumer Credit Risk Intelligence | 2/2 | Complete | 2026-02-20 |
 
 ---
 *Created: 2026-01-21*
-*Last updated: 2026-02-20*
+*Last updated: 2026-02-20 (Phase 22-02 documented)*
 *Milestone 4 (v4.0): Phase 22 - Consumer Credit Risk - SHIPPED*

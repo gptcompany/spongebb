@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-07)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** v4.0 Complete + visual regression hardening — Ready for v5.0 planning
+**Current focus:** v4.0 shipped + runtime/test operationalization docs (container-first)
 
 ## Current Position
 
 Phase: 22 of 22 (Consumer Credit Risk Intelligence)
-Plan: 1/1 Complete
+Plan: 2/2 Complete
 Status: ✅ Milestone Complete
-Last activity: 2026-02-20 — Playwright visual regression + CI workflow shipped
+Last activity: 2026-02-20 — GSD operational runbook added (container + runtime test strategy)
 
-Progress: █████████████████████ 100% (22/22 phases, 81/81 plans)
+Progress: █████████████████████ 100% (22/22 phases, 82/82 plans)
 
 ## Milestones
 
@@ -31,7 +31,7 @@ Progress: █████████████████████ 100% (
 
 | Phase | Name | Plans | Status |
 |-------|------|-------|--------|
-| 22 | Consumer Credit Risk Intelligence | 1/1 | ✅ Complete |
+| 22 | Consumer Credit Risk Intelligence | 2/2 | ✅ Complete |
 
 **Key Additions:**
 - Consumer credit total / student loans / ex-student tracking
@@ -40,6 +40,7 @@ Progress: █████████████████████ 100% (
 - XLP/XLY relative chart
 - AXP vs IGV relative spread chart
 - Credit-sensitive stocks ranking panel
+- Operational runbook: container execution + host/escalated runtime testing
 
 ## v3.0 Scope (SHIPPED)
 
@@ -107,12 +108,13 @@ Progress: █████████████████████ 100% (
 - Mortgage loss rates and bank loan loss reserves
 - USD liquidity proxy index
 - Dashboard panel: XLP/XLY + AXP/IGV + sensitive stock ranking
+- Runtime/testing strategy documented (sandbox limits, host/escalated path, Playwright workflow)
 
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Visual regression pipeline documented and integrated (Plan 10-06)
-Next steps: Define v5.0 scope with `/gsd:new-milestone` or `/gsd:discuss-milestone`
+Stopped at: Operational runbook documented in Phase 22 (Plan 22-02)
+Next steps: Implement direct container workflow (`Dockerfile`/`compose` + `make` targets) or define v5.0 scope
 
 ---
-*Last updated: 2026-02-20 after visual regression hardening (10-06)*
+*Last updated: 2026-02-20 after Phase 22 operationalization docs (22-02)*

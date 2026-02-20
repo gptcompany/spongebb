@@ -2,7 +2,7 @@
 
 **Status:** ✅ Complete  
 **Date:** 2026-02-20  
-**Plans:** 1/1
+**Plans:** 2/2
 
 ## Overview
 
@@ -50,11 +50,29 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - `tests/unit/test_dashboard/test_components/test_consumer_credit.py`
 - `tests/unit/test_dashboard/test_layout.py`
 
+### 4. Operational Runbook Layer (22-02)
+
+**Files:**
+- `.planning/phases/phase-22-consumer-credit-risk/22-02-PLAN.md`
+- `.planning/phases/phase-22-consumer-credit-risk/22-02-SUMMARY.md`
+- `.planning/STATE.md`
+- `.planning/ROADMAP.md`
+- `.planning/MILESTONES.md`
+- `.planning/milestones/v4.0-ROADMAP.md`
+
+**Operational Decisions:**
+- Container diretto confermato come modello runtime preferito
+- Test Python/E2E runtime da eseguire su host o outside-sandbox
+- Playwright Test mantenuto come regressione visuale automatica (local/CI)
+- Playwright MCP allineato per debug visuale interattivo
+- OpenBB chiarito come SDK/provider dati (non servizio always-on in questa repo)
+
 ## Validation Results
 
 - `ruff check`: ✅ pass
 - `py_compile`: ✅ pass
 - `pytest`: ⚠ non eseguibile nel sandbox corrente (`/dev/urandom` non disponibile)
+- Runtime test strategy: ✅ documentata nel piano operativo (22-02)
 
 ## Key Metrics Implemented
 
@@ -72,6 +90,7 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - Feature sviluppata e rilasciata con commit `9a229d7`
 - Branch: `main`
 - Push: `origin/main`
+- GSD operativo aggiornato con piano `22-02` (runtime/container/test workflow)
 
 ---
 *Phase 22 completed: 2026-02-20*
