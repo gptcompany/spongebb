@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-07)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** v4.0 Complete — Ready for v5.0 planning
+**Current focus:** v4.0 Complete + visual regression hardening — Ready for v5.0 planning
 
 ## Current Position
 
 Phase: 22 of 22 (Consumer Credit Risk Intelligence)
 Plan: 1/1 Complete
 Status: ✅ Milestone Complete
-Last activity: 2026-02-20 — v4.0 Consumer Credit Risk shipped
+Last activity: 2026-02-20 — Playwright visual regression + CI workflow shipped
 
 Progress: █████████████████████ 100% (22/22 phases, 81/81 plans)
 
@@ -111,8 +111,8 @@ Progress: █████████████████████ 100% (
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: v4.0 milestone complete and shipped
+Stopped at: Visual regression pipeline documented and integrated (Plan 10-06)
 Next steps: Define v5.0 scope with `/gsd:new-milestone` or `/gsd:discuss-milestone`
 
 ---
-*Last updated: 2026-02-20 after v4.0 shipped*
+*Last updated: 2026-02-20 after visual regression hardening (10-06)*

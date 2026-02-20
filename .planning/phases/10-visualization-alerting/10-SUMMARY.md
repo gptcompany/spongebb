@@ -37,6 +37,12 @@
 - ✅ QA-09: Dashboard shows data quality score (completeness %)
 - ✅ QA-10: Charts include sanity bounds (historical min/max ranges)
 
+### Visual Regression Hardening (10-06, post-release extension)
+- ✅ VIZ-09: Playwright visual regression test added (desktop + mobile Chromium)
+- ✅ Deterministic dashboard mode for snapshot stability (`FORCE_FALLBACK`, fixed timestamp)
+- ✅ CI workflow for automated visual checks with report artifacts
+- ✅ Baseline snapshots versioned in repository
+
 ## Deliverables
 
 ### Dashboard Module (`src/liquidity/dashboard/`)

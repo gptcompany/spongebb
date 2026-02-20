@@ -10,6 +10,7 @@ Build Plotly Dash dashboard for visualizing liquidity data, Discord alerting for
 - **Type**: Plotly Dash (interactive server)
 - **Features**: Filters, zoom, auto-refresh
 - **Panels**: Net/Global Liquidity, Regime, FX, Commodities, Stress, Capital Flows, Calendar overlay
+- **Post-release hardening (10-06)**: Playwright visual regression (desktop/mobile Chromium) with deterministic fallback mode
 
 ### Alerting
 - **Channel**: Discord webhooks
@@ -148,3 +149,4 @@ Key Metrics:
 - [ ] Data quality score visible on dashboard
 - [ ] HTML export generates valid standalone file
 - [ ] 100% unit test coverage for validation module
+- [ ] Visual regression baseline passes in CI (Playwright)

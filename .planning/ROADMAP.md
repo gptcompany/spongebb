@@ -159,6 +159,7 @@ Plans:
 - [x] 10-03: Discord alerting (regime changes, stress alerts, DXY moves) | wave:2 | effort:M
 - [x] 10-04: Quality & validation system (freshness, anomalies, cross-validation) | wave:1 | effort:L
 - [x] 10-05: HTML export and data quality indicators | wave:3 | effort:M
+- [x] 10-06: Playwright visual regression (desktop/mobile) + CI pipeline | wave:3 | effort:M
 
 ### Phase 11: High-Frequency Data Layer
 **Goal**: Reduce data lag from weekly to daily, add missing critical indicators
@@ -351,7 +352,7 @@ Phases execute in numeric order: 1 → 2 → ... → 21 → 22
 | 7. Liquidity Calculations | 4/4 | Complete | 2026-01-24 |
 | 8. Analysis & Correlations | 3/3 | Complete | 2026-01-26 |
 | 9. Calendar & API | 4/4 | Complete | 2026-02-04 |
-| 10. Visualization & Alerting | 5/5 | Complete | 2026-02-04 |
+| 10. Visualization & Alerting | 6/6 | Complete | 2026-02-20 |
 | 11. High-Frequency Data Layer | 6/6 | Complete | 2026-02-05 |
 | 12. Nowcasting & Forecasting | 4/4 | Complete | 2026-02-05 |
 | 13. Risk Metrics | 5/5 | Complete | 2026-02-05 |

@@ -14,13 +14,15 @@
 - Mortgage losses + loan loss reserves metrics
 - USD liquidity proxy index (Bloomberg-like)
 - Dashboard panel dedicato (XLP/XLY, AXP vs IGV, sensitive stocks)
+- Playwright visual regression baseline (desktop/mobile) + CI workflow
 
 **Stats:**
 
 - 1 phase, 1 plan
 - 2 nuovi moduli core
 - 2 nuovi file test dedicati
-- Commit release: `9a229d7`
+- Commit release (core): `9a229d7`
+- Commit hardening (visual regression): `4d363d4`, `37d6ede`
 
 **What's next:** definizione v5.0 scope
 
