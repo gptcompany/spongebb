@@ -45,6 +45,12 @@ from liquidity.collectors.consumer_credit import (
     WEEKLY_HF_SERIES,
     ConsumerCreditCollector,
 )
+from liquidity.collectors.consumer_credit_risk import (
+    CREDIT_RISK_SERIES_MAP,
+    DEFAULT_SENSITIVE_STOCKS,
+    MARKET_PAIR_SYMBOLS,
+    ConsumerCreditRiskCollector,
+)
 from liquidity.collectors.credit import (
     CP_SERIES,
     LENDING_THRESHOLDS,
@@ -213,6 +219,11 @@ __all__ = [
     "CONSUMER_SERIES",
     "ALL_CONSUMER_SERIES",
     "WEEKLY_HF_SERIES",
+    # Consumer Credit Risk (Phase 20)
+    "ConsumerCreditRiskCollector",
+    "CREDIT_RISK_SERIES_MAP",
+    "MARKET_PAIR_SYMBOLS",
+    "DEFAULT_SENSITIVE_STOCKS",
     # Cross-Currency Basis (Phase 11)
     "XCcyBasisCollector",
     "XCCY_STRESS_THRESHOLDS",

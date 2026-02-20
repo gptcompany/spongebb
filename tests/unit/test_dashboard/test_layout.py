@@ -61,6 +61,8 @@ class TestLayoutCreation:
         assert find_component(layout, "global-liquidity-chart")
         assert find_component(layout, "regime-indicator")
         assert find_component(layout, "regime-gauge")
+        assert find_component(layout, "xlp-xly-ratio-chart")
+        assert find_component(layout, "axp-igv-spread-chart")
 
     def test_layout_contains_refresh_button(self) -> None:
         """Test that layout includes manual refresh button."""

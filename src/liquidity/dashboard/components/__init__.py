@@ -6,6 +6,7 @@ This package contains individual UI components:
 - regime: Regime classification panel with color coding
 - fx: FX markets panel (DXY, major pairs)
 - commodities: Commodities panel (Gold, Copper, Oil)
+- consumer_credit: Consumer credit risk panel (XLP/XLY, AXP vs IGV, losses)
 - stress: Funding stress indicators panel
 - flows: Capital flows panel (TIC, ETF flows)
 - correlations: Correlation heatmap panel
@@ -33,6 +34,13 @@ from liquidity.dashboard.components.commodities import (
     create_commodity_chart,
     create_commodity_summary,
     create_oil_chart,
+)
+from liquidity.dashboard.components.consumer_credit import (
+    create_axp_igv_spread_chart,
+    create_consumer_credit_metrics,
+    create_consumer_credit_panel,
+    create_sensitive_stocks_table,
+    create_xlp_xly_ratio_chart,
 )
 from liquidity.dashboard.components.correlations import (
     create_correlation_alerts,
@@ -151,6 +159,12 @@ __all__ = [
     "create_commodity_chart",
     "create_oil_chart",
     "create_commodity_summary",
+    # Consumer Credit Risk (Phase 20)
+    "create_consumer_credit_panel",
+    "create_xlp_xly_ratio_chart",
+    "create_axp_igv_spread_chart",
+    "create_consumer_credit_metrics",
+    "create_sensitive_stocks_table",
     # Stress
     "create_stress_panel",
     "create_stress_gauge",

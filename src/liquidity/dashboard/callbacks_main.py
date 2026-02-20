@@ -24,6 +24,12 @@ from liquidity.dashboard.components.commodities import (
     create_commodity_summary,
     create_oil_chart,
 )
+from liquidity.dashboard.components.consumer_credit import (
+    create_axp_igv_spread_chart,
+    create_consumer_credit_metrics,
+    create_sensitive_stocks_table,
+    create_xlp_xly_ratio_chart,
+)
 from liquidity.dashboard.components.correlations import (
     create_correlation_alerts,
     create_correlation_heatmap,
@@ -225,6 +231,11 @@ def register_callbacks(app: Dash) -> None:
             # Correlation outputs
             Output("correlation-heatmap", "figure"),
             Output("correlation-alerts", "children"),
+            # Consumer credit risk outputs
+            Output("xlp-xly-ratio-chart", "figure"),
+            Output("axp-igv-spread-chart", "figure"),
+            Output("consumer-credit-metrics", "children"),
+            Output("consumer-credit-sensitive-stocks", "children"),
             # Calendar outputs
             Output("calendar-events", "children"),
         ],
@@ -289,6 +300,16 @@ def register_callbacks(app: Dash) -> None:
                 data.get("previous_correlations"),
             )
 
+            # Consumer credit risk panel
+            xlp_xly_fig = create_xlp_xly_ratio_chart(data.get("xlp_xly_df"))
+            axp_igv_fig = create_axp_igv_spread_chart(data.get("axp_igv_df"))
+            credit_metrics = create_consumer_credit_metrics(
+                data.get("consumer_credit_metrics")
+            )
+            sensitive_stocks = create_sensitive_stocks_table(
+                data.get("sensitive_stocks_df"),
+            )
+
             # Calendar panel
             calendar_events = create_calendar_events_from_dict(data.get("calendar_events", []))
 
@@ -308,6 +329,10 @@ def register_callbacks(app: Dash) -> None:
                 etf_fig,
                 corr_heatmap,
                 corr_alerts,
+                xlp_xly_fig,
+                axp_igv_fig,
+                credit_metrics,
+                sensitive_stocks,
                 calendar_events,
             )
 
@@ -1065,6 +1090,44 @@ async def _fetch_extended_async() -> dict[str, Any]:
         except Exception as e:
             logger.warning("Correlation engine failed: %s", e)
 
+    # Try Consumer Credit Risk collector
+    if importlib.util.find_spec("liquidity.collectors.consumer_credit_risk"):
+        try:
+            from liquidity.collectors.consumer_credit_risk import (
+                DEFAULT_SENSITIVE_STOCKS,
+                ConsumerCreditRiskCollector,
+            )
+
+            cc_collector = ConsumerCreditRiskCollector()
+            start_date = datetime.now(UTC) - timedelta(days=365 * 5)
+
+            credit_df = await cc_collector.collect_credit_risk(start_date=start_date)
+            tracking_df = cc_collector.build_tracking_series(credit_df)
+
+            market_symbols = list(
+                dict.fromkeys(
+                    cc_collector.MARKET_PAIR_SYMBOLS + DEFAULT_SENSITIVE_STOCKS
+                )
+            )
+            market_df = await cc_collector.collect_market_prices(
+                symbols=market_symbols,
+                start_date=start_date,
+                period="2y",
+            )
+
+            data["xlp_xly_df"] = cc_collector.calculate_xlp_xly_ratio(market_df)
+            data["axp_igv_df"] = cc_collector.calculate_axp_igv_relative(market_df)
+            data["consumer_credit_metrics"] = cc_collector.get_latest_tracking_metrics(
+                tracking_df
+            )
+            data["sensitive_stocks_df"] = cc_collector.rank_credit_sensitive_stocks(
+                market_df=market_df,
+                tracking_df=tracking_df,
+                symbols=DEFAULT_SENSITIVE_STOCKS,
+            )
+        except Exception as e:
+            logger.warning("Consumer credit risk collector failed: %s", e)
+
     # Try Calendar registry
     if importlib.util.find_spec("liquidity.calendar.registry"):
         try:
@@ -1165,5 +1228,9 @@ def _get_extended_error_response() -> tuple:
         create_etf_flows_chart(None),  # etf-flows-chart
         create_correlation_heatmap(None),  # correlation-heatmap
         html.Div(),  # correlation-alerts
+        create_xlp_xly_ratio_chart(None),  # xlp-xly-ratio-chart
+        create_axp_igv_spread_chart(None),  # axp-igv-spread-chart
+        html.Div(),  # consumer-credit-metrics
+        html.Div(),  # consumer-credit-sensitive-stocks
         [],  # calendar-events
     )

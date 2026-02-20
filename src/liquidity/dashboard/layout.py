@@ -19,6 +19,7 @@ from dash import dcc, html
 
 from liquidity.dashboard.components.calendar import create_calendar_strip
 from liquidity.dashboard.components.commodities import create_commodities_panel
+from liquidity.dashboard.components.consumer_credit import create_consumer_credit_panel
 from liquidity.dashboard.components.correlations import create_correlation_panel
 from liquidity.dashboard.components.eia_panel import create_eia_panel
 from liquidity.dashboard.components.flows import create_flows_panel
@@ -98,6 +99,16 @@ def create_layout() -> html.Div:
                             dbc.Col(
                                 create_correlation_panel(),
                                 width=6,
+                            ),
+                        ],
+                        className="mb-4",
+                    ),
+                    # Consumer credit risk panel (Phase 20)
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                create_consumer_credit_panel(),
+                                width=12,
                             ),
                         ],
                         className="mb-4",

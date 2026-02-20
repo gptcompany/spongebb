@@ -86,9 +86,17 @@ SERIES_MAP: dict[str, str] = {
     "retail_sales_ex_auto": "RRSFS",  # Retail Sales: ex Autos (millions USD, SA, monthly)
     "consumer_sentiment": "UMCSENT",  # U of Michigan Consumer Sentiment Index (monthly)
     "consumer_credit_total": "TOTALSL",  # Total Consumer Credit (billions USD, SA, monthly)
+    "consumer_credit_total_millions": "HCCSDODNS",  # Consumer Credit Outstanding (millions USD, SA, monthly)
+    "student_loans_outstanding": "SLOASM",  # Student Loans Owned and Securitized (millions USD, monthly)
     "pce": "PCE",  # Personal Consumption Expenditures (billions USD, SAAR, monthly)
     "credit_card_loans": "CCLACBW027SBOG",  # Credit Card Loans at Banks (millions USD, weekly)
     "consumer_loans": "CLSACBW027SBOG",  # Consumer Loans at Banks (millions USD, weekly)
+    # Consumer credit stress / losses
+    "loan_delinquency_all": "DRALACBS",  # Delinquency Rate on All Loans (percent, quarterly)
+    "loan_chargeoff_all": "CORALACBS",  # Charge-Off Rate on All Loans (percent, quarterly)
+    "mortgage_delinquency": "DRSFRMACBS",  # Delinquency Rate: Single-Family Mortgages (percent, quarterly)
+    "mortgage_chargeoff": "CORSFRMACBS",  # Charge-Off Rate: Single-Family Mortgages (percent, quarterly)
+    "loan_loss_reserves": "QBPBSTASTLNLESSRES",  # FDIC Loan Loss Reserves (millions USD, quarterly)
     # Phase 19: Real Rates (TIPS for BEI calculation)
     "tips_10y": "DFII10",  # 10-Year TIPS Real Yield (percent, daily)
     "tips_5y": "DFII5",  # 5-Year TIPS Real Yield (percent, daily)
@@ -128,9 +136,17 @@ UNIT_MAP: dict[str, str] = {
     "RRSFS": "millions_usd",  # Retail Sales: ex Autos
     "UMCSENT": "index",  # Consumer Sentiment Index
     "TOTALSL": "billions_usd",  # Total Consumer Credit
+    "HCCSDODNS": "millions_usd",  # Consumer Credit Outstanding
+    "SLOASM": "millions_usd",  # Student Loans Outstanding
     "PCE": "billions_usd_saar",  # Personal Consumption Expenditures
     "CCLACBW027SBOG": "millions_usd",  # Credit Card Loans at Banks
     "CLSACBW027SBOG": "millions_usd",  # Consumer Loans at Banks
+    # Consumer credit stress / losses
+    "DRALACBS": "percent",  # Delinquency Rate on All Loans
+    "CORALACBS": "percent",  # Charge-Off Rate on All Loans
+    "DRSFRMACBS": "percent",  # Delinquency Rate on Single-Family Mortgages
+    "CORSFRMACBS": "percent",  # Charge-Off Rate on Single-Family Mortgages
+    "QBPBSTASTLNLESSRES": "millions_usd",  # FDIC Loan Loss Reserves
     # Real Rates (Phase 19)
     "DFII10": "percent",  # 10-Year TIPS Real Yield
     "DFII5": "percent",  # 5-Year TIPS Real Yield
