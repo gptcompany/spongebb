@@ -26,6 +26,7 @@ Aggiungere un layer dedicato al consumer credit risk con:
 | 22-01 | Consumer Credit Risk Collector + Dashboard Panel | M | 1 |
 | 22-02 | Runtime Operationalization (Container + Test Execution Strategy) | S | 2 |
 | 22-03 | Direct Container Runtime Implementation (Dashboard + Python/E2E Tests) | M | 3 |
+| 22-04 | Claude Code Supervision Protocol (Governance + Execution Gates) | S | 4 |
 
 ## Technical Approach
 
@@ -80,6 +81,19 @@ Aggiungere un layer dedicato al consumer credit risk con:
    - `Makefile` con comandi standard (`up`, `test-python`, `test-visual`)
    - README aggiornato con runbook step-by-step
 
+### Plan 22-04
+
+1. Definizione supervisione Claude Code:
+   - scope attività supervisionate (edit/test/commit/push/docs)
+   - gate operativi prima e dopo ogni fase critica
+
+2. Definizione escalation:
+   - stop su incongruenze, cambi inattesi o azioni distruttive non autorizzate
+
+3. Tracciabilità:
+   - standard minimo di evidenze (hash, file list, verifiche, rischi residui)
+   - documento centralizzato in `.planning/reference/CLAUDE_CODE_SUPERVISION.md`
+
 ## Dependencies
 
 - Phase 6 (Credit & BIS data) per serie e concetti credit market
@@ -104,6 +118,9 @@ Aggiungere un layer dedicato al consumer credit risk con:
 | CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-02-SUMMARY.md` |
 | CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-03-PLAN.md` |
 | CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-03-SUMMARY.md` |
+| CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-04-PLAN.md` |
+| CREATE | `.planning/phases/phase-22-consumer-credit-risk/22-04-SUMMARY.md` |
+| CREATE | `.planning/reference/CLAUDE_CODE_SUPERVISION.md` |
 | MODIFY | `Dockerfile` |
 | MODIFY | `docker-compose.yml` |
 | CREATE | `Makefile` |
@@ -125,3 +142,4 @@ Aggiungere un layer dedicato al consumer credit risk con:
 - [x] Lint e compile check pass
 - [x] Runbook operativo container/test documentato in GSD
 - [x] Runtime container workflow implementato (`Dockerfile`/`compose`/`Makefile`)
+- [x] Protocollo supervisione Claude Code documentato e versionato

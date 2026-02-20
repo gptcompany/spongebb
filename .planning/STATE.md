@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-07)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** v4.0 shipped + container-first runtime implemented (dashboard + runtime tests)
+**Current focus:** v4.0 shipped + Claude Code supervision protocol documented
 
 ## Current Position
 
 Phase: 22 of 22 (Consumer Credit Risk Intelligence)
-Plan: 3/3 Complete
+Plan: 4/4 Complete
 Status: ✅ Milestone Complete
-Last activity: 2026-02-20 — Direct container runtime workflow implemented (Dockerfile/compose/Makefile)
+Last activity: 2026-02-20 — Claude Code supervision governance documented (Plan 22-04)
 
-Progress: █████████████████████ 100% (22/22 phases, 83/83 plans)
+Progress: █████████████████████ 100% (22/22 phases, 84/84 plans)
 
 ## Milestones
 
@@ -31,7 +31,7 @@ Progress: █████████████████████ 100% (
 
 | Phase | Name | Plans | Status |
 |-------|------|-------|--------|
-| 22 | Consumer Credit Risk Intelligence | 3/3 | ✅ Complete |
+| 22 | Consumer Credit Risk Intelligence | 4/4 | ✅ Complete |
 
 **Key Additions:**
 - Consumer credit total / student loans / ex-student tracking
@@ -42,6 +42,7 @@ Progress: █████████████████████ 100% (
 - Credit-sensitive stocks ranking panel
 - Operational runbook: container execution + host/escalated runtime testing
 - Direct container workflow implemented (`Dockerfile`, `docker-compose`, `Makefile`)
+- Claude Code supervision protocol (gate + escalation + traceability)
 
 ## v3.0 Scope (SHIPPED)
 
@@ -111,12 +112,13 @@ Progress: █████████████████████ 100% (
 - Dashboard panel: XLP/XLY + AXP/IGV + sensitive stock ranking
 - Runtime/testing strategy documented (sandbox limits, host/escalated path, Playwright workflow)
 - Containerized runtime/test execution (dashboard, pytest, Playwright)
+- Supervisione Claude Code documentata in GSD/reference
 
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Container workflow implemented in Phase 22 (Plan 22-03)
-Next steps: Eseguire smoke test completo dei target `make` su host Docker e poi definire v5.0 scope
+Stopped at: Supervision protocol documented in Phase 22 (Plan 22-04)
+Next steps: Eseguire smoke test supervisionato dei target `make` su host Docker e poi definire v5.0 scope
 
 ---
-*Last updated: 2026-02-20 after Phase 22 container implementation (22-03)*
+*Last updated: 2026-02-20 after Phase 22 supervision protocol (22-04)*

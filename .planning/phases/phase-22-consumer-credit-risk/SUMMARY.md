@@ -2,7 +2,7 @@
 
 **Status:** ✅ Complete  
 **Date:** 2026-02-20  
-**Plans:** 3/3
+**Plans:** 4/4
 
 ## Overview
 
@@ -83,6 +83,18 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - Comandi operativi standardizzati (`make up`, `make test-python`, `make test-visual`)
 - Runbook README step-by-step coerente con l’infrastruttura container
 
+### 6. Claude Code Supervision Layer (22-04)
+
+**Files:**
+- `.planning/phases/phase-22-consumer-credit-risk/22-04-PLAN.md`
+- `.planning/phases/phase-22-consumer-credit-risk/22-04-SUMMARY.md`
+- `.planning/reference/CLAUDE_CODE_SUPERVISION.md`
+
+**Delivered:**
+- Protocollo supervisione operativo formalizzato
+- Gate pre-edit, pre-commit, pre-push, post-push
+- Policy di escalation e tracciabilità per cross-check
+
 ## Validation Results
 
 - `ruff check`: ✅ pass
@@ -90,6 +102,7 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - `pytest`: ⚠ non eseguibile nel sandbox corrente (`/dev/urandom` non disponibile)
 - Runtime test strategy: ✅ documentata nel piano operativo (22-02)
 - Runtime container workflow: ✅ implementato nel piano 22-03
+- Claude Code supervision protocol: ✅ documentato nel piano 22-04
 
 ## Key Metrics Implemented
 
@@ -110,6 +123,7 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - GSD operativo aggiornato con piano `22-02` (runtime/container/test workflow)
 - Implementazione container runtime completata con piano `22-03`
 - Commit implementazione container runtime: `6d34191`
+- Supervisione Claude Code formalizzata con piano `22-04`
 
 ---
 *Phase 22 completed: 2026-02-20*
