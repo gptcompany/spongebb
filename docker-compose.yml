@@ -5,6 +5,9 @@
 #   docker compose up -d                    # Start API with external QuestDB/Redis
 #   docker compose --profile isolated up -d # Start all services (isolated)
 #   docker compose --profile dev up -d      # Development mode with hot reload
+#   docker compose --profile dashboard up -d liquidity-dashboard
+#   docker compose --profile test run --rm liquidity-pytest
+#   docker compose --profile test run --rm liquidity-playwright
 #
 # Port allocation strategy:
 # - API: 8000 (configurable via LIQUIDITY_API_PORT)
@@ -23,6 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runtime
     container_name: liquidity-api
     restart: unless-stopped
     ports:
@@ -48,6 +52,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runtime
     container_name: liquidity-api-isolated
     profiles:
       - isolated
@@ -81,6 +86,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runtime
     container_name: liquidity-api-dev
     profiles:
       - dev
@@ -103,6 +109,127 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
+    networks:
+      - liquidity-network
+
+  # Dashboard runtime (container-first workflow)
+  liquidity-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: liquidity-dashboard
+    profiles:
+      - dashboard
+    restart: unless-stopped
+    ports:
+      - "${LIQUIDITY_DASHBOARD_PORT:-8050}:8050"
+    environment:
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_EIA_API_KEY=${LIQUIDITY_EIA_API_KEY:-}
+      - OPENBB_FRED_API_KEY=${OPENBB_FRED_API_KEY:-}
+      - OPENBB_EIA_API_KEY=${OPENBB_EIA_API_KEY:-}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
+      - LIQUIDITY_DASHBOARD_FORCE_FALLBACK=${LIQUIDITY_DASHBOARD_FORCE_FALLBACK:-0}
+      - LIQUIDITY_DASHBOARD_FIXED_NOW=${LIQUIDITY_DASHBOARD_FIXED_NOW:-}
+    command: ["python", "-m", "liquidity.dashboard", "--host", "0.0.0.0", "--port", "8050"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8050"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - liquidity-network
+
+  # Dashboard development mode with hot reload
+  liquidity-dashboard-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: liquidity-dashboard-dev
+    profiles:
+      - dev
+    restart: unless-stopped
+    ports:
+      - "${LIQUIDITY_DASHBOARD_PORT:-8050}:8050"
+    environment:
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_EIA_API_KEY=${LIQUIDITY_EIA_API_KEY:-}
+      - OPENBB_FRED_API_KEY=${OPENBB_FRED_API_KEY:-}
+      - OPENBB_EIA_API_KEY=${OPENBB_EIA_API_KEY:-}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-DEBUG}
+      - LIQUIDITY_DASHBOARD_FORCE_FALLBACK=${LIQUIDITY_DASHBOARD_FORCE_FALLBACK:-0}
+      - LIQUIDITY_DASHBOARD_FIXED_NOW=${LIQUIDITY_DASHBOARD_FIXED_NOW:-}
+    volumes:
+      - ./src:/app/src:ro
+    command: ["python", "-m", "liquidity.dashboard", "--host", "0.0.0.0", "--port", "8050", "--debug"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8050"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - liquidity-network
+
+  # Deterministic dashboard service used by visual regression tests
+  liquidity-dashboard-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    profiles:
+      - test
+    environment:
+      - LIQUIDITY_DASHBOARD_FORCE_FALLBACK=1
+      - LIQUIDITY_DASHBOARD_FIXED_NOW=2026-02-20T00:00:00+00:00
+      - PYTHONHASHSEED=0
+    command: ["python", "-m", "liquidity.dashboard", "--host", "0.0.0.0", "--port", "8050"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8050"]
+      interval: 15s
+      timeout: 10s
+      retries: 6
+      start_period: 20s
+    networks:
+      - liquidity-network
+
+  # Runtime Python tests inside container (avoids sandbox /dev/urandom limits)
+  liquidity-pytest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test-runtime
+    profiles:
+      - test
+    environment:
+      - PYTHONHASHSEED=0
+    volumes:
+      - ./tests:/app/tests:ro
+      - ./src:/app/src:ro
+    command: ["python", "-m", "pytest", "tests/unit", "-q"]
+    networks:
+      - liquidity-network
+
+  # Visual regression tests via Playwright (containerized)
+  liquidity-playwright:
+    image: mcr.microsoft.com/playwright:v1.52.0-noble
+    profiles:
+      - test
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /work
+    depends_on:
+      liquidity-dashboard-test:
+        condition: service_healthy
+    environment:
+      - CI=1
+      - PLAYWRIGHT_SKIP_WEBSERVER=1
+      - PLAYWRIGHT_BASE_URL=http://liquidity-dashboard-test:8050
+    volumes:
+      - ./:/work
+    command: ["bash", "-lc", "npm ci && npm run test:visual"]
     networks:
       - liquidity-network
 

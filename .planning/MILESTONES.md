@@ -4,7 +4,7 @@
 
 **Delivered:** Consumer-credit-risk intelligence layer integrated into data collection and dashboard.
 
-**Phases completed:** 22 (2 plans total)
+**Phases completed:** 22 (3 plans total)
 
 **Key accomplishments:**
 
@@ -16,17 +16,19 @@
 - Dashboard panel dedicato (XLP/XLY, AXP vs IGV, sensitive stocks)
 - Playwright visual regression baseline (desktop/mobile) + CI workflow
 - Operational runbook GSD (container-first execution + runtime test strategy host/escalated)
+- Direct container implementation (`Dockerfile` targets + compose services + Makefile runbook)
 
 **Stats:**
 
-- 1 phase, 2 plans
+- 1 phase, 3 plans
 - 2 nuovi moduli core
 - 2 nuovi file test dedicati
 - Commit release (core): `9a229d7`
 - Commit hardening (visual regression): `4d363d4`, `37d6ede`
 - Commit operational docs (GSD 22-02): `1d05b86`
+- Commit operational docs trace: `382b36b`
 
-**What's next:** implementazione workflow container diretto o definizione v5.0 scope
+**What's next:** validazione smoke test completa dei target container o definizione v5.0 scope
 
 ---
 
@@ -106,4 +108,4 @@
 
 ---
 
-*Last updated: 2026-02-20 — v4.0 Consumer Credit Risk + Plan 22-02 operational runbook*
+*Last updated: 2026-02-20 — v4.0 Consumer Credit Risk + Plan 22-03 container implementation*

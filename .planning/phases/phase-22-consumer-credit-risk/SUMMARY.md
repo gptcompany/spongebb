@@ -2,7 +2,7 @@
 
 **Status:** ✅ Complete  
 **Date:** 2026-02-20  
-**Plans:** 2/2
+**Plans:** 3/3
 
 ## Overview
 
@@ -67,12 +67,29 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - Playwright MCP allineato per debug visuale interattivo
 - OpenBB chiarito come SDK/provider dati (non servizio always-on in questa repo)
 
+### 5. Container Runtime Layer (22-03)
+
+**Files:**
+- `Dockerfile`
+- `docker-compose.yml`
+- `Makefile`
+- `README.md`
+- `.planning/phases/phase-22-consumer-credit-risk/22-03-PLAN.md`
+- `.planning/phases/phase-22-consumer-credit-risk/22-03-SUMMARY.md`
+
+**Delivered:**
+- Target Docker separati per runtime e test-runtime
+- Servizi compose dedicati a dashboard runtime/dev/test, pytest runtime, Playwright visual
+- Comandi operativi standardizzati (`make up`, `make test-python`, `make test-visual`)
+- Runbook README step-by-step coerente con l’infrastruttura container
+
 ## Validation Results
 
 - `ruff check`: ✅ pass
 - `py_compile`: ✅ pass
 - `pytest`: ⚠ non eseguibile nel sandbox corrente (`/dev/urandom` non disponibile)
 - Runtime test strategy: ✅ documentata nel piano operativo (22-02)
+- Runtime container workflow: ✅ implementato nel piano 22-03
 
 ## Key Metrics Implemented
 
@@ -91,6 +108,7 @@ Aggiunto un modulo end-to-end per il monitoraggio del consumer credit risk, con 
 - Branch: `main`
 - Push: `origin/main`
 - GSD operativo aggiornato con piano `22-02` (runtime/container/test workflow)
+- Implementazione container runtime completata con piano `22-03`
 
 ---
 *Phase 22 completed: 2026-02-20*
