@@ -75,7 +75,11 @@ class Settings(BaseSettings):
     fred_api_key: SecretStr = Field(
         default=SecretStr(""),
         description="FRED API key for data fetching",
-        validation_alias=AliasChoices("LIQUIDITY_FRED_API_KEY", "FRED_API_KEY"),
+        validation_alias=AliasChoices(
+            "LIQUIDITY_FRED_API_KEY",
+            "FRED_API_KEY",
+            "OPENBB_FRED_API_KEY",
+        ),
     )
 
     # EIA API key for petroleum data
@@ -83,7 +87,11 @@ class Settings(BaseSettings):
     eia_api_key: SecretStr = Field(
         default=SecretStr(""),
         description="EIA API key for petroleum data fetching",
-        validation_alias=AliasChoices("LIQUIDITY_EIA_API_KEY", "EIA_API_KEY"),
+        validation_alias=AliasChoices(
+            "LIQUIDITY_EIA_API_KEY",
+            "EIA_API_KEY",
+            "OPENBB_EIA_API_KEY",
+        ),
     )
 
     # QuestDB configuration
@@ -201,7 +209,7 @@ def configure_openbb_credentials() -> bool:
         settings = get_settings()
 
         # FRED API key
-        fred_key = settings.fred_api_key
+        fred_key = settings.fred_api_key.get_secret_value()
         if fred_key:
             obb.user.credentials.fred_api_key = fred_key
             logger.info("FRED API key configured in OpenBB")
@@ -210,7 +218,7 @@ def configure_openbb_credentials() -> bool:
             return False
 
         # EIA API key (optional)
-        eia_key = settings.eia_api_key
+        eia_key = settings.eia_api_key.get_secret_value()
         if eia_key:
             obb.user.credentials.eia_api_key = eia_key
             logger.info("EIA API key configured in OpenBB")

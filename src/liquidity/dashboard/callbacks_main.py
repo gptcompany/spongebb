@@ -8,6 +8,7 @@ Handles:
 
 import asyncio
 import logging
+import math
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
@@ -917,9 +918,107 @@ def _fetch_dashboard_data() -> dict[str, Any]:
             raise ImportError("Calculator modules not available")
     except ImportError as e:
         logger.error("Could not import calculators: %s", e)
-        raise
+        return _build_mock_dashboard_data(reason=f"Import error: {e}")
 
-    return asyncio.run(_fetch_data_async())
+    try:
+        return asyncio.run(_fetch_data_async())
+    except Exception as e:
+        logger.warning("Falling back to mock dashboard data: %s", e)
+        return _build_mock_dashboard_data(reason=str(e))
+
+
+def _build_mock_dashboard_data(reason: str | None = None) -> dict[str, Any]:
+    """Build resilient fallback data for dashboard rendering.
+
+    This prevents empty/error panels when credentials or upstream data are unavailable.
+    """
+    dates = pd.date_range(end=datetime.now(UTC), periods=180, freq="D")
+    idx = list(range(len(dates)))
+
+    net_values = pd.Series(
+        [5800.0 + (i * 0.6) + 110.0 * math.sin(i / 16.0) for i in idx],
+        index=dates,
+    )
+    walcl_values = pd.Series(
+        [9000.0 + (i * 0.2) for i in idx],
+        index=dates,
+    )
+    tga_values = pd.Series(
+        [650.0 + 45.0 * (1 + math.sin(i / 14.0)) for i in idx],
+        index=dates,
+    )
+    rrp_values = pd.Series(
+        [280.0 + 50.0 * (1 + math.cos(i / 18.0)) for i in idx],
+        index=dates,
+    )
+
+    global_values = pd.Series(
+        [28000.0 + (i * 1.2) + 180.0 * math.sin(i / 20.0) for i in idx],
+        index=dates,
+    )
+    fed_values = global_values * 0.30
+    ecb_values = global_values * 0.28
+    boj_values = global_values * 0.25
+    pboc_values = global_values * 0.17
+
+    net_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "net_liquidity": net_values.values,
+            "walcl": walcl_values.values,
+            "tga": tga_values.values,
+            "rrp": rrp_values.values,
+        }
+    )
+    global_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "global_liquidity": global_values.values,
+            "fed_usd": fed_values.values,
+            "ecb_usd": ecb_values.values,
+            "boj_usd": boj_values.values,
+            "pboc_usd": pboc_values.values,
+        }
+    )
+
+    def _delta(series: pd.Series, periods: int) -> float:
+        if len(series) <= periods:
+            return 0.0
+        return float(series.iloc[-1] - series.iloc[-(periods + 1)])
+
+    weekly_delta = _delta(net_values, 7)
+    monthly_delta = _delta(net_values, 30)
+    net_direction = "EXPANSION" if weekly_delta >= 0 else "CONTRACTION"
+
+    return {
+        "net_liquidity_df": net_df,
+        "global_liquidity_df": global_df,
+        "regime": {
+            "direction": net_direction,
+            "intensity": min(100.0, max(0.0, abs(weekly_delta) / 4.0)),
+            "confidence": "LOW" if reason else "MEDIUM",
+            "net_liq_percentile": 0.5,
+            "global_liq_percentile": 0.5,
+            "stealth_qe_score": 0.5,
+        },
+        "net_metrics": {
+            "current": float(net_values.iloc[-1]),
+            "weekly_delta": weekly_delta,
+            "monthly_delta": monthly_delta,
+            "delta_60d": _delta(net_values, 60),
+            "delta_90d": _delta(net_values, 90),
+        },
+        "global_metrics": {
+            "current": float(global_values.iloc[-1]),
+            "weekly_delta": _delta(global_values, 7),
+            "monthly_delta": _delta(global_values, 30),
+            "delta_60d": _delta(global_values, 60),
+            "delta_90d": _delta(global_values, 90),
+        },
+        "quality_score": 70 if not reason else 55,
+        "calendar_events": [],
+        "fallback_reason": reason or "",
+    }
 
 
 async def _fetch_data_async() -> dict[str, Any]:
@@ -935,51 +1034,55 @@ async def _fetch_data_async() -> dict[str, Any]:
 
     # Configure OpenBB credentials before using calculators
     if not configure_openbb_credentials():
-        logger.warning("OpenBB credentials not configured, using mock data")
-        raise RuntimeError("OpenBB credentials not configured")
+        logger.warning("OpenBB credentials not configured, using fallback dashboard data")
+        return _build_mock_dashboard_data(reason="OpenBB credentials not configured")
 
-    # Initialize calculators
-    net_calc = NetLiquidityCalculator()
-    global_calc = GlobalLiquidityCalculator()
-    regime_classifier = RegimeClassifier()
+    try:
+        # Initialize calculators
+        net_calc = NetLiquidityCalculator()
+        global_calc = GlobalLiquidityCalculator()
+        regime_classifier = RegimeClassifier()
 
-    # Fetch data
-    net_df = await net_calc.calculate()
-    global_df = await global_calc.calculate()
+        # Fetch data
+        net_df = await net_calc.calculate()
+        global_df = await global_calc.calculate()
 
-    # Get current values
-    net_result = await net_calc.get_current()
-    global_result = await global_calc.get_current()
-    regime_result = await regime_classifier.classify()
+        # Get current values
+        net_result = await net_calc.get_current()
+        global_result = await global_calc.get_current()
+        regime_result = await regime_classifier.classify()
 
-    return {
-        "net_liquidity_df": net_df,
-        "global_liquidity_df": global_df,
-        "regime": {
-            "direction": regime_result.direction.value,
-            "intensity": regime_result.intensity,
-            "confidence": regime_result.confidence,
-            "net_liq_percentile": regime_result.net_liq_percentile,
-            "global_liq_percentile": regime_result.global_liq_percentile,
-            "stealth_qe_score": regime_result.stealth_qe_score,
-        },
-        "net_metrics": {
-            "current": net_result.net_liquidity,
-            "weekly_delta": net_result.weekly_delta,
-            "monthly_delta": net_result.monthly_delta,
-            "delta_60d": net_result.delta_60d,
-            "delta_90d": net_result.delta_90d,
-        },
-        "global_metrics": {
-            "current": global_result.total_usd,
-            "weekly_delta": global_result.weekly_delta,
-            "monthly_delta": global_result.delta_30d,
-            "delta_60d": global_result.delta_60d,
-            "delta_90d": global_result.delta_90d,
-        },
-        "quality_score": 100,
-        "calendar_events": [],
-    }
+        return {
+            "net_liquidity_df": net_df,
+            "global_liquidity_df": global_df,
+            "regime": {
+                "direction": regime_result.direction.value,
+                "intensity": regime_result.intensity,
+                "confidence": regime_result.confidence,
+                "net_liq_percentile": regime_result.net_liq_percentile,
+                "global_liq_percentile": regime_result.global_liq_percentile,
+                "stealth_qe_score": regime_result.stealth_qe_score,
+            },
+            "net_metrics": {
+                "current": net_result.net_liquidity,
+                "weekly_delta": net_result.weekly_delta,
+                "monthly_delta": net_result.monthly_delta,
+                "delta_60d": net_result.delta_60d,
+                "delta_90d": net_result.delta_90d,
+            },
+            "global_metrics": {
+                "current": global_result.total_usd,
+                "weekly_delta": global_result.weekly_delta,
+                "monthly_delta": global_result.delta_30d,
+                "delta_60d": global_result.delta_60d,
+                "delta_90d": global_result.delta_90d,
+            },
+            "quality_score": 100,
+            "calendar_events": [],
+        }
+    except Exception as e:
+        logger.warning("Primary dashboard fetch failed, using fallback data: %s", e)
+        return _build_mock_dashboard_data(reason=str(e))
 
 
 def _fetch_extended_data() -> dict[str, Any]:

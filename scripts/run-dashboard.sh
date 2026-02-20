@@ -13,12 +13,22 @@ if ! command -v dotenvx &> /dev/null; then
     exit 1
 fi
 
-# Default env file location
-ENV_FILE="${DOTENV_FILE:-/media/sam/1TB/.env}"
+# Resolve env file:
+# 1) DOTENV_FILE override
+# 2) Project-local .env
+# 3) Shared /media/sam/1TB/.env
+if [ -n "${DOTENV_FILE:-}" ]; then
+    ENV_FILE="$DOTENV_FILE"
+elif [ -f "$PROJECT_DIR/.env" ]; then
+    ENV_FILE="$PROJECT_DIR/.env"
+else
+    ENV_FILE="/media/sam/1TB/.env"
+fi
 
 if [ ! -f "$ENV_FILE" ]; then
     echo "Warning: $ENV_FILE not found. Running without secrets."
     cd "$PROJECT_DIR" && uv run python -m liquidity.dashboard "$@"
 else
+    echo "Using env file: $ENV_FILE"
     cd "$PROJECT_DIR" && dotenvx run -f "$ENV_FILE" -- uv run python -m liquidity.dashboard "$@"
 fi
