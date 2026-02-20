@@ -29,6 +29,7 @@
 - Commit operational docs (GSD 22-02): `1d05b86`
 - Commit operational docs trace: `382b36b`
 - Commit container runtime implementation (22-03): `6d34191`
+- Commit supervision protocol (22-04): `ee2139b`
 
 **What's next:** esecuzione smoke test supervisionato dei target container o definizione v5.0 scope
 
