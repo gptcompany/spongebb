@@ -24,6 +24,7 @@
 - 2 nuovi file test dedicati
 - Commit release (core): `9a229d7`
 - Commit hardening (visual regression): `4d363d4`, `37d6ede`
+- Commit operational docs (GSD 22-02): `1d05b86`
 
 **What's next:** implementazione workflow container diretto o definizione v5.0 scope
 
