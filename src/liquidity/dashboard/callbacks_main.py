@@ -9,6 +9,7 @@ Handles:
 import asyncio
 import logging
 import math
+import os
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
@@ -75,6 +76,29 @@ from liquidity.dashboard.components.stress import (
 from liquidity.dashboard.export import HTMLExporter
 
 logger = logging.getLogger(__name__)
+
+
+def _env_flag(name: str) -> bool:
+    """Return True if environment variable is set to a truthy value."""
+    value = os.getenv(name, "").strip().lower()
+    return value in {"1", "true", "yes", "on"}
+
+
+def _dashboard_now() -> datetime:
+    """Return deterministic UTC now when fixed timestamp is configured."""
+    fixed_now = os.getenv("LIQUIDITY_DASHBOARD_FIXED_NOW", "").strip()
+    if fixed_now:
+        try:
+            parsed = datetime.fromisoformat(fixed_now.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                return parsed.replace(tzinfo=UTC)
+            return parsed.astimezone(UTC)
+        except ValueError:
+            logger.warning(
+                "Invalid LIQUIDITY_DASHBOARD_FIXED_NOW=%s, using realtime clock",
+                fixed_now,
+            )
+    return datetime.now(UTC)
 
 
 def register_callbacks(app: Dash) -> None:
@@ -181,7 +205,7 @@ def register_callbacks(app: Dash) -> None:
             )
 
             # Update status
-            last_update = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
+            last_update = _dashboard_now().strftime("%Y-%m-%d %H:%M UTC")
             quality_score = f"{data.get('quality_score', 100):.0f}%"
 
             # Store data for potential export
@@ -405,7 +429,7 @@ def register_callbacks(app: Dash) -> None:
             }
 
             # Generate HTML content
-            timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M")
+            timestamp = _dashboard_now().strftime("%Y%m%d_%H%M")
             filename = f"liquidity_dashboard_{timestamp}.html"
 
             if figures:
@@ -422,7 +446,7 @@ def register_callbacks(app: Dash) -> None:
                 <head><title>Global Liquidity Monitor Export - {timestamp}</title></head>
                 <body style="background:#1a1a2e;color:#eee;font-family:sans-serif;padding:20px;">
                 <h1 style="color:#00ff88;">Global Liquidity Monitor</h1>
-                <p>Exported at: {datetime.now(UTC).isoformat()}</p>
+                <p>Exported at: {_dashboard_now().isoformat()}</p>
                 <p>No chart data available for export.</p>
                 </body>
                 </html>
@@ -903,6 +927,10 @@ def _fetch_dashboard_data() -> dict[str, Any]:
     Returns:
         Dictionary with main dashboard data.
     """
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        logger.info("Dashboard fallback mode forced by environment")
+        return _build_mock_dashboard_data(reason="Forced fallback mode")
+
     # Try to import calculators to check availability
     try:
         import importlib.util
@@ -932,7 +960,7 @@ def _build_mock_dashboard_data(reason: str | None = None) -> dict[str, Any]:
 
     This prevents empty/error panels when credentials or upstream data are unavailable.
     """
-    dates = pd.date_range(end=datetime.now(UTC), periods=180, freq="D")
+    dates = pd.date_range(end=_dashboard_now(), periods=180, freq="D")
     idx = list(range(len(dates)))
 
     net_values = pd.Series(
@@ -1032,6 +1060,10 @@ async def _fetch_data_async() -> dict[str, Any]:
     from liquidity.calculators.net_liquidity import NetLiquidityCalculator
     from liquidity.config import configure_openbb_credentials
 
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        logger.info("Dashboard fallback mode forced by environment")
+        return _build_mock_dashboard_data(reason="Forced fallback mode")
+
     # Configure OpenBB credentials before using calculators
     if not configure_openbb_credentials():
         logger.warning("OpenBB credentials not configured, using fallback dashboard data")
@@ -1101,6 +1133,10 @@ async def _fetch_extended_async() -> dict[str, Any]:
         Dictionary with real data from collectors.
     """
     import importlib.util
+
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        logger.info("Extended panel fallback mode forced by environment")
+        return {"calendar_events": []}
 
     data: dict[str, Any] = {}
 

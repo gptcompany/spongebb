@@ -30,6 +30,9 @@ ENV/
 htmlcov/
 .tox/
 .nox/
+playwright-report/
+test-results/
+node_modules/
 
 # Build
 dist/
