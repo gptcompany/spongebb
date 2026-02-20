@@ -1,12 +1,38 @@
 # Project Milestones: Global Liquidity Monitor
 
-## v3.0 Commodity Intelligence (In Progress)
+## v4.0 Consumer Credit Risk (Shipped: 2026-02-20)
 
-**Goal:** Transform oil from "price tracker" to "macro liquidity indicator" with supply fundamentals, positioning data, and market structure analysis.
+**Delivered:** Consumer-credit-risk intelligence layer integrated into data collection and dashboard.
 
-**Phases:** 16-21 (24 plans planned)
+**Phases completed:** 22 (1 plan total)
 
-**Planned features:**
+**Key accomplishments:**
+
+- Consumer credit risk collector (`consumer_credit_risk.py`)
+- Tracking di consumer credit ex-student loans
+- Debt-in-default proxy (delinquency-based)
+- Mortgage losses + loan loss reserves metrics
+- USD liquidity proxy index (Bloomberg-like)
+- Dashboard panel dedicato (XLP/XLY, AXP vs IGV, sensitive stocks)
+
+**Stats:**
+
+- 1 phase, 1 plan
+- 2 nuovi moduli core
+- 2 nuovi file test dedicati
+- Commit release: `9a229d7`
+
+**What's next:** definizione v5.0 scope
+
+---
+
+## v3.0 Commodity Intelligence (Shipped: 2026-02-07)
+
+**Delivered:** Oil intelligence stack completo (supply fundamentals, positioning, term structure, real rates, commodity news).
+
+**Phases completed:** 16-21 (24 plans total)
+
+**Key accomplishments:**
 
 - EIA Weekly Petroleum data (inventory, production, refinery utilization)
 - CFTC COT Reports (commercial vs speculator positioning, extremes detection)
@@ -15,14 +41,9 @@
 - Commodity news intelligence (OPEC, weather, sanctions, supply disruptions)
 - Supply-demand balance calculator with regime integration
 
-**Research topics:**
+**Git range:** `1280df5` → `d09caf3`
 
-- EIA FiscalData API structure
-- CFTC JSON API for COT reports
-- CME futures chain via yfinance
-- NOAA hurricane tracking API
-
-**Started:** 2026-02-06
+**What's next:** v4.0 Consumer Credit Risk ✅
 
 ---
 
@@ -81,4 +102,4 @@
 
 ---
 
-*Last updated: 2026-02-06 — v3.0 Commodity Intelligence started*
+*Last updated: 2026-02-20 — v4.0 Consumer Credit Risk shipped*

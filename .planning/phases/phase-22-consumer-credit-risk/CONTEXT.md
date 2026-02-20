@@ -1,0 +1,79 @@
+# Phase 22: Consumer Credit Risk - Context
+
+## Goal
+
+Aggiungere un layer dedicato al consumer credit risk con:
+- tracking macro (consumer credit, student loans, defaults, mortgage losses, reserves)
+- indicatori relativi di mercato (XLP/XLY, AXP vs IGV)
+- ranking dei titoli più sensibili allo stress creditizio consumer.
+
+## Requirements (extension post-v3.0)
+
+| ID | Requirement |
+|----|-------------|
+| CCR-01 | Consumer credit total e ex-student loans |
+| CCR-02 | Debt in default proxy e default rate tracking |
+| CCR-03 | Mortgage losses e banking loan loss reserves |
+| CCR-04 | XLP/XLY ratio chart |
+| CCR-05 | AXP vs IGV relative spread chart |
+| CCR-06 | USD liquidity proxy index (Bloomberg-like) |
+| CCR-07 | Dashboard panel con metriche e top sensitive stocks |
+
+## Plans
+
+| Plan | Description | Effort | Wave |
+|------|-------------|--------|------|
+| 22-01 | Consumer Credit Risk Collector + Dashboard Panel | M | 1 |
+
+## Technical Approach
+
+### Plan 22-01
+
+1. Estendere FRED series map con indicatori credit stress:
+   - `HCCSDODNS`, `SLOASM`, `DRALACBS`, `CORALACBS`, `DRSFRMACBS`, `CORSFRMACBS`, `QBPBSTASTLNLESSRES`
+
+2. Creare `ConsumerCreditRiskCollector`:
+   - normalizzazione unità
+   - derivazioni (`consumer_credit_ex_students_b`, `debt_in_default_est_b`, `usd_liquidity_index`)
+   - calcolo `XLP/XLY` e `AXP vs IGV` relative spread
+   - ranking di sensitivity stocks via fattore composito di stress creditizio
+
+3. Integrare dashboard:
+   - nuovo pannello `consumer_credit`
+   - callback output dedicati
+   - metric summary + tabella sensitivity
+
+4. Test:
+   - unit test collector
+   - unit test component dashboard
+   - update test layout
+
+## Dependencies
+
+- Phase 6 (Credit & BIS data) per serie e concetti credit market
+- Phase 10 (Dashboard framework) per integrazione UI
+- Phase 11 (Consumer credit proxies) per baseline consumer data
+
+## Files Created/Modified
+
+| Action | File |
+|--------|------|
+| CREATE | `src/liquidity/collectors/consumer_credit_risk.py` |
+| MODIFY | `src/liquidity/collectors/fred.py` |
+| MODIFY | `src/liquidity/collectors/__init__.py` |
+| CREATE | `src/liquidity/dashboard/components/consumer_credit.py` |
+| MODIFY | `src/liquidity/dashboard/components/__init__.py` |
+| MODIFY | `src/liquidity/dashboard/layout.py` |
+| MODIFY | `src/liquidity/dashboard/callbacks_main.py` |
+| CREATE | `tests/unit/collectors/test_consumer_credit_risk.py` |
+| CREATE | `tests/unit/test_dashboard/test_components/test_consumer_credit.py` |
+| MODIFY | `tests/unit/test_dashboard/test_layout.py` |
+
+## Validation Criteria
+
+- [x] Metriche consumer credit/ex-student calcolate correttamente
+- [x] Proxy debt-in-default disponibile
+- [x] Mortgage losses e reserves tracciati
+- [x] Chart XLP/XLY e AXP-IGV visibili in dashboard
+- [x] Ranking stock sensitive disponibile
+- [x] Lint e compile check pass

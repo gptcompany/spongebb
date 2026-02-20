@@ -13,6 +13,7 @@ None
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-02-04
 - ✅ [v2.0 Advanced Analytics](milestones/v2.0-ROADMAP.md) (Phases 11-15) — SHIPPED 2026-02-06
 - ✅ [v3.0 Commodity Intelligence](milestones/v3.0-ROADMAP.md) (Phases 16-21) — SHIPPED 2026-02-07
+- ✅ [v4.0 Consumer Credit Risk](milestones/v4.0-ROADMAP.md) (Phase 22) — SHIPPED 2026-02-20
 
 ## Phases Summary
 
@@ -21,6 +22,8 @@ None
 **v2.0 Advanced Analytics (Phases 11-15):** High-Frequency Data, Nowcasting, Risk Metrics, News Intelligence, Backtesting
 
 **v3.0 Commodity Intelligence (Phases 16-21):** EIA Oil Data, CFTC Positioning, Oil Term Structure, Real Rates, Commodity News, Supply-Demand Model
+
+**v4.0 Consumer Credit Risk (Phase 22):** Consumer credit stress tracking, relative market panels, credit-sensitive stock ranking
 
 ## Phase Details
 
@@ -316,10 +319,26 @@ Plans:
 - [x] 21-03: Oil regime signals (tight/loose) | wave:2 | effort:M
 - [x] 21-04: Integration with liquidity regime classifier | wave:2 | effort:L
 
+---
+
+## ✅ v4.0 Consumer Credit Risk (Complete)
+
+**Milestone Goal:** Add a dedicated consumer-credit-risk intelligence layer tied to equity relative performance and stress-sensitive stock screening.
+
+### Phase 22: Consumer Credit Risk Intelligence
+**Goal**: Consumer credit stress tracking + dashboard panel (XLP/XLY, AXP vs IGV) + sensitivity ranking
+**Depends on**: Phase 6, Phase 10, Phase 11
+**Requirements**: CCR-01 (Credit ex-student), CCR-02 (Default proxy), CCR-03 (Mortgage losses + reserves), CCR-04 (Relative charts), CCR-05 (Sensitivity ranking)
+**Research**: Unlikely (extends existing FRED/Yahoo + dashboard patterns)
+**Research topics**: FRED series coverage for credit stress, robust proxy construction, relative-performance visualization
+
+Plans:
+- [x] 22-01: Consumer credit risk collector + dashboard integration + stock sensitivity ranking | wave:1 | effort:M
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
+Phases execute in numeric order: 1 → 2 → ... → 21 → 22
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -344,8 +363,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 19. Real Rates | 4/4 | Complete | 2026-02-06 |
 | 20. Commodity News | 4/4 | Complete | 2026-02-07 |
 | 21. Supply-Demand Model | 4/4 | Complete | 2026-02-07 |
+| 22. Consumer Credit Risk Intelligence | 1/1 | Complete | 2026-02-20 |
 
 ---
 *Created: 2026-01-21*
-*Last updated: 2026-02-07*
-*Milestone 3 (v3.0): Phases 16-21 - Commodity Intelligence - SHIPPED*
+*Last updated: 2026-02-20*
+*Milestone 4 (v4.0): Phase 22 - Consumer Credit Risk - SHIPPED*

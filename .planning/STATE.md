@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-07)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** v3.0 Complete — Ready for v4.0 planning
+**Current focus:** v4.0 Complete — Ready for v5.0 planning
 
 ## Current Position
 
-Phase: 21 of 21 (Supply-Demand Model)
-Plan: 4/4 Complete
+Phase: 22 of 22 (Consumer Credit Risk Intelligence)
+Plan: 1/1 Complete
 Status: ✅ Milestone Complete
-Last activity: 2026-02-07 — v3.0 Commodity Intelligence shipped
+Last activity: 2026-02-20 — v4.0 Consumer Credit Risk shipped
 
-Progress: █████████████████████ 100% (21/21 phases, 80/80 plans)
+Progress: █████████████████████ 100% (22/22 phases, 81/81 plans)
 
 ## Milestones
 
@@ -23,6 +23,23 @@ Progress: █████████████████████ 100% (
 | v1.0 | MVP | 1-10 | ✅ Complete | 2026-02-04 |
 | v2.0 | Advanced Analytics | 11-15 | ✅ Complete | 2026-02-06 |
 | v3.0 | Commodity Intelligence | 16-21 | ✅ Complete | 2026-02-07 |
+| v4.0 | Consumer Credit Risk | 22 | ✅ Complete | 2026-02-20 |
+
+## v4.0 Scope (SHIPPED)
+
+**Goal:** Add a dedicated consumer-credit-risk monitoring layer and dashboard intelligence
+
+| Phase | Name | Plans | Status |
+|-------|------|-------|--------|
+| 22 | Consumer Credit Risk Intelligence | 1/1 | ✅ Complete |
+
+**Key Additions:**
+- Consumer credit total / student loans / ex-student tracking
+- Debt-in-default proxy estimate
+- Mortgage losses and loan loss reserves monitoring
+- XLP/XLY relative chart
+- AXP vs IGV relative spread chart
+- Credit-sensitive stocks ranking panel
 
 ## v3.0 Scope (SHIPPED)
 
@@ -51,11 +68,11 @@ Progress: █████████████████████ 100% (
 - Total LOC: ~48,000
 - Total Tests: 2,500+
 - API Endpoints: 14
-- Dashboard Panels: 13
+- Dashboard Panels: 14
 - Alert Types: 7
-- Collectors: 30+
+- Collectors: 31+
 - GitHub: https://github.com/gptcompany/openbb_liquidity
-- Tag: v3.0
+- Tag: v4.0
 
 ## Key Features
 
@@ -84,11 +101,18 @@ Progress: █████████████████████ 100% (
 - Supply-demand model (balance, forecast, regime)
 - Combined Liquidity×Oil regime matrix
 
+### v4.0 Consumer Credit Risk
+- Consumer credit risk collector (FRED + Yahoo)
+- Ex-student loan credit tracking and debt-in-default proxy
+- Mortgage loss rates and bank loan loss reserves
+- USD liquidity proxy index
+- Dashboard panel: XLP/XLY + AXP/IGV + sensitive stock ranking
+
 ## Session Continuity
 
-Last session: 2026-02-07
-Stopped at: v3.0 milestone complete and shipped
-Next steps: Define v4.0 scope with `/gsd:new-milestone` or `/gsd:discuss-milestone`
+Last session: 2026-02-20
+Stopped at: v4.0 milestone complete and shipped
+Next steps: Define v5.0 scope with `/gsd:new-milestone` or `/gsd:discuss-milestone`
 
 ---
-*Last updated: 2026-02-07 after v3.0 shipped*
+*Last updated: 2026-02-20 after v4.0 shipped*
