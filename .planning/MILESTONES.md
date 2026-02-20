@@ -27,6 +27,7 @@
 - Commit hardening (visual regression): `4d363d4`, `37d6ede`
 - Commit operational docs (GSD 22-02): `1d05b86`
 - Commit operational docs trace: `382b36b`
+- Commit container runtime implementation (22-03): `6d34191`
 
 **What's next:** validazione smoke test completa dei target container o definizione v5.0 scope
 
