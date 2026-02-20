@@ -19,9 +19,19 @@ from liquidity.dashboard.callbacks import register_callbacks
 from liquidity.dashboard.export import HTMLExporter
 from liquidity.dashboard.layout import create_layout
 
-# Note: Layout and callbacks are NOT auto-registered here.
-# Each script should explicitly set app.layout and register callbacks
-# to avoid duplicate registration issues.
+_callbacks_registered = False
+
+
+def _ensure_app_configured() -> None:
+    """Ensure app layout and callbacks are registered exactly once."""
+    global _callbacks_registered
+
+    if app.layout is None:
+        app.layout = create_layout()
+
+    if not _callbacks_registered:
+        register_callbacks(app)
+        _callbacks_registered = True
 
 
 def run_server(debug: bool = False, port: int = 8050, host: str = "0.0.0.0") -> None:  # nosec B104
@@ -32,6 +42,7 @@ def run_server(debug: bool = False, port: int = 8050, host: str = "0.0.0.0") -> 
         port: Server port. Defaults to 8050.
         host: Server host. Defaults to 0.0.0.0.
     """
+    _ensure_app_configured()
     app.run(debug=debug, port=port, host=host)
 
 
