@@ -23,6 +23,17 @@ router = APIRouter(prefix="/metrics", tags=["metrics"])
     summary="Get Stealth QE Score",
     description="Detects hidden liquidity injections through RRP velocity, "
     "TGA spending, and Fed balance sheet changes.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Stealth QE Detail",
+            "description": "Hidden liquidity injection components (RRP, TGA, Fed)",
+            "category": "Macro Liquidity",
+            "subCategory": "Stealth QE",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 20, "h": 5},
+        }
+    },
 )
 async def get_stealth_qe(
     calculator: StealthQECalcDep,
