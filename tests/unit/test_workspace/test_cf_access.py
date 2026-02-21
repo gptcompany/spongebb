@@ -21,11 +21,16 @@ def health(request):
     return PlainTextResponse("healthy")
 
 
+def docs(request):
+    return PlainTextResponse("docs")
+
+
 # Build minimal test app with CF Access middleware
 _test_app = Starlette(
     routes=[
         Route("/test", homepage),
         Route("/health", health),
+        Route("/docs", docs),
         Route("/", homepage),
     ]
 )
@@ -71,4 +76,10 @@ def test_cf_middleware_exempts_health():
 def test_cf_middleware_exempts_root():
     """Root endpoint is exempt from CF Access verification."""
     resp = _cf_client.get("/")
+    assert resp.status_code == 200
+
+
+def test_cf_middleware_exempts_docs():
+    """Docs endpoint is exempt from CF Access verification."""
+    resp = _cf_client.get("/docs")
     assert resp.status_code == 200

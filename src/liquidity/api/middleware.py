@@ -17,7 +17,7 @@ from starlette.responses import JSONResponse
 logger = logging.getLogger(__name__)
 
 # Exact paths exempt from CF Access verification
-_EXEMPT_EXACT = frozenset({"/", "/health", "/openapi.json", "/widgets.json"})
+_EXEMPT_EXACT = frozenset({"/", "/health", "/docs", "/redoc", "/openapi.json", "/widgets.json"})
 
 # Path prefixes exempt (match prefix + "/" to prevent traversal: /docs but not /documents)
 _EXEMPT_PREFIXES = ("/docs/", "/redoc/", "/health/")
