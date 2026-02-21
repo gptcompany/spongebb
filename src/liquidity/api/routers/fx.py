@@ -30,6 +30,17 @@ router = APIRouter(prefix="/fx", tags=["fx"])
     response_model=DXYResponse,
     summary="Get DXY Index",
     description="Returns the US Dollar Index (DXY) with current value and recent history.",
+    openapi_extra={
+        "widget_config": {
+            "name": "DXY Index",
+            "description": "US Dollar Index with recent history",
+            "category": "FX",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 15, "h": 6},
+            "data": {"dataKey": "data"},
+        }
+    },
 )
 async def get_dxy(
     collector: FXCollectorDep,
@@ -106,6 +117,17 @@ async def get_dxy(
     response_model=FXPairsResponse,
     summary="Get Major FX Pairs",
     description="Returns major FX pairs vs USD with current values and changes.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Major FX Pairs",
+            "description": "Major currency pairs vs USD",
+            "category": "FX",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 15, "h": 6},
+            "data": {"dataKey": "pairs"},
+        }
+    },
 )
 async def get_fx_pairs(
     collector: FXCollectorDep,
