@@ -25,6 +25,16 @@ router = APIRouter(prefix="/regime", tags=["regime"])
     summary="Get Current Liquidity Regime",
     description="Classifies the current liquidity environment as EXPANSION or CONTRACTION "
     "based on net liquidity, global liquidity, and stealth QE signals.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Current Regime",
+            "description": "Liquidity regime classification with confidence",
+            "category": "Regime",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 15, "h": 5},
+        }
+    },
 )
 async def get_current_regime(
     classifier: RegimeClassifierDep,
@@ -83,6 +93,16 @@ async def get_current_regime(
     description="Classifies the combined liquidity-oil environment for macro commodity signals. "
     "Combines liquidity regime (EXPANSION/CONTRACTION) with oil supply-demand regime "
     "(TIGHT/BALANCED/LOOSE) to produce a unified signal.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Combined Regime",
+            "description": "Liquidity + oil regime with commodity signal",
+            "category": "Regime",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 15, "h": 5},
+        }
+    },
 )
 async def get_combined_regime() -> CombinedRegimeResponse:
     """Get combined liquidity-oil regime classification.
