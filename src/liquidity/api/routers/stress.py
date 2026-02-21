@@ -34,8 +34,20 @@ router = APIRouter(prefix="/stress", tags=["stress"])
             "category": "Macro Liquidity",
             "subCategory": "Stress",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 3600000,
+            "staleTime": 1800000,
             "gridData": {"w": 20, "h": 6},
+            "data": {
+                "table": {
+                    "columnsDefs": [
+                        {"field": "sofr_ois_spread", "headerName": "SOFR-OIS Spread", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "sofr_percentile", "headerName": "SOFR %ile", "cellDataType": "number", "formatterFn": "percent"},
+                        {"field": "repo_stress", "headerName": "Repo Stress", "cellDataType": "text", "renderFn": "greenRed"},
+                        {"field": "cp_spread", "headerName": "CP Spread", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "overall_stress", "headerName": "Overall Stress", "cellDataType": "text", "renderFn": "greenRed"},
+                    ]
+                },
+            },
         }
     },
 )

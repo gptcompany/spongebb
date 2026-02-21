@@ -31,8 +31,18 @@ router = APIRouter(prefix="/regime", tags=["regime"])
             "description": "Liquidity regime classification with confidence",
             "category": "Regime",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 3600000,
+            "staleTime": 1800000,
             "gridData": {"w": 15, "h": 5},
+            "data": {
+                "table": {
+                    "columnsDefs": [
+                        {"field": "regime", "headerName": "Regime", "cellDataType": "text", "renderFn": "greenRed"},
+                        {"field": "intensity", "headerName": "Intensity", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "confidence", "headerName": "Confidence", "cellDataType": "number", "formatterFn": "percent"},
+                    ]
+                },
+            },
         }
     },
 )
@@ -99,8 +109,20 @@ async def get_current_regime(
             "description": "Liquidity + oil regime with commodity signal",
             "category": "Regime",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 3600000,
+            "staleTime": 1800000,
             "gridData": {"w": 15, "h": 5},
+            "data": {
+                "table": {
+                    "columnsDefs": [
+                        {"field": "liquidity_regime", "headerName": "Liquidity Regime", "cellDataType": "text", "renderFn": "greenRed"},
+                        {"field": "oil_regime", "headerName": "Oil Regime", "cellDataType": "text", "renderFn": "greenRed"},
+                        {"field": "combined_regime", "headerName": "Combined", "cellDataType": "text", "renderFn": "greenRed"},
+                        {"field": "confidence", "headerName": "Confidence", "cellDataType": "number", "formatterFn": "percent"},
+                        {"field": "commodity_signal", "headerName": "Commodity Signal", "cellDataType": "text"},
+                    ]
+                },
+            },
         }
     },
 )

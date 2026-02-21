@@ -35,9 +35,22 @@ router = APIRouter(prefix="/correlations", tags=["correlations"])
             "description": "Asset vs net liquidity correlation coefficients",
             "category": "Correlations",
             "type": "table",
-            "refetchInterval": 3600000,
+            "refetchInterval": 14400000,
+            "staleTime": 7200000,
             "gridData": {"w": 20, "h": 6},
-            "data": {"dataKey": "correlations"},
+            "data": {
+                "dataKey": "correlations",
+                "table": {
+                    "columnsDefs": [
+                        {"field": "asset", "headerName": "Asset", "cellDataType": "text", "pinned": "left"},
+                        {"field": "correlation", "headerName": "Correlation", "cellDataType": "number", "formatterFn": "none"},
+                        {"field": "p_value", "headerName": "P-Value", "cellDataType": "number", "formatterFn": "none"},
+                    ]
+                },
+            },
+            "params": [
+                {"paramName": "window", "value": "30d", "label": "Window", "type": "text", "show": True, "description": "Correlation window: 30d or 90d"},
+            ],
         }
     },
 )
@@ -151,7 +164,8 @@ async def get_correlations(
             "description": "Full cross-asset correlation matrix",
             "category": "Correlations",
             "type": "table",
-            "refetchInterval": 3600000,
+            "refetchInterval": 14400000,
+            "staleTime": 7200000,
             "gridData": {"w": 20, "h": 8},
             "data": {"dataKey": "matrix"},
         }

@@ -37,8 +37,21 @@ router = APIRouter(prefix="/liquidity", tags=["liquidity"])
             "category": "Macro Liquidity",
             "subCategory": "Fed",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 14400000,
+            "staleTime": 7200000,
             "gridData": {"w": 20, "h": 5},
+            "data": {
+                "table": {
+                    "columnsDefs": [
+                        {"field": "value", "headerName": "Net Liquidity", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "walcl", "headerName": "WALCL", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "tga", "headerName": "TGA", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "rrp", "headerName": "RRP", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "weekly_delta", "headerName": "Weekly Delta", "cellDataType": "number", "formatterFn": "int", "renderFn": "greenRed"},
+                        {"field": "sentiment", "headerName": "Sentiment", "cellDataType": "text", "renderFn": "greenRed"},
+                    ]
+                },
+            },
         }
     },
 )
@@ -101,8 +114,21 @@ async def get_net_liquidity(
             "category": "Macro Liquidity",
             "subCategory": "Global",
             "type": "table",
-            "refetchInterval": 3600000,
+            "refetchInterval": 14400000,
+            "staleTime": 7200000,
             "gridData": {"w": 20, "h": 5},
+            "data": {
+                "table": {
+                    "columnsDefs": [
+                        {"field": "value", "headerName": "Total (B USD)", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "weekly_delta", "headerName": "Weekly Delta", "cellDataType": "number", "formatterFn": "int", "renderFn": "greenRed"},
+                        {"field": "coverage_pct", "headerName": "Coverage", "cellDataType": "number", "formatterFn": "percent"},
+                    ]
+                },
+            },
+            "params": [
+                {"paramName": "tier", "value": "1", "label": "Tier", "type": "number", "show": True, "description": "1=Fed/ECB/BoJ/PBoC, 2=Include BoE/SNB/BoC"},
+            ],
         }
     },
 )

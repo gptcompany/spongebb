@@ -36,18 +36,23 @@ router = APIRouter(prefix="/calendar", tags=["calendar"])
             "category": "Calendar",
             "type": "table",
             "refetchInterval": 3600000,
+            "staleTime": 1800000,
             "gridData": {"w": 20, "h": 8},
             "data": {
                 "dataKey": "events",
                 "table": {
-                    "columnDefs": [
+                    "columnsDefs": [
                         {"field": "date", "headerName": "Date", "cellDataType": "dateString", "pinned": "left"},
-                        {"field": "event_type", "headerName": "Type", "renderFn": "titleCase"},
-                        {"field": "title", "headerName": "Event"},
-                        {"field": "impact", "headerName": "Impact", "renderFn": "greenRed"},
+                        {"field": "event_type", "headerName": "Type", "cellDataType": "text", "renderFn": "titleCase"},
+                        {"field": "title", "headerName": "Event", "cellDataType": "text"},
+                        {"field": "impact", "headerName": "Impact", "cellDataType": "text", "renderFn": "greenRed"},
                     ]
                 },
             },
+            "params": [
+                {"paramName": "start", "value": "", "label": "Start Date", "type": "date", "show": True, "description": "Start date (YYYY-MM-DD). Defaults to today."},
+                {"paramName": "end", "value": "", "label": "End Date", "type": "date", "show": True, "description": "End date (YYYY-MM-DD). Defaults to 30 days from start."},
+            ],
         }
     },
 )
@@ -177,8 +182,22 @@ async def get_calendar_events(
             "category": "Calendar",
             "type": "table",
             "refetchInterval": 3600000,
+            "staleTime": 1800000,
             "gridData": {"w": 20, "h": 6},
-            "data": {"dataKey": "events"},
+            "data": {
+                "dataKey": "events",
+                "table": {
+                    "columnsDefs": [
+                        {"field": "date", "headerName": "Date", "cellDataType": "dateString", "pinned": "left"},
+                        {"field": "event_type", "headerName": "Type", "cellDataType": "text", "renderFn": "titleCase"},
+                        {"field": "title", "headerName": "Event", "cellDataType": "text"},
+                        {"field": "impact", "headerName": "Impact", "cellDataType": "text", "renderFn": "greenRed"},
+                    ]
+                },
+            },
+            "params": [
+                {"paramName": "limit", "value": "5", "label": "Max Events", "type": "number", "show": True, "description": "Number of upcoming events to return (1-50)"},
+            ],
         }
     },
 )

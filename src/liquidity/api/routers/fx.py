@@ -36,9 +36,21 @@ router = APIRouter(prefix="/fx", tags=["fx"])
             "description": "US Dollar Index with recent history",
             "category": "FX",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 1800000,
+            "staleTime": 900000,
             "gridData": {"w": 15, "h": 6},
-            "data": {"dataKey": "data"},
+            "data": {
+                "dataKey": "data",
+                "table": {
+                    "columnsDefs": [
+                        {"field": "timestamp", "headerName": "Date", "cellDataType": "dateString"},
+                        {"field": "value", "headerName": "DXY Index", "cellDataType": "number", "formatterFn": "none"},
+                    ]
+                },
+            },
+            "params": [
+                {"paramName": "period", "value": "30d", "label": "Period", "type": "text", "show": True, "description": "Historical period: 5d, 7d, 30d, 60d, 90d"},
+            ],
         }
     },
 )
@@ -123,9 +135,22 @@ async def get_dxy(
             "description": "Major currency pairs vs USD",
             "category": "FX",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 1800000,
+            "staleTime": 900000,
             "gridData": {"w": 15, "h": 6},
-            "data": {"dataKey": "pairs"},
+            "data": {
+                "dataKey": "pairs",
+                "table": {
+                    "columnsDefs": [
+                        {"field": "pair", "headerName": "Pair", "cellDataType": "text", "pinned": "left"},
+                        {"field": "current", "headerName": "Rate", "cellDataType": "number", "formatterFn": "none"},
+                        {"field": "change_1d", "headerName": "1D Change", "cellDataType": "number", "formatterFn": "percent", "renderFn": "greenRed"},
+                    ]
+                },
+            },
+            "params": [
+                {"paramName": "period", "value": "7d", "label": "Period", "type": "text", "show": True, "description": "Period for change calc: 5d, 7d, 30d"},
+            ],
         }
     },
 )

@@ -201,6 +201,9 @@ _DEFAULT_CHART_DAYS = 730
             "refetchInterval": 3600000,
             "staleTime": 1800000,
             "gridData": {"w": 20, "h": 8},
+            "params": [
+                {"paramName": "days", "value": "730", "label": "Lookback (days)", "type": "number", "show": True, "description": "Number of days of history to display (30-3650)"},
+            ],
         }
     },
 )
@@ -265,6 +268,9 @@ async def workspace_chart_net_liquidity(
             "refetchInterval": 3600000,
             "staleTime": 1800000,
             "gridData": {"w": 20, "h": 8},
+            "params": [
+                {"paramName": "days", "value": "730", "label": "Lookback (days)", "type": "number", "show": True, "description": "Number of days of history to display (30-3650)"},
+            ],
         }
     },
 )

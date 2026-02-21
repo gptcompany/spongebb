@@ -30,8 +30,23 @@ router = APIRouter(prefix="/metrics", tags=["metrics"])
             "category": "Macro Liquidity",
             "subCategory": "Stealth QE",
             "type": "table",
-            "refetchInterval": 900000,
+            "refetchInterval": 3600000,
+            "staleTime": 1800000,
             "gridData": {"w": 20, "h": 5},
+            "data": {
+                "table": {
+                    "columnsDefs": [
+                        {"field": "score", "headerName": "Score", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "status", "headerName": "Status", "cellDataType": "text", "renderFn": "greenRed"},
+                        {"field": "rrp_level", "headerName": "RRP Level", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "rrp_velocity", "headerName": "RRP Velocity", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "tga_level", "headerName": "TGA Level", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "tga_spending", "headerName": "TGA Spending", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "fed_total", "headerName": "Fed Total", "cellDataType": "number", "formatterFn": "int"},
+                        {"field": "fed_change", "headerName": "Fed Change", "cellDataType": "number", "formatterFn": "int", "renderFn": "greenRed"},
+                    ]
+                },
+            },
         }
     },
 )
