@@ -174,6 +174,39 @@ services:
     networks:
       - liquidity-network
 
+  # OpenBB Workspace backend (openbb-api --app, port 6900)
+  liquidity-workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: liquidity-workspace
+    profiles:
+      - workspace
+    restart: unless-stopped
+    ports:
+      - "${LIQUIDITY_WORKSPACE_PORT:-6900}:6900"
+    command: >-
+      openbb-api --app liquidity.openbb_ext.workspace_app:app
+      --host 0.0.0.0 --port 6900
+    environment:
+      - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-host.docker.internal}
+      - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
+      - LIQUIDITY_QUESTDB_HTTP_PORT=${LIQUIDITY_QUESTDB_HTTP_PORT:-9000}
+      - LIQUIDITY_REDIS_URL=${LIQUIDITY_REDIS_URL:-redis://host.docker.internal:6379}
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_EIA_API_KEY=${LIQUIDITY_EIA_API_KEY:-}
+      - LIQUIDITY_CF_ACCESS_ENABLED=${LIQUIDITY_CF_ACCESS_ENABLED:-false}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6900/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - liquidity-network
+
   # Deterministic dashboard service used by visual regression tests
   liquidity-dashboard-test:
     build:
