@@ -27,6 +27,17 @@ router = APIRouter(prefix="/stress", tags=["stress"])
     summary="Get Funding Stress Indicators",
     description="Returns funding market stress metrics including SOFR-OIS spread, "
     "SOFR distribution width, repo stress ratio, and CP-Treasury spread.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Funding Stress Indicators",
+            "description": "SOFR-OIS spread, repo stress, CP spread, and overall stress regime",
+            "category": "Macro Liquidity",
+            "subCategory": "Stress",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 20, "h": 6},
+        }
+    },
 )
 async def get_stress_indicators(
     collector: StressCollectorDep,
