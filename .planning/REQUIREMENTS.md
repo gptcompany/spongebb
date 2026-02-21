@@ -143,8 +143,8 @@ Requirements for exposing the liquidity monitor as a native OpenBB ecosystem com
 - [ ] **WS-03**: `workspace_app.py` re-exports existing FastAPI `app` for `openbb-api` launch
 - [ ] **WS-04**: Dedicated `/workspace/metrics/*` endpoints returning `MetricResponseModel`-compatible JSON for metric widgets (Net Liquidity value + WoW delta, Global Liquidity total, Stealth QE score, Regime badge)
 - [ ] **WS-05**: Dedicated `/workspace/charts/*` endpoints returning Plotly JSON for chart widgets (Net Liquidity time series, Global Liquidity breakdown)
-- [ ] **WS-06**: `openapi_extra` annotations on existing table endpoints with `widget_config` metadata (name, category, grid dimensions)
-- [ ] **WS-07**: Docker Compose `workspace` service running `openbb-api --app` on port 6900
+- [x] **WS-06**: `openapi_extra` annotations on existing table endpoints with `widget_config` metadata (name, category, grid dimensions)
+- [x] **WS-07**: Docker Compose `workspace` service running `openbb-api --app` on port 6900
 - [ ] **WS-08**: Integration test confirming `/widgets.json` auto-generated and `/liquidity/net` responds through `openbb-api`
 
 ### Widget Configuration
@@ -310,8 +310,8 @@ Which phases cover which requirements. Updated by create-roadmap.
 | WS-03 | Phase 23 | Pending |
 | WS-04 | Phase 23 | Pending |
 | WS-05 | Phase 23 | Pending |
-| WS-06 | Phase 23 | Pending |
-| WS-07 | Phase 23 | Pending |
+| WS-06 | Phase 23 | Complete |
+| WS-07 | Phase 23 | Complete |
 | WS-08 | Phase 23 | Pending |
 | WC-01 | Phase 24 | Pending |
 | WC-02 | Phase 24 | Pending |

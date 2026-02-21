@@ -362,7 +362,7 @@ Plans:
 Plans:
 - [ ] 23-01: Foundation — `openbb-platform-api` dependency, version pin, CORS, `workspace_app.py` | wave:1 | effort:M
 - [ ] 23-02: Workspace metric + chart endpoints (`/workspace/*` routes) | wave:1 | effort:M
-- [ ] 23-03: Table endpoint annotations (`openapi_extra` widget_config) + Docker service | wave:2 | effort:M
+- [x] 23-03: Table endpoint annotations (`openapi_extra` widget_config) + Docker service | wave:2 | effort:M
 - [ ] 23-04: Integration tests + smoke test end-to-end | wave:2 | effort:S
 
 ### Phase 24: Widget Polish & Optimization
@@ -419,7 +419,7 @@ Phases execute in numeric order: 1 → 2 → ... → 22 → 23 → 24 → 25
 | 20. Commodity News | 4/4 | Complete | 2026-02-07 |
 | 21. Supply-Demand Model | 4/4 | Complete | 2026-02-07 |
 | 22. Consumer Credit Risk Intelligence | 4/4 | Complete | 2026-02-20 |
-| 23. Workspace Backend Integration | 0/4 | Pending | — |
+| 23. Workspace Backend Integration | 1/4 | Active | — |
 | 24. Widget Polish & Optimization | 0/3 | Pending | — |
 | 25. Native Provider Extension | 0/3 | Pending (conditional) | — |
 
