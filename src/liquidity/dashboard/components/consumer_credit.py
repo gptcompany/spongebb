@@ -258,6 +258,6 @@ def create_sensitive_stocks_table(
     return html.Div(
         [
             html.Small("Most Sensitive To Consumer Credit Loss Stress", className="text-muted"),
-            dbc.Table(headers + [html.Tbody(rows)], bordered=False, hover=True, size="sm", dark=True),
+            dbc.Table(headers + [html.Tbody(rows)], bordered=False, hover=True, size="sm", className="table-dark"),
         ]
     )
