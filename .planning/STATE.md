@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-07)
+See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** v4.0 shipped + Claude Code supervision protocol documented
+**Current focus:** v5.0 OpenBB Platform Integration — defining requirements
 
 ## Current Position
 
-Phase: 22 of 22 (Consumer Credit Risk Intelligence)
-Plan: 4/4 Complete
-Status: ✅ Milestone Complete
-Last activity: 2026-02-20 — Claude Code supervision governance documented (Plan 22-04)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-21 — Milestone v5.0 started
 
-Progress: █████████████████████ 100% (22/22 phases, 84/84 plans)
+Progress: ░░░░░░░░░░░░░░░░░░░░░ 0%
 
 ## Milestones
 
@@ -24,101 +24,56 @@ Progress: █████████████████████ 100% (
 | v2.0 | Advanced Analytics | 11-15 | ✅ Complete | 2026-02-06 |
 | v3.0 | Commodity Intelligence | 16-21 | ✅ Complete | 2026-02-07 |
 | v4.0 | Consumer Credit Risk | 22 | ✅ Complete | 2026-02-20 |
+| v5.0 | OpenBB Platform Integration | TBD | ◆ Active | — |
 
-## v4.0 Scope (SHIPPED)
+## v5.0 Scope (ACTIVE)
 
-**Goal:** Add a dedicated consumer-credit-risk monitoring layer and dashboard intelligence
+**Goal:** Elevate the liquidity monitor from standalone Dash app to native OpenBB ecosystem component
 
-| Phase | Name | Plans | Status |
-|-------|------|-------|--------|
-| 22 | Consumer Credit Risk Intelligence | 4/4 | ✅ Complete |
+**Target features:**
+- OpenBB Workspace custom backend (FastAPI → widget-compatible endpoints)
+- OpenBB Provider Extension (`openbb-liquidity` package with ETL Fetcher classes)
+- openbb-cookiecutter multi-interface generation (Workspace + MCP + CLI + Python)
 
-**Key Additions:**
-- Consumer credit total / student loans / ex-student tracking
-- Debt-in-default proxy estimate
-- Mortgage losses and loan loss reserves monitoring
-- XLP/XLY relative chart
-- AXP vs IGV relative spread chart
-- Credit-sensitive stocks ranking panel
-- Operational runbook: container execution + host/escalated runtime testing
-- Direct container workflow implemented (`Dockerfile`, `docker-compose`, `Makefile`)
-- Claude Code supervision protocol (gate + escalation + traceability)
+## Accumulated Context
 
-## v3.0 Scope (SHIPPED)
+### From v4.0
+- `dbc.Table` `dark=True` deprecated in dbc 2.0.4 → use `className="table-dark"` (fixed 2026-02-21)
+- OpenBB SDK used as library only (not always-on service)
+- Dashboard separate from OpenBB SDK boundary (confirmed in Phase 22-02)
+- Container runtime operational (Dockerfile + compose + Makefile)
+- Playwright visual regression baseline (desktop + mobile)
+- Claude Code supervision protocol documented
 
-**Goal:** Transform oil from "price tracker" to "macro liquidity indicator"
+### From v3.0
+- Oil intelligence fully integrated with liquidity regime
+- CFTC COT, EIA petroleum, term structure all operational
 
-| Phase | Name | Plans | Status |
-|-------|------|-------|--------|
-| 16 | EIA Oil Data | 4/4 | ✅ Complete |
-| 17 | CFTC Positioning | 4/4 | ✅ Complete |
-| 18 | Oil Term Structure | 4/4 | ✅ Complete |
-| 19 | Real Rates | 4/4 | ✅ Complete |
-| 20 | Commodity News | 4/4 | ✅ Complete |
-| 21 | Supply-Demand Model | 4/4 | ✅ Complete |
+### From v2.0
+- Nowcasting, risk metrics, news NLP all operational
+- Backtesting engine with VectorBT validated
 
-**Key Additions:**
-- EIA Weekly Petroleum (inventory, production, refinery)
-- CFTC COT Reports (commercial vs speculator positioning)
-- Oil term structure (contango/backwardation signals)
-- Real rates tracking (oil-rates correlation)
-- Commodity news intelligence (OPEC, weather, sanctions)
-- Supply-demand balance calculator
-- Combined Liquidity×Oil regime integration
+### From v1.0
+- 31+ collectors, 14 API endpoints, 21 dashboard panels
+- >85% global CB coverage confirmed
+- Hayes formula (WALCL - TGA - RRP) validated
 
 ## Project Stats
 
-- Total LOC: ~48,000
+- Total LOC: ~52,000
 - Total Tests: 2,500+
 - API Endpoints: 14
-- Dashboard Panels: 14
+- Dashboard Panels: 21
 - Alert Types: 7
 - Collectors: 31+
 - GitHub: https://github.com/gptcompany/openbb_liquidity
 - Tag: v4.0
 
-## Key Features
-
-### v1.0 MVP
-- Fed balance sheet tracking (Hayes formula: WALCL - TGA - RRP)
-- Global CB coverage >85% (Fed, ECB, BoJ, PBoC, BoE, SNB, BoC)
-- Binary regime (EXPANSION/CONTRACTION) with intensity 0-100
-- Correlation engine: 30d + 90d windows + EWMA
-- FastAPI server with 12 endpoints
-- Plotly Dash dashboard with 10 panels
-- Discord alerting
-
-### v2.0 Advanced Analytics
-- High-frequency data (daily TGA, China DR007/SHIBOR, stablecoins)
-- Nowcasting (Kalman filters, HMM regime detection, PBoC estimator)
-- Risk metrics (VaR, CVaR, Regime VaR)
-- News intelligence (RSS, NLP translation, FOMC diff)
-- Backtesting (VectorBT, Monte Carlo, regime attribution)
-
-### v3.0 Commodity Intelligence
-- EIA Weekly Petroleum collector
-- CFTC COT positioning analytics
-- Oil term structure (contango/backwardation)
-- Real rates engine (TIPS, BEI, oil correlation)
-- Commodity news (oil RSS, OPEC calendar, NOAA hurricane)
-- Supply-demand model (balance, forecast, regime)
-- Combined Liquidity×Oil regime matrix
-
-### v4.0 Consumer Credit Risk
-- Consumer credit risk collector (FRED + Yahoo)
-- Ex-student loan credit tracking and debt-in-default proxy
-- Mortgage loss rates and bank loan loss reserves
-- USD liquidity proxy index
-- Dashboard panel: XLP/XLY + AXP/IGV + sensitive stock ranking
-- Runtime/testing strategy documented (sandbox limits, host/escalated path, Playwright workflow)
-- Containerized runtime/test execution (dashboard, pytest, Playwright)
-- Supervisione Claude Code documentata in GSD/reference
-
 ## Session Continuity
 
-Last session: 2026-02-20
-Stopped at: Supervision protocol documented in Phase 22 (Plan 22-04)
-Next steps: Eseguire smoke test supervisionato dei target `make` su host Docker e poi definire v5.0 scope
+Last session: 2026-02-21
+Stopped at: v5.0 milestone initialization — defining requirements
+Next steps: Research OpenBB extension ecosystem, define requirements, create roadmap
 
 ---
-*Last updated: 2026-02-20 after Phase 22 supervision protocol (22-04)*
+*Last updated: 2026-02-21 after v5.0 milestone initialization*
