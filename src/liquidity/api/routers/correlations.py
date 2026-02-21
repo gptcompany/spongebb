@@ -29,6 +29,17 @@ router = APIRouter(prefix="/correlations", tags=["correlations"])
     response_model=CorrelationResponse,
     summary="Get Asset-Liquidity Correlations",
     description="Returns correlations between asset returns and net liquidity changes.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Liquidity Correlations",
+            "description": "Asset vs net liquidity correlation coefficients",
+            "category": "Correlations",
+            "type": "table",
+            "refetchInterval": 3600000,
+            "gridData": {"w": 20, "h": 6},
+            "data": {"dataKey": "correlations"},
+        }
+    },
 )
 async def get_correlations(
     engine: CorrelationEngineDep,
@@ -134,6 +145,17 @@ async def get_correlations(
     response_model=CorrelationMatrixResponse,
     summary="Get Correlation Matrix",
     description="Returns full cross-asset correlation matrix.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Correlation Matrix",
+            "description": "Full cross-asset correlation matrix",
+            "category": "Correlations",
+            "type": "table",
+            "refetchInterval": 3600000,
+            "gridData": {"w": 20, "h": 8},
+            "data": {"dataKey": "matrix"},
+        }
+    },
 )
 async def get_correlation_matrix(
     engine: CorrelationEngineDep,
