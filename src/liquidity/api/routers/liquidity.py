@@ -30,6 +30,17 @@ router = APIRouter(prefix="/liquidity", tags=["liquidity"])
     summary="Get Fed Net Liquidity Index",
     description="Returns the Hayes Net Liquidity Index: WALCL - TGA - RRP. "
     "All values in billions USD.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Net Liquidity Detail",
+            "description": "Hayes formula components: WALCL, TGA, RRP, delta",
+            "category": "Macro Liquidity",
+            "subCategory": "Fed",
+            "type": "table",
+            "refetchInterval": 900000,
+            "gridData": {"w": 20, "h": 5},
+        }
+    },
 )
 async def get_net_liquidity(
     calculator: NetLiquidityCalcDep,
@@ -83,6 +94,17 @@ async def get_net_liquidity(
     summary="Get Global Liquidity Index",
     description="Returns aggregated liquidity from major central banks "
     "(Fed, ECB, BoJ, PBoC, and optionally Tier 2 CBs). All values in billions USD.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Global Liquidity Detail",
+            "description": "Central bank balance sheet breakdown in USD",
+            "category": "Macro Liquidity",
+            "subCategory": "Global",
+            "type": "table",
+            "refetchInterval": 3600000,
+            "gridData": {"w": 20, "h": 5},
+        }
+    },
 )
 async def get_global_liquidity(
     calculator: GlobalLiquidityCalcDep,
