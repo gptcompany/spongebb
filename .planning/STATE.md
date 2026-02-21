@@ -93,8 +93,8 @@ Progress: ============================== 100%
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: Phase 25 complete — v5.0 milestone complete
-Next steps: `/gsd:complete-milestone` to archive v5.0
+Stopped at: v5.0 milestone archived and tagged
+Next steps: `/gsd:new-milestone` to define v6.0
 
 ---
-*Last updated: 2026-02-21 after Phase 25 execution*
+*Last updated: 2026-02-21 after v5.0 milestone archival*

@@ -8,14 +8,16 @@ A FAANG-grade global liquidity monitoring system based on Arthur Hayes' framewor
 
 **Real-time regime classification** — Know instantly whether we're in Expansionary, Neutral, or Contractionary liquidity regime to inform trading decisions.
 
-## Current Milestone: v5.0 OpenBB Platform Integration
+## Current State: v5.0 Shipped
 
-**Goal:** Elevate the liquidity monitor from standalone Dash app to native OpenBB ecosystem component — exposable as Workspace backend, distributable as provider extension, and deployable as multi-interface package.
+**Last shipped:** v5.0 OpenBB Platform Integration (2026-02-21)
 
-**Target features:**
-- OpenBB Workspace custom backend (FastAPI → widget-compatible endpoints)
-- OpenBB Provider Extension (`openbb-liquidity` package with ETL Fetcher classes)
-- openbb-cookiecutter multi-interface generation (Workspace + MCP + CLI + Python)
+**Delivered in v5.0:**
+- OpenBB Workspace custom backend (12 widget-annotated endpoints, CF Access middleware, Docker service)
+- Widget polish (refetchInterval/staleTime optimization, columnsDefs + formatterFn/renderFn, params arrays)
+- Native Provider Extension (`obb.liquidity.*` SDK with 3 Fetcher adapters: NetLiquidity, GlobalLiquidity, StealthQE)
+
+**Next milestone:** TBD — run `/gsd:new-milestone` to define v6.0
 
 ## Requirements
 
@@ -42,12 +44,13 @@ A FAANG-grade global liquidity monitoring system based on Arthur Hayes' framewor
 - ✓ Consumer credit risk layer (credit stress, XLP/XLY, sensitive stocks) — v4.0
 - ✓ Container runtime (Dockerfile, compose, Makefile) — v4.0
 - ✓ Claude Code supervision protocol — v4.0
+- ✓ OpenBB Workspace custom backend (12 widget endpoints, Docker service) — v5.0
+- ✓ Widget polish (refetchInterval, columnsDefs, formatters) — v5.0
+- ✓ OpenBB Provider Extension (`obb.liquidity.*` SDK, 3 Fetcher adapters) — v5.0
 
 ### Active
 
-- [ ] OpenBB Workspace custom backend integration
-- [ ] OpenBB Provider Extension (`openbb-liquidity` package)
-- [ ] openbb-cookiecutter multi-interface deployment
+None — all milestones v1.0-v5.0 complete. Run `/gsd:new-milestone` for v6.0.
 
 ### Out of Scope
 
@@ -63,19 +66,13 @@ A FAANG-grade global liquidity monitoring system based on Arthur Hayes' framewor
 
 **Origin:** Arthur Hayes "Frowny Cloud" article analysis showing Bitcoin correlation with dollar liquidity (0.7-0.8).
 
-**Current state (v4.0 shipped):**
-- 52,000+ LOC Python across 174 source files
-- 31+ data collectors, 14 API endpoints, 21 dashboard panels
-- FastAPI REST layer already operational
-- OpenBB SDK 4.x used as data layer for FRED (70+ series)
-- Container runtime with Docker Compose + Makefile
-- Playwright visual regression with CI
-
-**OpenBB ecosystem (2025-2026):**
-- OpenBB Platform 4.6.0 supports custom provider extensions (ETL pattern)
-- `openbb-platform-api` enables FastAPI → Workspace backend
-- `openbb-cookiecutter` generates multi-interface packages from FastAPI
-- Provider extensions register via `pyproject.toml` entry points
+**Current state (v5.0 shipped):**
+- ~53,000 LOC Python across 174+ source files
+- 31+ data collectors, 18 API endpoints, 21 dashboard panels
+- OpenBB Workspace backend with 12 widget-annotated endpoints
+- OpenBB Provider Extension with 3 Fetcher adapters (`obb.liquidity.*`)
+- 2,550+ tests, Docker Compose runtime
+- OpenBB SDK 4.x (pinned >=4.4.0,<4.7.0)
 
 **Data sources confirmed:**
 - FRED API (Fed, ECB, BoJ, rates, bonds) — free, reliable
@@ -105,8 +102,8 @@ A FAANG-grade global liquidity monitoring system based on Arthur Hayes' framewor
 | Plotly over Grafana | Simpler deployment, HTML export, no extra service | ✓ Good |
 | Port Apps Script to Python | Remove Google limitations, enable backtest/integration | ✓ Good |
 | Double-entry validation | Ensure data consistency via accounting checks | ✓ Good |
-| Strategy B→A→C for OpenBB integration | Workspace backend (quick win) → Provider (reusable) → cookiecutter (full) | — Pending |
-| Dashboard stays standalone + OpenBB | Keep Dash app, add OpenBB as additional interface | — Pending |
+| Strategy B→A→C for OpenBB integration | Workspace backend (quick win) → Provider (reusable) → cookiecutter (full) | ✓ B+A done, C deferred |
+| Dashboard stays standalone + OpenBB | Keep Dash app, add OpenBB as additional interface | ✓ Good |
 
 ---
-*Last updated: 2026-02-21 after v5.0 milestone initialization*
+*Last updated: 2026-02-21 after v5.0 milestone archived*
