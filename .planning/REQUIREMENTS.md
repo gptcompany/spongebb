@@ -132,9 +132,55 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **QA-09**: Dashboard shows data quality score (completeness %)
 - [ ] **QA-10**: Charts include sanity bounds (historical min/max ranges)
 
-## v2 Requirements
+## v5.0 Requirements — OpenBB Platform Integration
 
-Deferred to future release. Tracked but not in current roadmap.
+Requirements for exposing the liquidity monitor as a native OpenBB ecosystem component.
+
+### Workspace Backend Integration
+
+- [ ] **WS-01**: All 14 existing GET endpoints exposed as OpenBB Workspace widgets via `openbb-api --app`
+- [ ] **WS-02**: CORS configured for `https://pro.openbb.co` and `http://localhost:1420` (Desktop App)
+- [ ] **WS-03**: `workspace_app.py` re-exports existing FastAPI `app` for `openbb-api` launch
+- [ ] **WS-04**: Dedicated `/workspace/metrics/*` endpoints returning `MetricResponseModel`-compatible JSON for metric widgets (Net Liquidity value + WoW delta, Global Liquidity total, Stealth QE score, Regime badge)
+- [ ] **WS-05**: Dedicated `/workspace/charts/*` endpoints returning Plotly JSON for chart widgets (Net Liquidity time series, Global Liquidity breakdown)
+- [ ] **WS-06**: `openapi_extra` annotations on existing table endpoints with `widget_config` metadata (name, category, grid dimensions)
+- [ ] **WS-07**: Docker Compose `workspace` service running `openbb-api --app` on port 6900
+- [ ] **WS-08**: Integration test confirming `/widgets.json` auto-generated and `/liquidity/net` responds through `openbb-api`
+
+### Widget Configuration
+
+- [ ] **WC-01**: `refetchInterval` per widget type (FRED daily: 4h, regime/stress: 15m, BIS quarterly: disabled)
+- [ ] **WC-02**: `staleTime` aligned to data update frequencies per widget
+- [ ] **WC-03**: `data.table.columnsDefs` with `formatterFn` and `renderFn` for delta/regime columns
+- [ ] **WC-04**: Dynamic date defaults in widget params (e.g., `$currentDate-2y` for history)
+- [ ] **WC-05**: Optional `X-API-KEY` header auth middleware (disabled by default)
+
+### Version Stability
+
+- [ ] **VS-01**: OpenBB version pinned to `openbb>=4.4.0,<4.7.0` in `pyproject.toml`
+- [ ] **VS-02**: Integration test calling real OpenBB endpoints to detect version-breaking renames
+
+### Provider Extension (Optional Phase 3)
+
+- [ ] **PE-01**: `src/liquidity/openbb_ext/` scaffold with `__init__.py`, `models/`, `Provider` registration
+- [ ] **PE-02**: `NetLiquidityFetcher` thin adapter wrapping `NetLiquidityCalculator`
+- [ ] **PE-03**: `GlobalLiquidityFetcher` thin adapter wrapping `GlobalLiquidityCalculator`
+- [ ] **PE-04**: `StealthQEFetcher` thin adapter wrapping `StealthQECalculator`
+- [ ] **PE-05**: `pyproject.toml` entry point `[project.entry-points."openbb_provider_extension"]`
+- [ ] **PE-06**: `openbb-build` in Makefile and Dockerfile post-install
+- [ ] **PE-07**: Verification: `obb.coverage.providers` shows `liquidity`; `obb.liquidity.net()` returns data
+- [ ] **PE-08**: vcrpy cassette tests for each Fetcher
+
+### Gate for PE-* Requirements
+
+PE-* requirements are conditional on:
+- OpenBB Issue #7113 (`PackageBuilder` + Python 3.12 + uv) being resolved
+- Explicit demand for `obb.liquidity.*` SDK access (e.g., NautilusTrader strategy code)
+If neither condition is met by Phase 23-24 completion, PE-* defers to v6.0.
+
+## Deferred Requirements
+
+Tracked but not in current roadmap.
 
 ### Advanced Analysis
 
@@ -162,6 +208,9 @@ Explicitly excluded. Documented to prevent scope creep.
 | Shadow banking tracking | Opaque, unreliable data |
 | Grafana dashboards | Plotly simpler, HTML export, no extra service |
 | Historical backfill >5 years | MVP focus, can add later |
+| OpenBB Terminal (legacy CLI) | Focus on Workspace + SDK |
+| `live_grid` WebSocket widgets | Daily/weekly macro data, polling sufficient |
+| Public PyPI publication | Defer to v6.0 when API surface stable |
 
 ## Traceability
 
@@ -256,11 +305,36 @@ Which phases cover which requirements. Updated by create-roadmap.
 | QA-09 | Phase 10 | Pending |
 | QA-10 | Phase 10 | Pending |
 
+| WS-01 | Phase 23 | Pending |
+| WS-02 | Phase 23 | Pending |
+| WS-03 | Phase 23 | Pending |
+| WS-04 | Phase 23 | Pending |
+| WS-05 | Phase 23 | Pending |
+| WS-06 | Phase 23 | Pending |
+| WS-07 | Phase 23 | Pending |
+| WS-08 | Phase 23 | Pending |
+| WC-01 | Phase 24 | Pending |
+| WC-02 | Phase 24 | Pending |
+| WC-03 | Phase 24 | Pending |
+| WC-04 | Phase 24 | Pending |
+| WC-05 | Phase 24 | Pending |
+| VS-01 | Phase 23 | Pending |
+| VS-02 | Phase 23 | Pending |
+| PE-01 | Phase 25 | Pending (conditional) |
+| PE-02 | Phase 25 | Pending (conditional) |
+| PE-03 | Phase 25 | Pending (conditional) |
+| PE-04 | Phase 25 | Pending (conditional) |
+| PE-05 | Phase 25 | Pending (conditional) |
+| PE-06 | Phase 25 | Pending (conditional) |
+| PE-07 | Phase 25 | Pending (conditional) |
+| PE-08 | Phase 25 | Pending (conditional) |
+
 **Coverage:**
-- v1 requirements: 86 total
-- Mapped to phases: 86
+- v1 requirements: 86 total, mapped to phases 1-10
+- v5.0 requirements: 23 total (15 firm + 8 conditional)
+- Mapped to phases: 109
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-01-21*
-*Last updated: 2026-01-21 after roadmap creation*
+*Last updated: 2026-02-21 after v5.0 milestone requirements*

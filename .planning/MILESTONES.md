@@ -1,5 +1,24 @@
 # Project Milestones: Global Liquidity Monitor
 
+## v5.0 OpenBB Platform Integration (Active: 2026-02-21)
+
+**Goal:** Expose the liquidity monitor as a native OpenBB Workspace backend and optionally as a provider extension.
+
+**Phases:** 23-25 (10 plans: 7 firm + 3 conditional)
+
+**Strategy:** Workspace backend first (`openbb-api --app`), widget polish second, provider extension conditional.
+
+**Key decisions:**
+- `openbb-platform-api` v1.3.0 as integration layer (zero boilerplate)
+- Monorepo subfolder `src/liquidity/openbb_ext/` (not separate package)
+- Provider extension gated on Issue #7113 resolution + explicit SDK demand
+- Version pin `openbb>=4.4.0,<4.7.0` to prevent silent breakage
+
+**Research:** 4 parallel researchers + synthesis completed 2026-02-21
+**Roadmap:** `.planning/milestones/v5.0-ROADMAP.md`
+
+---
+
 ## v4.0 Consumer Credit Risk (Shipped: 2026-02-20)
 
 **Delivered:** Consumer-credit-risk intelligence layer integrated into data collection and dashboard.
@@ -31,7 +50,7 @@
 - Commit container runtime implementation (22-03): `6d34191`
 - Commit supervision protocol (22-04): `ee2139b`
 
-**What's next:** esecuzione smoke test supervisionato dei target container o definizione v5.0 scope
+**What's next:** v5.0 OpenBB Platform Integration ◆
 
 ---
 

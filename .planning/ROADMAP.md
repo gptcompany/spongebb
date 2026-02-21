@@ -14,6 +14,7 @@ None
 - ✅ [v2.0 Advanced Analytics](milestones/v2.0-ROADMAP.md) (Phases 11-15) — SHIPPED 2026-02-06
 - ✅ [v3.0 Commodity Intelligence](milestones/v3.0-ROADMAP.md) (Phases 16-21) — SHIPPED 2026-02-07
 - ✅ [v4.0 Consumer Credit Risk](milestones/v4.0-ROADMAP.md) (Phase 22) — SHIPPED 2026-02-20
+- ◆ [v5.0 OpenBB Platform Integration](milestones/v5.0-ROADMAP.md) (Phases 23-25) — ACTIVE
 
 ## Phases Summary
 
@@ -24,6 +25,8 @@ None
 **v3.0 Commodity Intelligence (Phases 16-21):** EIA Oil Data, CFTC Positioning, Oil Term Structure, Real Rates, Commodity News, Supply-Demand Model
 
 **v4.0 Consumer Credit Risk (Phase 22):** Consumer credit stress tracking, relative market panels, credit-sensitive stock ranking, runtime/test operational runbook, direct container workflow, Claude Code supervision governance
+
+**v5.0 OpenBB Platform Integration (Phases 23-25):** Workspace backend integration, widget polish & optimization, native provider extension (conditional)
 
 ## Phase Details
 
@@ -339,10 +342,58 @@ Plans:
 - [x] 22-03: Direct container runtime implementation (`Dockerfile` + `compose` + `Makefile`) | wave:3 | effort:M
 - [x] 22-04: Claude Code supervision protocol documentation (gate + escalation + traceability) | wave:4 | effort:S
 
+---
+
+## ◆ v5.0 OpenBB Platform Integration (Active)
+
+**Milestone Goal:** Elevate the liquidity monitor from standalone Dash app to native OpenBB ecosystem component — exposable as Workspace backend, distributable as provider extension.
+
+**Research:** Completed 2026-02-21 — 4 parallel researchers (stack, features, architecture, pitfalls). See `.planning/research/SUMMARY.md`.
+
+**Strategy:** Workspace backend first (zero new packages beyond `openbb-platform-api`), then widget polish, then optional provider extension.
+
+### Phase 23: Workspace Backend Integration
+**Goal**: Expose the existing FastAPI as an OpenBB Workspace custom backend via `openbb-api --app`
+**Depends on**: Phase 9 (FastAPI API), Phase 10 (Dashboard), Phase 22 (Container runtime)
+**Requirements**: WS-01, WS-02, WS-03, WS-04, WS-05, WS-06, WS-07, WS-08, VS-01, VS-02
+**Research**: Completed (standard pattern, fully documented)
+**Research topics**: `openbb-platform-api` integration, CORS config, `openapi_extra` annotations, `workspace_app.py`
+
+Plans:
+- [ ] 23-01: Foundation — `openbb-platform-api` dependency, version pin, CORS, `workspace_app.py` | wave:1 | effort:M
+- [ ] 23-02: Workspace metric + chart endpoints (`/workspace/*` routes) | wave:1 | effort:M
+- [ ] 23-03: Table endpoint annotations (`openapi_extra` widget_config) + Docker service | wave:2 | effort:M
+- [ ] 23-04: Integration tests + smoke test end-to-end | wave:2 | effort:S
+
+### Phase 24: Widget Polish & Optimization
+**Goal**: Optimize widget metadata, refresh intervals, column formatting, and auth for production UX
+**Depends on**: Phase 23
+**Requirements**: WC-01, WC-02, WC-03, WC-04, WC-05
+**Research**: Completed (widget config spec complete)
+**Research topics**: `refetchInterval`, `staleTime`, `columnsDefs`, `formatterFn`, `renderFn`, dynamic defaults
+
+Plans:
+- [ ] 24-01: Refresh intervals + stale time per widget type | wave:1 | effort:S
+- [ ] 24-02: Column definitions + formatters + renderers | wave:1 | effort:S
+- [ ] 24-03: Dynamic date defaults + optional API key auth | wave:2 | effort:S
+
+### Phase 25: Native Provider Extension (Conditional)
+**Goal**: Create `obb.liquidity.*` Python SDK commands via thin Fetcher adapters wrapping existing calculators
+**Depends on**: Phase 23, Phase 24
+**Requirements**: PE-01, PE-02, PE-03, PE-04, PE-05, PE-06, PE-07, PE-08
+**Research**: Completed (verify Issue #7113 before executing)
+**Research topics**: TET pipeline, Fetcher classes, entry point registration, `openbb-build`, vcrpy cassettes
+**Gate**: Issue #7113 resolved AND explicit demand for `obb.liquidity.*` SDK access
+
+Plans:
+- [ ] 25-01: Extension scaffold (`src/liquidity/openbb_ext/`, Provider registration, entry point) | wave:1 | effort:M
+- [ ] 25-02: Fetcher adapters (NetLiquidity, GlobalLiquidity, StealthQE) | wave:1 | effort:M
+- [ ] 25-03: `openbb-build` integration + verification + cassette tests | wave:2 | effort:M
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → ... → 21 → 22
+Phases execute in numeric order: 1 → 2 → ... → 22 → 23 → 24 → 25
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -368,8 +419,11 @@ Phases execute in numeric order: 1 → 2 → ... → 21 → 22
 | 20. Commodity News | 4/4 | Complete | 2026-02-07 |
 | 21. Supply-Demand Model | 4/4 | Complete | 2026-02-07 |
 | 22. Consumer Credit Risk Intelligence | 4/4 | Complete | 2026-02-20 |
+| 23. Workspace Backend Integration | 0/4 | Pending | — |
+| 24. Widget Polish & Optimization | 0/3 | Pending | — |
+| 25. Native Provider Extension | 0/3 | Pending (conditional) | — |
 
 ---
 *Created: 2026-01-21*
-*Last updated: 2026-02-20 (Phase 22-04 documented)*
-*Milestone 4 (v4.0): Phase 22 - Consumer Credit Risk - SHIPPED*
+*Last updated: 2026-02-21 (v5.0 OpenBB Platform Integration roadmap added)*
+*Milestone 5 (v5.0): Phases 23-25 - OpenBB Platform Integration - ACTIVE*
