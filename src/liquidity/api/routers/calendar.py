@@ -29,6 +29,27 @@ router = APIRouter(prefix="/calendar", tags=["calendar"])
     response_model=CalendarEventsResponse,
     summary="Get Calendar Events",
     description="Returns liquidity-impacting events within a date range.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Macro Calendar",
+            "description": "Upcoming liquidity-impacting events (auctions, Fed meetings, etc.)",
+            "category": "Calendar",
+            "type": "table",
+            "refetchInterval": 3600000,
+            "gridData": {"w": 20, "h": 8},
+            "data": {
+                "dataKey": "events",
+                "table": {
+                    "columnsDefs": [
+                        {"field": "date", "headerName": "Date", "cellDataType": "dateString", "pinned": "left"},
+                        {"field": "event_type", "headerName": "Type", "renderFn": "titleCase"},
+                        {"field": "title", "headerName": "Event"},
+                        {"field": "impact", "headerName": "Impact", "renderFn": "greenRed"},
+                    ]
+                },
+            },
+        }
+    },
 )
 async def get_calendar_events(
     registry: CalendarRegistryDep,
@@ -149,6 +170,17 @@ async def get_calendar_events(
     response_model=CalendarEventsResponse,
     summary="Get Next Events",
     description="Returns the next N upcoming high-impact events.",
+    openapi_extra={
+        "widget_config": {
+            "name": "Next Liquidity Events",
+            "description": "Upcoming high-impact liquidity events",
+            "category": "Calendar",
+            "type": "table",
+            "refetchInterval": 3600000,
+            "gridData": {"w": 20, "h": 6},
+            "data": {"dataKey": "events"},
+        }
+    },
 )
 async def get_next_events(
     registry: CalendarRegistryDep,
