@@ -59,7 +59,7 @@ async def workspace_metric_net_liquidity(
         return WorkspaceMetric(
             value=round(result.net_liquidity, 1),
             label="Net Liquidity (B USD)",
-            delta=round(result.weekly_delta, 1),
+            delta=round(result.weekly_delta, 1) if result.weekly_delta is not None else None,
             unit="B USD",
             sentiment=result.sentiment.value,
         )
@@ -96,7 +96,7 @@ async def workspace_metric_global_liquidity(
         return WorkspaceMetric(
             value=round(result.total_usd, 1),
             label="Global Liquidity (B USD)",
-            delta=round(result.weekly_delta, 1),
+            delta=round(result.weekly_delta, 1) if result.weekly_delta is not None else None,
             unit="B USD",
         )
     except ValueError as e:
@@ -223,11 +223,12 @@ async def workspace_chart_net_liquidity(
             fig = go.Figure()
             fig.add_annotation(text="No data available", showarrow=False, font=dict(size=20))
         else:
+            clean = history["net_liquidity"].dropna()
             fig = go.Figure()
             fig.add_trace(
                 go.Scatter(
-                    x=history.index.tolist(),
-                    y=history["net_liquidity"].tolist(),
+                    x=clean.index.tolist(),
+                    y=clean.tolist(),
                     mode="lines",
                     name="Net Liquidity",
                     line=dict(color="#00d4aa", width=2),
@@ -295,10 +296,11 @@ async def workspace_chart_global_liquidity(
             fig = go.Figure()
             for col, (color, name) in cb_colors.items():
                 if col in history.columns:
+                    clean = history[col].dropna()
                     fig.add_trace(
                         go.Scatter(
-                            x=history.index.tolist(),
-                            y=history[col].tolist(),
+                            x=clean.index.tolist(),
+                            y=clean.tolist(),
                             mode="lines",
                             name=name,
                             stackgroup="cb",

@@ -40,14 +40,26 @@ def test_cf_middleware_blocks_without_header():
     assert "authentication required" in resp.json()["error"].lower()
 
 
-def test_cf_middleware_allows_with_header():
-    """Requests with valid CF-Access header pass through."""
+def test_cf_middleware_allows_with_both_headers():
+    """Requests with both CF-Access headers pass through."""
+    resp = _cf_client.get(
+        "/test",
+        headers={
+            "Cf-Access-Authenticated-User-Email": "user@example.com",
+            "Cf-Access-Jwt-Assertion": "eyJhbGciOiJSUzI1NiJ9.test.sig",
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.text == "OK"
+
+
+def test_cf_middleware_blocks_with_email_only():
+    """Requests with only email header (no JWT) get 403."""
     resp = _cf_client.get(
         "/test",
         headers={"Cf-Access-Authenticated-User-Email": "user@example.com"},
     )
-    assert resp.status_code == 200
-    assert resp.text == "OK"
+    assert resp.status_code == 403
 
 
 def test_cf_middleware_exempts_health():

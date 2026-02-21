@@ -40,7 +40,7 @@ router = APIRouter(prefix="/calendar", tags=["calendar"])
             "data": {
                 "dataKey": "events",
                 "table": {
-                    "columnsDefs": [
+                    "columnDefs": [
                         {"field": "date", "headerName": "Date", "cellDataType": "dateString", "pinned": "left"},
                         {"field": "event_type", "headerName": "Type", "renderFn": "titleCase"},
                         {"field": "title", "headerName": "Event"},
