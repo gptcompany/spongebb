@@ -10,6 +10,7 @@ from liquidity.validation import (
     QualityConfig,
     QualityDetails,
     QualityReport,
+    RegressionInputs,
     RegressionSuiteResult,
     ValidationEngine,
 )
@@ -89,12 +90,12 @@ class TestValidationEngine:
 
     def test_run_regression_suite(self, engine: ValidationEngine) -> None:
         """Test run_regression_suite."""
-        result = engine.run_regression_suite(
+        result = engine.run_regression_suite(RegressionInputs(
             walcl=7500e9,
             tga=800e9,
             rrp=500e9,
             net_liquidity=6200e9,
-        )
+        ))
 
         assert isinstance(result, RegressionSuiteResult)
         assert result.total_tests >= 1
@@ -104,7 +105,7 @@ class TestValidationEngine:
         self, engine: ValidationEngine
     ) -> None:
         """Test run_regression_suite with historical comparison."""
-        result = engine.run_regression_suite(
+        result = engine.run_regression_suite(RegressionInputs(
             walcl=5.82e12 + 800e9 + 500e9,
             tga=800e9,
             rrp=500e9,
@@ -112,7 +113,7 @@ class TestValidationEngine:
             global_liquidity=28.5e12,
             stealth_qe=15.0,
             historical_date="2024-01-15",
-        )
+        ))
 
         assert result.total_tests >= 4
 

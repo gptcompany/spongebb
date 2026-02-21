@@ -245,6 +245,35 @@ class BISCollector(BaseCollector[pd.DataFrame]):
 
         return df
 
+    @staticmethod
+    def _detect_lbs_columns(df: pd.DataFrame) -> dict[str, str | None]:
+        """Detect BIS LBS column names by keyword matching.
+
+        Returns:
+            Dict mapping logical names to actual column names (or None).
+        """
+        result: dict[str, str | None] = {
+            "freq": None, "measure": None, "position": None,
+            "curr": None, "time": None, "value": None, "rep_cty": None,
+        }
+        for col in df.columns:
+            col_upper = col.upper()
+            if "FREQ" in col_upper:
+                result["freq"] = col
+            elif "MEASURE" in col_upper:
+                result["measure"] = col
+            elif "POSITION" in col_upper:
+                result["position"] = col
+            elif "CURR" in col_upper and "TYPE" in col_upper:
+                result["curr"] = col
+            elif "TIME" in col_upper and "PERIOD" in col_upper:
+                result["time"] = col
+            elif col_upper == "OBS_VALUE" or "VALUE" in col_upper:
+                result["value"] = col
+            elif "REP" in col_upper and "CTY" in col_upper:
+                result["rep_cty"] = col
+        return result
+
     def filter_lbs_data(
         self,
         df: pd.DataFrame,
@@ -265,31 +294,14 @@ class BISCollector(BaseCollector[pd.DataFrame]):
         Returns:
             Filtered DataFrame with columns: timestamp, value, rep_cty.
         """
-        # Find the actual column names (BIS uses different naming conventions)
-        freq_col = None
-        measure_col = None
-        position_col = None
-        curr_col = None
-        time_col = None
-        value_col = None
-        rep_cty_col = None
-
-        for col in df.columns:
-            col_upper = col.upper()
-            if "FREQ" in col_upper:
-                freq_col = col
-            elif "MEASURE" in col_upper:
-                measure_col = col
-            elif "POSITION" in col_upper:
-                position_col = col
-            elif "CURR" in col_upper and "TYPE" in col_upper:
-                curr_col = col
-            elif "TIME" in col_upper and "PERIOD" in col_upper:
-                time_col = col
-            elif col_upper == "OBS_VALUE" or "VALUE" in col_upper:
-                value_col = col
-            elif "REP" in col_upper and "CTY" in col_upper:
-                rep_cty_col = col
+        cols = self._detect_lbs_columns(df)
+        freq_col = cols.get("freq")
+        measure_col = cols.get("measure")
+        position_col = cols.get("position")
+        curr_col = cols.get("curr")
+        time_col = cols.get("time")
+        value_col = cols.get("value")
+        rep_cty_col = cols.get("rep_cty")
 
         logger.debug(
             "LBS columns found: freq=%s, measure=%s, position=%s, curr=%s, "
@@ -305,15 +317,10 @@ class BISCollector(BaseCollector[pd.DataFrame]):
 
         # Apply filters
         filtered = df.copy()
-
-        if freq_col and freq_col in filtered.columns:
-            filtered = filtered[filtered[freq_col] == freq]
-        if measure_col and measure_col in filtered.columns:
-            filtered = filtered[filtered[measure_col] == measure]
-        if position_col and position_col in filtered.columns:
-            filtered = filtered[filtered[position_col] == position]
-        if curr_col and curr_col in filtered.columns:
-            filtered = filtered[filtered[curr_col] == curr_type]
+        filter_map = {freq_col: freq, measure_col: measure, position_col: position, curr_col: curr_type}
+        for col, val in filter_map.items():
+            if col and col in filtered.columns:
+                filtered = filtered[filtered[col] == val]
 
         # Select and rename output columns
         output_cols = {}

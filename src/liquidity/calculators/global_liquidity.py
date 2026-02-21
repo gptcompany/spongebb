@@ -117,6 +117,20 @@ class GlobalLiquidityResult:
     coverage_pct: float
 
 
+@dataclass
+class CBDataFrames:
+    """Central bank DataFrames for aggregation."""
+
+    fed: pd.DataFrame
+    ecb: pd.DataFrame
+    boj: pd.DataFrame
+    pboc: pd.DataFrame
+    fx: pd.DataFrame
+    boe: pd.DataFrame
+    snb: pd.DataFrame
+    boc: pd.DataFrame
+
+
 class GlobalLiquidityCalculator:
     """Calculate Global Liquidity Index from major central banks.
 
@@ -251,17 +265,11 @@ class GlobalLiquidityCalculator:
                     logger.warning("Tier 2 data fetch %d failed: %s", i, r)
 
         # Build the result DataFrame
-        return self._aggregate_data(
-            fed_df=fed_df,
-            ecb_df=ecb_df,
-            boj_df=boj_df,
-            pboc_df=pboc_df,
-            fx_df=fx_df,
-            boe_df=boe_df,
-            snb_df=snb_df,
-            boc_df=boc_df,
-            tier=tier,
+        cb_data = CBDataFrames(
+            fed=fed_df, ecb=ecb_df, boj=boj_df, pboc=pboc_df,
+            fx=fx_df, boe=boe_df, snb=snb_df, boc=boc_df,
         )
+        return self._aggregate_data(cb_data, tier=tier)
 
     async def get_current(self, tier: int = 1) -> GlobalLiquidityResult:
         """Get current Global Liquidity with breakdown and deltas.
@@ -378,92 +386,64 @@ class GlobalLiquidityCalculator:
 
     def _aggregate_data(
         self,
-        fed_df: pd.DataFrame,
-        ecb_df: pd.DataFrame,
-        boj_df: pd.DataFrame,
-        pboc_df: pd.DataFrame,
-        fx_df: pd.DataFrame,
-        boe_df: pd.DataFrame,
-        snb_df: pd.DataFrame,
-        boc_df: pd.DataFrame,
+        cb: CBDataFrames,
         tier: int,
     ) -> pd.DataFrame:
         """Aggregate all CB data into Global Liquidity time series.
 
         Args:
-            fed_df: Fed Net Liquidity DataFrame.
-            ecb_df: ECB total assets DataFrame.
-            boj_df: BoJ total assets DataFrame.
-            pboc_df: PBoC total assets DataFrame.
-            fx_df: FX rates DataFrame.
-            boe_df: BoE total assets DataFrame.
-            snb_df: SNB total assets DataFrame.
-            boc_df: BoC total assets DataFrame.
+            cb: Central bank DataFrames.
             tier: Tier level (1 or 2).
 
         Returns:
             Aggregated DataFrame with Global Liquidity.
         """
         # Get latest FX rates for conversion
-        fx_rates = self._get_latest_fx_rates(fx_df)
+        fx_rates = self._get_latest_fx_rates(cb.fx)
 
         # Process each CB dataset
         dfs: dict[str, pd.DataFrame] = {}
 
         # Fed Net Liquidity (already in billions USD)
-        if not fed_df.empty and "net_liquidity" in fed_df.columns:
-            dfs["fed"] = fed_df[["timestamp", "net_liquidity"]].rename(
+        if not cb.fed.empty and "net_liquidity" in cb.fed.columns:
+            dfs["fed"] = cb.fed[["timestamp", "net_liquidity"]].rename(
                 columns={"net_liquidity": "fed_usd"}
             )
             dfs["fed"]["timestamp"] = pd.to_datetime(dfs["fed"]["timestamp"])
 
-        # ECB (millions EUR -> billions USD)
-        if not ecb_df.empty:
-            ecb_processed = self._process_cb_data(
-                ecb_df, "ecb_usd", "EUR", CB_UNITS["ecb"]["divisor"], fx_rates
-            )
-            if not ecb_processed.empty:
-                dfs["ecb"] = ecb_processed
-
-        # BoJ (100 million JPY -> billions USD)
-        if not boj_df.empty:
-            boj_processed = self._process_cb_data(
-                boj_df, "boj_usd", "JPY", CB_UNITS["boj"]["divisor"], fx_rates
-            )
-            if not boj_processed.empty:
-                dfs["boj"] = boj_processed
+        # Tier 1 CBs
+        tier1_cbs = [
+            (cb.ecb, "ecb_usd", "EUR", "ecb"),
+            (cb.boj, "boj_usd", "JPY", "boj"),
+        ]
+        for cb_df, col_name, currency, unit_key in tier1_cbs:
+            if not cb_df.empty:
+                processed = self._process_cb_data(
+                    cb_df, col_name, currency, CB_UNITS[unit_key]["divisor"], fx_rates
+                )
+                if not processed.empty:
+                    dfs[unit_key] = processed
 
         # PBoC - handle both asset types
-        if not pboc_df.empty:
-            pboc_processed = self._process_pboc_data(pboc_df, fx_rates)
+        if not cb.pboc.empty:
+            pboc_processed = self._process_pboc_data(cb.pboc, fx_rates)
             if not pboc_processed.empty:
                 dfs["pboc"] = pboc_processed
 
         # Tier 2 CBs
         if tier >= 2:
-            # BoE (millions GBP -> billions USD)
-            if not boe_df.empty:
-                boe_processed = self._process_cb_data(
-                    boe_df, "boe_usd", "GBP", CB_UNITS["boe"]["divisor"], fx_rates
-                )
-                if not boe_processed.empty:
-                    dfs["boe"] = boe_processed
-
-            # SNB (millions CHF -> billions USD)
-            if not snb_df.empty:
-                snb_processed = self._process_cb_data(
-                    snb_df, "snb_usd", "CHF", CB_UNITS["snb"]["divisor"], fx_rates
-                )
-                if not snb_processed.empty:
-                    dfs["snb"] = snb_processed
-
-            # BoC (millions CAD -> billions USD)
-            if not boc_df.empty:
-                boc_processed = self._process_cb_data(
-                    boc_df, "boc_usd", "CAD", CB_UNITS["boc"]["divisor"], fx_rates
-                )
-                if not boc_processed.empty:
-                    dfs["boc"] = boc_processed
+            tier2_cbs = [
+                (cb.boe, "boe_usd", "GBP", "boe"),
+                (cb.snb, "snb_usd", "CHF", "snb"),
+                (cb.boc, "boc_usd", "CAD", "boc"),
+            ]
+            for cb_df, col_name, currency, unit_key in tier2_cbs:
+                if not cb_df.empty:
+                    processed = self._process_cb_data(
+                        cb_df, col_name, currency, CB_UNITS[unit_key]["divisor"], fx_rates
+                    )
+                    if not processed.empty:
+                        dfs[unit_key] = processed
 
         if not dfs:
             logger.warning("No data available for aggregation")

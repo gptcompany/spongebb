@@ -54,6 +54,37 @@ class RegressionSuiteResult:
     results: list[RegressionTestResult]
 
 
+@dataclass
+class RegressionInputs:
+    """Input data for regression test suite.
+
+    Attributes:
+        walcl: Fed Total Assets (for Hayes formula test).
+        tga: Treasury General Account.
+        rrp: Reverse Repo.
+        net_liquidity: Calculated/reported Net Liquidity.
+        fed_usd: Fed balance sheet in USD.
+        ecb_usd: ECB balance sheet in USD.
+        boj_usd: BoJ balance sheet in USD.
+        pboc_usd: PBoC balance sheet in USD.
+        global_liquidity: Calculated/reported Global Liquidity.
+        stealth_qe: Calculated Stealth QE score.
+        historical_date: Date for historical comparison.
+    """
+
+    walcl: float | None = None
+    tga: float | None = None
+    rrp: float | None = None
+    net_liquidity: float | None = None
+    fed_usd: float | None = None
+    ecb_usd: float | None = None
+    boj_usd: float | None = None
+    pboc_usd: float | None = None
+    global_liquidity: float | None = None
+    stealth_qe: float | None = None
+    historical_date: str | None = None
+
+
 class RegressionTester:
     """Run regression tests against known historical values.
 
@@ -83,8 +114,7 @@ class RegressionTester:
 
         # Run full suite
         suite_result = tester.run_all_regression_tests(
-            net_liq_data={...},
-            global_liq_data={...},
+            RegressionInputs(walcl=7500e9, tga=800e9, rrp=500e9, net_liquidity=6200e9)
         )
     """
 
@@ -314,32 +344,12 @@ class RegressionTester:
 
     def run_all_regression_tests(
         self,
-        walcl: float | None = None,
-        tga: float | None = None,
-        rrp: float | None = None,
-        net_liquidity: float | None = None,
-        fed_usd: float | None = None,
-        ecb_usd: float | None = None,
-        boj_usd: float | None = None,
-        pboc_usd: float | None = None,
-        global_liquidity: float | None = None,
-        stealth_qe: float | None = None,
-        historical_date: str | None = None,
+        inputs: RegressionInputs,
     ) -> RegressionSuiteResult:
         """Run full regression test suite.
 
         Args:
-            walcl: Fed Total Assets (for Hayes formula test).
-            tga: Treasury General Account.
-            rrp: Reverse Repo.
-            net_liquidity: Calculated/reported Net Liquidity.
-            fed_usd: Fed balance sheet in USD.
-            ecb_usd: ECB balance sheet in USD.
-            boj_usd: BoJ balance sheet in USD.
-            pboc_usd: PBoC balance sheet in USD.
-            global_liquidity: Calculated/reported Global Liquidity.
-            stealth_qe: Calculated Stealth QE score.
-            historical_date: Date for historical comparison.
+            inputs: RegressionInputs with all test data.
 
         Returns:
             RegressionSuiteResult with all test outcomes.
@@ -347,35 +357,35 @@ class RegressionTester:
         results: list[RegressionTestResult] = []
 
         # Test Hayes formula if data provided
-        if all(v is not None for v in [walcl, tga, rrp, net_liquidity]):
+        if all(v is not None for v in [inputs.walcl, inputs.tga, inputs.rrp, inputs.net_liquidity]):
             result = self.test_hayes_formula(
-                walcl=walcl,  # type: ignore
-                tga=tga,  # type: ignore
-                rrp=rrp,  # type: ignore
-                expected_net_liquidity=net_liquidity,  # type: ignore
+                walcl=inputs.walcl,  # type: ignore
+                tga=inputs.tga,  # type: ignore
+                rrp=inputs.rrp,  # type: ignore
+                expected_net_liquidity=inputs.net_liquidity,  # type: ignore
             )
             results.append(result)
 
         # Test Global Liquidity sum if data provided
-        if all(v is not None for v in [fed_usd, ecb_usd, boj_usd, pboc_usd, global_liquidity]):
+        if all(v is not None for v in [inputs.fed_usd, inputs.ecb_usd, inputs.boj_usd, inputs.pboc_usd, inputs.global_liquidity]):
             result = self.test_global_liquidity_sum(
-                fed_usd=fed_usd,  # type: ignore
-                ecb_usd=ecb_usd,  # type: ignore
-                boj_usd=boj_usd,  # type: ignore
-                pboc_usd=pboc_usd,  # type: ignore
-                expected_global_liquidity=global_liquidity,  # type: ignore
+                fed_usd=inputs.fed_usd,  # type: ignore
+                ecb_usd=inputs.ecb_usd,  # type: ignore
+                boj_usd=inputs.boj_usd,  # type: ignore
+                pboc_usd=inputs.pboc_usd,  # type: ignore
+                expected_global_liquidity=inputs.global_liquidity,  # type: ignore
             )
             results.append(result)
 
         # Test against historical values if date provided
-        if historical_date and all(
-            v is not None for v in [net_liquidity, global_liquidity, stealth_qe]
+        if inputs.historical_date and all(
+            v is not None for v in [inputs.net_liquidity, inputs.global_liquidity, inputs.stealth_qe]
         ):
             historical_results = self.test_against_historical(
-                date_str=historical_date,
-                net_liquidity=net_liquidity,  # type: ignore
-                global_liquidity=global_liquidity,  # type: ignore
-                stealth_qe=stealth_qe,  # type: ignore
+                date_str=inputs.historical_date,
+                net_liquidity=inputs.net_liquidity,  # type: ignore
+                global_liquidity=inputs.global_liquidity,  # type: ignore
+                stealth_qe=inputs.stealth_qe,  # type: ignore
             )
             results.extend(historical_results)
 

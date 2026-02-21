@@ -118,6 +118,28 @@ class PBOCCollector(BaseCollector[pd.DataFrame]):
 
             return self._parse_pboc_html(htm_response.text)
 
+    @staticmethod
+    def _extract_total_assets(table: pd.DataFrame) -> float | None:
+        """Extract total assets value from a PBoC HTML table.
+
+        Returns:
+            Total assets in hundreds of millions CNY, or None if not found.
+        """
+        for _idx, row in table.iterrows():
+            row_str = str(row.values).lower()
+            if "total" not in row_str or "asset" not in row_str:
+                continue
+            for val in row.values:
+                try:
+                    if pd.notna(val):
+                        num = float(str(val).replace(",", "").replace(" ", ""))
+                        # Sanity check: PBoC assets 40-60T CNY (hundreds of millions: 400k-600k)
+                        if 200_000 < num < 800_000:
+                            return num
+                except (ValueError, TypeError):
+                    continue
+        return None
+
     def _parse_pboc_html(self, html: str) -> pd.DataFrame:
         """Parse PBoC HTM balance sheet table."""
         # Use pandas.read_html to extract tables
@@ -135,27 +157,11 @@ class PBOCCollector(BaseCollector[pd.DataFrame]):
 
         for table in tables:
             table_str = table.to_string().lower()
-            if "total" in table_str and "asset" in table_str:
-                # Look for the total assets value
-                for _idx, row in table.iterrows():
-                    row_str = str(row.values).lower()
-                    if "total" in row_str and "asset" in row_str:
-                        # Find the numeric value in this row
-                        for val in row.values:
-                            try:
-                                if pd.notna(val):
-                                    num = float(
-                                        str(val).replace(",", "").replace(" ", "")
-                                    )
-                                    # Sanity check: PBoC assets should be 40-60 trillion CNY
-                                    # In hundreds of millions: 400,000 - 600,000
-                                    if 200_000 < num < 800_000:
-                                        total_assets = num
-                                        break
-                            except (ValueError, TypeError):
-                                continue
-                if total_assets:
-                    break
+            if "total" not in table_str or "asset" not in table_str:
+                continue
+            total_assets = self._extract_total_assets(table)
+            if total_assets is not None:
+                break
 
         if total_assets is None:
             raise CollectorFetchError("Could not extract total assets from PBoC HTML")

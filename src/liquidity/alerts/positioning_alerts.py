@@ -209,6 +209,28 @@ class PositioningAlertEngine:
             severity=severity,
         )
 
+    def _try_emit_alert(
+        self,
+        alert_type: PositioningAlertType,
+        commodity: str,
+        timestamp: datetime,
+        spec_percentile: float,
+        comm_percentile: float,
+        message: str,
+        severity: str,
+        skip_dedup: bool,
+        alerts: list[PositioningAlert],
+    ) -> None:
+        """Emit an alert if dedup allows it."""
+        if skip_dedup or self._should_alert(commodity, alert_type):
+            alerts.append(
+                self._create_alert(
+                    alert_type, commodity, timestamp,
+                    spec_percentile, comm_percentile, message, severity,
+                )
+            )
+            self._record_alert(commodity, alert_type)
+
     def check_extremes(
         self,
         commodity: str,
@@ -232,144 +254,42 @@ class PositioningAlertEngine:
         if timestamp is None:
             timestamp = datetime.now(UTC)
 
-        alerts = []
+        alerts: list[PositioningAlert] = []
+        emit = lambda at, msg, sev: self._try_emit_alert(
+            at, commodity, timestamp, spec_percentile, comm_percentile, msg, sev, skip_dedup, alerts,
+        )
 
         # Speculator extremes (higher priority)
         if spec_percentile >= self.THRESHOLDS["critical_high"]:
-            alert_type = PositioningAlertType.SPEC_EXTREME_LONG
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        f"Speculators at {spec_percentile:.1f}th percentile - CROWDED LONG",
-                        "critical",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
-
+            emit(PositioningAlertType.SPEC_EXTREME_LONG,
+                 f"Speculators at {spec_percentile:.1f}th percentile - CROWDED LONG", "critical")
         elif spec_percentile >= self.THRESHOLDS["extreme_high"]:
-            alert_type = PositioningAlertType.SPEC_EXTREME_LONG
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        f"Speculators at {spec_percentile:.1f}th percentile - elevated long",
-                        "warning",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
-
+            emit(PositioningAlertType.SPEC_EXTREME_LONG,
+                 f"Speculators at {spec_percentile:.1f}th percentile - elevated long", "warning")
         elif spec_percentile <= self.THRESHOLDS["critical_low"]:
-            alert_type = PositioningAlertType.SPEC_EXTREME_SHORT
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        f"Speculators at {spec_percentile:.1f}th percentile - CROWDED SHORT",
-                        "critical",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
-
+            emit(PositioningAlertType.SPEC_EXTREME_SHORT,
+                 f"Speculators at {spec_percentile:.1f}th percentile - CROWDED SHORT", "critical")
         elif spec_percentile <= self.THRESHOLDS["extreme_low"]:
-            alert_type = PositioningAlertType.SPEC_EXTREME_SHORT
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        f"Speculators at {spec_percentile:.1f}th percentile - elevated short",
-                        "warning",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
+            emit(PositioningAlertType.SPEC_EXTREME_SHORT,
+                 f"Speculators at {spec_percentile:.1f}th percentile - elevated short", "warning")
 
         # Commercial extremes (less frequent, higher signal value)
         if comm_percentile >= self.THRESHOLDS["extreme_high"]:
-            alert_type = PositioningAlertType.COMM_EXTREME_LONG
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        f"Commercials at {comm_percentile:.1f}th percentile - SMART MONEY BULLISH",
-                        "critical",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
-
+            emit(PositioningAlertType.COMM_EXTREME_LONG,
+                 f"Commercials at {comm_percentile:.1f}th percentile - SMART MONEY BULLISH", "critical")
         elif comm_percentile <= self.THRESHOLDS["extreme_low"]:
-            alert_type = PositioningAlertType.COMM_EXTREME_SHORT
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        f"Commercials at {comm_percentile:.1f}th percentile - SMART MONEY BEARISH",
-                        "critical",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
+            emit(PositioningAlertType.COMM_EXTREME_SHORT,
+                 f"Commercials at {comm_percentile:.1f}th percentile - SMART MONEY BEARISH", "critical")
 
         # Divergence (specs bullish, comms bearish or vice versa)
-        if (
-            spec_percentile >= self.THRESHOLDS["divergence_high"]
-            and comm_percentile <= self.THRESHOLDS["divergence_low"]
-        ):
-            alert_type = PositioningAlertType.COMM_SPEC_DIVERGENCE
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        "Smart money vs speculators DIVERGING - commercials bearish while specs bullish",
-                        "warning",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
-
-        elif (
-            spec_percentile <= self.THRESHOLDS["divergence_low"]
-            and comm_percentile >= self.THRESHOLDS["divergence_high"]
-        ):
-            alert_type = PositioningAlertType.COMM_SPEC_DIVERGENCE
-            if skip_dedup or self._should_alert(commodity, alert_type):
-                alerts.append(
-                    self._create_alert(
-                        alert_type,
-                        commodity,
-                        timestamp,
-                        spec_percentile,
-                        comm_percentile,
-                        "Smart money vs speculators DIVERGING - commercials bullish while specs bearish",
-                        "warning",
-                    )
-                )
-                self._record_alert(commodity, alert_type)
+        if (spec_percentile >= self.THRESHOLDS["divergence_high"]
+                and comm_percentile <= self.THRESHOLDS["divergence_low"]):
+            emit(PositioningAlertType.COMM_SPEC_DIVERGENCE,
+                 "Smart money vs speculators DIVERGING - commercials bearish while specs bullish", "warning")
+        elif (spec_percentile <= self.THRESHOLDS["divergence_low"]
+                and comm_percentile >= self.THRESHOLDS["divergence_high"]):
+            emit(PositioningAlertType.COMM_SPEC_DIVERGENCE,
+                 "Smart money vs speculators DIVERGING - commercials bullish while specs bearish", "warning")
 
         return alerts
 

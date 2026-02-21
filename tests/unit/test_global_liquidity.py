@@ -8,6 +8,7 @@ import pytest
 
 from liquidity.calculators.global_liquidity import (
     CB_UNITS,
+    CBDataFrames,
     FX_CONVERSION_CONFIG,
     TIER_COVERAGE,
     GlobalLiquidityCalculator,
@@ -652,14 +653,11 @@ class TestAggregateData:
     def test_aggregate_empty_dfs(self, calculator):
         """Test aggregation with all empty DataFrames."""
         result = calculator._aggregate_data(
-            fed_df=pd.DataFrame(),
-            ecb_df=pd.DataFrame(),
-            boj_df=pd.DataFrame(),
-            pboc_df=pd.DataFrame(),
-            fx_df=pd.DataFrame(),
-            boe_df=pd.DataFrame(),
-            snb_df=pd.DataFrame(),
-            boc_df=pd.DataFrame(),
+            CBDataFrames(
+                fed=pd.DataFrame(), ecb=pd.DataFrame(), boj=pd.DataFrame(),
+                pboc=pd.DataFrame(), fx=pd.DataFrame(), boe=pd.DataFrame(),
+                snb=pd.DataFrame(), boc=pd.DataFrame(),
+            ),
             tier=1,
         )
         assert result.empty
@@ -675,14 +673,11 @@ class TestAggregateData:
         )
 
         result = calculator._aggregate_data(
-            fed_df=fed_df,
-            ecb_df=pd.DataFrame(),
-            boj_df=pd.DataFrame(),
-            pboc_df=pd.DataFrame(),
-            fx_df=pd.DataFrame(),
-            boe_df=pd.DataFrame(),
-            snb_df=pd.DataFrame(),
-            boc_df=pd.DataFrame(),
+            CBDataFrames(
+                fed=fed_df, ecb=pd.DataFrame(), boj=pd.DataFrame(),
+                pboc=pd.DataFrame(), fx=pd.DataFrame(), boe=pd.DataFrame(),
+                snb=pd.DataFrame(), boc=pd.DataFrame(),
+            ),
             tier=1,
         )
 
@@ -723,14 +718,11 @@ class TestAggregateData:
         )
 
         result = calculator._aggregate_data(
-            fed_df=fed_df,
-            ecb_df=pd.DataFrame(),
-            boj_df=pd.DataFrame(),
-            pboc_df=pd.DataFrame(),
-            fx_df=fx_df,
-            boe_df=boe_df,
-            snb_df=pd.DataFrame(),
-            boc_df=pd.DataFrame(),
+            CBDataFrames(
+                fed=fed_df, ecb=pd.DataFrame(), boj=pd.DataFrame(),
+                pboc=pd.DataFrame(), fx=fx_df, boe=boe_df,
+                snb=pd.DataFrame(), boc=pd.DataFrame(),
+            ),
             tier=2,
         )
 
@@ -855,14 +847,11 @@ class TestAggregateTier2Complete:
         )
 
         result = calculator._aggregate_data(
-            fed_df=fed_df,
-            ecb_df=pd.DataFrame(),
-            boj_df=pd.DataFrame(),
-            pboc_df=pd.DataFrame(),
-            fx_df=fx_df,
-            boe_df=pd.DataFrame(),
-            snb_df=snb_df,
-            boc_df=pd.DataFrame(),
+            CBDataFrames(
+                fed=fed_df, ecb=pd.DataFrame(), boj=pd.DataFrame(),
+                pboc=pd.DataFrame(), fx=fx_df, boe=pd.DataFrame(),
+                snb=snb_df, boc=pd.DataFrame(),
+            ),
             tier=2,
         )
 
@@ -895,14 +884,11 @@ class TestAggregateTier2Complete:
         )
 
         result = calculator._aggregate_data(
-            fed_df=fed_df,
-            ecb_df=pd.DataFrame(),
-            boj_df=pd.DataFrame(),
-            pboc_df=pd.DataFrame(),
-            fx_df=fx_df,
-            boe_df=pd.DataFrame(),
-            snb_df=pd.DataFrame(),
-            boc_df=boc_df,
+            CBDataFrames(
+                fed=fed_df, ecb=pd.DataFrame(), boj=pd.DataFrame(),
+                pboc=pd.DataFrame(), fx=fx_df, boe=pd.DataFrame(),
+                snb=pd.DataFrame(), boc=boc_df,
+            ),
             tier=2,
         )
 
@@ -932,14 +918,11 @@ class TestAggregateTier2Complete:
         )
 
         result = calculator._aggregate_data(
-            fed_df=fed_df,
-            ecb_df=pd.DataFrame(),
-            boj_df=pd.DataFrame(),
-            pboc_df=pd.DataFrame(),
-            fx_df=fx_df,
-            boe_df=boe_df,
-            snb_df=snb_df,
-            boc_df=boc_df,
+            CBDataFrames(
+                fed=fed_df, ecb=pd.DataFrame(), boj=pd.DataFrame(),
+                pboc=pd.DataFrame(), fx=fx_df, boe=boe_df,
+                snb=snb_df, boc=boc_df,
+            ),
             tier=2,
         )
 

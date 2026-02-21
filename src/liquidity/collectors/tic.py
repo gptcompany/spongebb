@@ -135,6 +135,34 @@ def _parse_value(value: str | float) -> float | None:
         return None
 
 
+def _parse_column_date(col_str: str) -> datetime:
+    """Parse a date from a TIC column name string.
+
+    Supports 'Mon YYYY' and 'YYYY-MM' formats.
+    Falls back to current UTC time if parsing fails.
+    """
+    # Try "Jan 2024" format
+    date_match = re.search(
+        r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*(\d{4})",
+        col_str,
+    )
+    if date_match:
+        try:
+            ts = datetime.strptime(f"{date_match.group(1)[:3]} {date_match.group(2)}", "%b %Y")
+            return ts.replace(tzinfo=UTC)
+        except ValueError:
+            pass
+    # Try "YYYY-MM" format
+    date_match = re.search(r"(\d{4})-(\d{2})", col_str)
+    if date_match:
+        try:
+            ts = datetime.strptime(f"{date_match.group(1)}-{date_match.group(2)}", "%Y-%m")
+            return ts.replace(tzinfo=UTC)
+        except ValueError:
+            pass
+    return datetime.now(UTC)
+
+
 class TICCollector(BaseCollector[pd.DataFrame]):
     """TIC (Treasury International Capital) data collector.
 
@@ -370,6 +398,45 @@ class TICCollector(BaseCollector[pd.DataFrame]):
 
         return df
 
+    @staticmethod
+    def _detect_csv_columns(
+        df: pd.DataFrame,
+    ) -> tuple[str, str | None, datetime]:
+        """Detect country column, value column, and timestamp from CSV TIC data.
+
+        Returns:
+            Tuple of (country_col, value_col, timestamp).
+            value_col is None if no value columns found.
+        """
+        # Find country column
+        country_col = None
+        for col in df.columns:
+            col_str = str(col).strip().lower()
+            if col_str in ("country", "name", "country/region"):
+                country_col = col
+                break
+            if df.columns.get_loc(col) == 0:  # type: ignore[union-attr]
+                country_col = col
+
+        if country_col is None:
+            country_col = df.columns[0]
+
+        # Find date-like columns
+        date_cols = [
+            col for col in df.columns
+            if re.search(r"\d{4}", str(col))
+            or re.search(r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)", str(col))
+        ]
+        if not date_cols:
+            date_cols = [c for c in df.columns if c != country_col]
+
+        if not date_cols:
+            return country_col, None, datetime.now(UTC)
+
+        value_col = date_cols[-1]
+        timestamp = _parse_column_date(str(value_col))
+        return country_col, value_col, timestamp
+
     def _normalize_major_holders(
         self, df: pd.DataFrame, top_n: int = 25
     ) -> pd.DataFrame:
@@ -398,72 +465,12 @@ class TICCollector(BaseCollector[pd.DataFrame]):
             value_col = columns[-1]
             timestamp = datetime.now(UTC)
         else:
-            # CSV format with named columns
-            # Find country column
-            country_col = None
-            for col in df.columns:
-                col_str = str(col).strip().lower()
-                if col_str in ("country", "name", "country/region"):
-                    country_col = col
-                    break
-                # First column is often country
-                if df.columns.get_loc(col) == 0:  # type: ignore[union-attr]
-                    country_col = col
-
-            if country_col is None:
-                country_col = df.columns[0]
-
-            # Find most recent date column (usually last numeric column)
-            date_cols = []
-            for col in df.columns:
-                col_str = str(col)
-                # Look for date-like columns (e.g., "Jan 2024", "2024-01", etc.)
-                if re.search(r"\d{4}", col_str) or re.search(
-                    r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)", col_str
-                ):
-                    date_cols.append(col)
-
-            if not date_cols:
-                # Use last non-country column
-                date_cols = [c for c in df.columns if c != country_col]
-
-            if not date_cols:
+            country_col, value_col, timestamp = self._detect_csv_columns(df)
+            if value_col is None:
                 logger.warning("No value columns found in TIC data")
                 return pd.DataFrame(
                     columns=["timestamp", "series_id", "source", "value", "unit"]
                 )
-
-            # Use most recent date column
-            value_col = date_cols[-1]
-
-            # Parse the date from column name
-            col_str = str(value_col)
-            timestamp = datetime.now(UTC)
-
-            # Try to parse date from column name
-            date_match = re.search(
-                r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*(\d{4})",
-                col_str,
-            )
-            if date_match:
-                month_str = date_match.group(1)[:3]
-                year_str = date_match.group(2)
-                try:
-                    timestamp = datetime.strptime(f"{month_str} {year_str}", "%b %Y")
-                    timestamp = timestamp.replace(tzinfo=UTC)
-                except ValueError:
-                    pass
-            else:
-                # Try YYYY-MM format
-                date_match = re.search(r"(\d{4})-(\d{2})", col_str)
-                if date_match:
-                    try:
-                        timestamp = datetime.strptime(
-                            f"{date_match.group(1)}-{date_match.group(2)}", "%Y-%m"
-                        )
-                        timestamp = timestamp.replace(tzinfo=UTC)
-                    except ValueError:
-                        pass
 
         # Patterns to exclude (aggregate rows, not individual countries)
         exclude_patterns = [

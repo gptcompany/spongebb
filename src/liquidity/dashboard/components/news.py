@@ -314,21 +314,15 @@ def _get_source_label(source: str) -> str:
         feed_source = FeedSource(source)
         return SOURCE_LABELS.get(feed_source, source)
     except ValueError:
-        # Not a valid FeedSource, return as-is or extract meaningful part
-        if "fed" in source.lower():
-            return "Fed"
-        elif "ecb" in source.lower():
-            return "ECB"
-        elif "boj" in source.lower():
-            return "BoJ"
-        elif "boe" in source.lower():
-            return "BoE"
-        elif "snb" in source.lower():
-            return "SNB"
-        elif "boc" in source.lower():
-            return "BoC"
-        elif "pboc" in source.lower():
-            return "PBoC"
+        # Not a valid FeedSource, try keyword matching
+        source_lower = source.lower()
+        keyword_map = [
+            ("fed", "Fed"), ("ecb", "ECB"), ("boj", "BoJ"), ("boe", "BoE"),
+            ("snb", "SNB"), ("boc", "BoC"), ("pboc", "PBoC"),
+        ]
+        for keyword, label in keyword_map:
+            if keyword in source_lower:
+                return label
         return source
 
 

@@ -256,23 +256,22 @@ class TestTreasuryAuctionCalendarEdgeCases:
         """Test Q1 2026 has all auction types."""
         events = calendar.get_events(date(2026, 1, 1), date(2026, 3, 31))
 
+        type_keywords = {
+            "Bill": "bill",
+            "2-Year Note": "2y_note",
+            "5-Year Note": "5y_note",
+            "10-Year Note": "10y_note",
+            "30-Year Bond": "30y_bond",
+            "TIPS": "tips",
+            "FRN": "frn",
+        }
         types_found = set()
         for event in events:
             security_type = event.metadata.get("security_type", "")
-            if "Bill" in security_type:
-                types_found.add("bill")
-            elif "2-Year Note" in security_type:
-                types_found.add("2y_note")
-            elif "5-Year Note" in security_type:
-                types_found.add("5y_note")
-            elif "10-Year Note" in security_type:
-                types_found.add("10y_note")
-            elif "30-Year Bond" in security_type:
-                types_found.add("30y_bond")
-            elif "TIPS" in security_type:
-                types_found.add("tips")
-            elif "FRN" in security_type:
-                types_found.add("frn")
+            for keyword, label in type_keywords.items():
+                if keyword in security_type:
+                    types_found.add(label)
+                    break
 
         expected = {"bill", "2y_note", "5y_note", "10y_note", "30y_bond", "tips", "frn"}
         assert types_found == expected

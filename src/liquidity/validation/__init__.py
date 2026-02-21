@@ -31,8 +31,7 @@ Example:
 
     # Run regression tests
     suite_result = engine.regression.run_all_regression_tests(
-        walcl=7500e9, tga=800e9, rrp=500e9,
-        net_liquidity=6200e9,
+        RegressionInputs(walcl=7500e9, tga=800e9, rrp=500e9, net_liquidity=6200e9)
     )
 """
 
@@ -66,7 +65,7 @@ from .cross_validation import (
 )
 from .freshness import FreshnessChecker, FreshnessCheckResult
 from .quality_score import QualityDetails, QualityReport, QualityScorer
-from .regression import RegressionSuiteResult, RegressionTester, RegressionTestResult
+from .regression import RegressionInputs, RegressionSuiteResult, RegressionTester, RegressionTestResult
 
 
 class ValidationEngine:
@@ -168,49 +167,17 @@ class ValidationEngine:
 
     def run_regression_suite(
         self,
-        walcl: float | None = None,
-        tga: float | None = None,
-        rrp: float | None = None,
-        net_liquidity: float | None = None,
-        fed_usd: float | None = None,
-        ecb_usd: float | None = None,
-        boj_usd: float | None = None,
-        pboc_usd: float | None = None,
-        global_liquidity: float | None = None,
-        stealth_qe: float | None = None,
-        historical_date: str | None = None,
+        inputs: RegressionInputs,
     ) -> RegressionSuiteResult:
         """Run regression test suite.
 
         Args:
-            walcl: Fed Total Assets.
-            tga: Treasury General Account.
-            rrp: Reverse Repo.
-            net_liquidity: Calculated Net Liquidity.
-            fed_usd: Fed balance sheet in USD.
-            ecb_usd: ECB balance sheet in USD.
-            boj_usd: BoJ balance sheet in USD.
-            pboc_usd: PBoC balance sheet in USD.
-            global_liquidity: Calculated Global Liquidity.
-            stealth_qe: Calculated Stealth QE score.
-            historical_date: Date for historical comparison.
+            inputs: RegressionInputs with all test data.
 
         Returns:
             RegressionSuiteResult with all test outcomes.
         """
-        return self.regression.run_all_regression_tests(
-            walcl=walcl,
-            tga=tga,
-            rrp=rrp,
-            net_liquidity=net_liquidity,
-            fed_usd=fed_usd,
-            ecb_usd=ecb_usd,
-            boj_usd=boj_usd,
-            pboc_usd=pboc_usd,
-            global_liquidity=global_liquidity,
-            stealth_qe=stealth_qe,
-            historical_date=historical_date,
-        )
+        return self.regression.run_all_regression_tests(inputs)
 
     def is_data_quality_acceptable(
         self,
@@ -264,6 +231,7 @@ __all__ = [
     "Anomaly",
     "AnomalyReport",
     # Regression
+    "RegressionInputs",
     "RegressionTester",
     "RegressionTestResult",
     "RegressionSuiteResult",

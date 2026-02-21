@@ -4,6 +4,7 @@ import pytest
 
 from liquidity.validation.config import RegressionConfig
 from liquidity.validation.regression import (
+    RegressionInputs,
     RegressionSuiteResult,
     RegressionTester,
 )
@@ -194,12 +195,12 @@ class TestRegressionTester:
         """Test running full suite with Hayes formula only."""
         tester = RegressionTester()
 
-        result = tester.run_all_regression_tests(
+        result = tester.run_all_regression_tests(RegressionInputs(
             walcl=7500e9,
             tga=800e9,
             rrp=500e9,
             net_liquidity=6200e9,
-        )
+        ))
 
         assert result.total_tests == 1
         assert result.passed_tests == 1
@@ -209,7 +210,7 @@ class TestRegressionTester:
         """Test running full suite with all data."""
         tester = RegressionTester()
 
-        result = tester.run_all_regression_tests(
+        result = tester.run_all_regression_tests(RegressionInputs(
             walcl=7500e9,
             tga=800e9,
             rrp=500e9,
@@ -219,7 +220,7 @@ class TestRegressionTester:
             boj_usd=5000e9,
             pboc_usd=6000e9,
             global_liquidity=26000e9,
-        )
+        ))
 
         assert result.total_tests == 2  # Hayes + Global sum
         assert result.pass_rate >= 50.0  # At least one should pass
@@ -228,7 +229,7 @@ class TestRegressionTester:
         """Test running full suite with historical comparison."""
         tester = RegressionTester()
 
-        result = tester.run_all_regression_tests(
+        result = tester.run_all_regression_tests(RegressionInputs(
             walcl=5.82e12 + 800e9 + 500e9,  # ~7.12e12
             tga=800e9,
             rrp=500e9,
@@ -236,7 +237,7 @@ class TestRegressionTester:
             global_liquidity=28.5e12,
             stealth_qe=15.0,
             historical_date="2024-01-15",
-        )
+        ))
 
         assert result.total_tests >= 4  # Hayes + 3 historical
         assert result.passed_tests >= 3  # Historical should pass
@@ -245,7 +246,7 @@ class TestRegressionTester:
         """Test running full suite with no data."""
         tester = RegressionTester()
 
-        result = tester.run_all_regression_tests()
+        result = tester.run_all_regression_tests(RegressionInputs())
 
         assert result.total_tests == 0
         assert result.pass_rate == 100.0
