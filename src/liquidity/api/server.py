@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from liquidity.api.deps import get_storage
+from liquidity.config import get_settings
 from liquidity.api.routers import (
     calendar_router,
     correlations_router,
@@ -80,10 +81,11 @@ app = FastAPI(
     },
 )
 
-# CORS middleware - permissive for internal use
+# CORS middleware - explicit origins for OpenBB Workspace + local dev
+_settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Internal use - restrict in production
+    allow_origins=_settings.workspace_cors_origins,
     allow_credentials=True,
     allow_methods=["GET"],  # Read-only API
     allow_headers=["*"],

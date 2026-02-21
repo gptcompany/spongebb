@@ -20,7 +20,9 @@ classifiers = [
 
 dependencies = [
     # Core data platform
-    "openbb>=4.0.0",
+    "openbb>=4.4.0,<4.7.0",
+    # Workspace backend launcher (openbb-api --app)
+    "openbb-platform-api>=1.2.0",
     # Time-series storage
     "questdb>=2.0.0",
     # Async HTTP client

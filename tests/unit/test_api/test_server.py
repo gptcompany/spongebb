@@ -133,12 +133,12 @@ class TestCORSMiddleware:
         """Create test client."""
         return TestClient(app)
 
-    def test_cors_allows_any_origin(self, client):
-        """Test CORS allows any origin (internal use)."""
+    def test_cors_allows_workspace_origin(self, client):
+        """Test CORS allows OpenBB Workspace origin."""
         response = client.options(
             "/health",
             headers={
-                "Origin": "http://localhost:3000",
+                "Origin": "https://pro.openbb.co",
                 "Access-Control-Request-Method": "GET",
             },
         )

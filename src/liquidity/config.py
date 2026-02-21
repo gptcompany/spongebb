@@ -136,6 +136,22 @@ class Settings(BaseSettings):
         description="Logging level",
     )
 
+    # Workspace / OpenBB integration
+    cf_access_enabled: bool = Field(
+        default=False,
+        description="Enable Cloudflare Access header verification (defense-in-depth)",
+    )
+    workspace_cors_origins: list[str] = Field(
+        default=[
+            "https://pro.openbb.co",
+            "http://localhost:1420",
+            "https://liquidity.princyx.xyz",
+            "http://localhost:8000",
+            "http://localhost:6900",
+        ],
+        description="CORS allowed origins for OpenBB Workspace backend",
+    )
+
     @property
     def questdb_ilp_uri(self) -> str:
         """Get QuestDB ILP connection URI."""
