@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Real-time regime classification — Know instantly whether we're in Expansionary or Contractionary liquidity regime to inform trading decisions.
-**Current focus:** v5.0 OpenBB Platform Integration — defining requirements
+**Current focus:** v5.0 OpenBB Platform Integration — complete
 
 ## Current Position
 
-Phase: 23 (Workspace Backend Integration)
-Plan: 3 of 4 complete
-Status: Plan 23-03 complete — widget annotations + Docker workspace service
-Last activity: 2026-02-21 — Plan 23-03 executed (9 tasks, 9 commits)
+Phase: 25 (Native Provider Extension) — COMPLETE
+Plan: 3 of 3 complete
+Status: All v5.0 phases complete (23, 24, 25)
+Last activity: 2026-02-21 — Phase 25 executed (provider scaffold + 3 fetchers + 17 tests)
 
-Progress: ===============....... 75%
+Progress: ============================== 100%
 
 ## Milestones
 
@@ -24,18 +24,31 @@ Progress: ===============....... 75%
 | v2.0 | Advanced Analytics | 11-15 | ✅ Complete | 2026-02-06 |
 | v3.0 | Commodity Intelligence | 16-21 | ✅ Complete | 2026-02-07 |
 | v4.0 | Consumer Credit Risk | 22 | ✅ Complete | 2026-02-20 |
-| v5.0 | OpenBB Platform Integration | TBD | ◆ Active | — |
+| v5.0 | OpenBB Platform Integration | 23-25 | ✅ Complete | 2026-02-21 |
 
-## v5.0 Scope (ACTIVE)
+## v5.0 Summary (COMPLETE)
 
 **Goal:** Elevate the liquidity monitor from standalone Dash app to native OpenBB ecosystem component
 
-**Target features:**
-- OpenBB Workspace custom backend (FastAPI → widget-compatible endpoints)
-- OpenBB Provider Extension (`openbb-liquidity` package with ETL Fetcher classes)
-- openbb-cookiecutter multi-interface generation (Workspace + MCP + CLI + Python)
+**Delivered:**
+- Phase 23: OpenBB Workspace custom backend (12 widget-annotated endpoints, CF Access middleware, Docker service)
+- Phase 24: Widget polish (refetchInterval/staleTime optimization, columnsDefs + formatterFn/renderFn, params arrays)
+- Phase 25: Native Provider Extension (`obb.liquidity.*` SDK with 3 Fetcher adapters: NetLiquidity, GlobalLiquidity, StealthQE)
 
 ## Accumulated Context
+
+### From v5.0 Phase 25
+- OpenBB Provider extension registered via `[project.entry-points."openbb_provider_extension"]`
+- Lazy imports in `aextract_data()` to avoid circular dependency: provider → calculators → collectors → `from openbb import obb` → provider
+- `date as dateType` alias pattern avoids Pydantic field name clash with type annotation
+- 3 Fetcher classes in `src/liquidity/openbb_ext/models/` (TET pipeline pattern)
+- 17 unit tests: 6 discovery + 11 fetcher TET
+
+### From v5.0 Phase 24
+- refetchInterval/staleTime tuned per data source frequency (FRED weekly, NY Fed daily, PBoC monthly)
+- columnsDefs (with 's') is the correct OpenBB Workspace key (NOT columnDefs)
+- formatterFn: int, none, percent, normalized, normalizedPercent, dateToYear
+- renderFn: greenRed, titleCase, columnColor, hoverCard, cellOnClick, showCellChange
 
 ### From v5.0 Phase 23
 - 12 API endpoints annotated with openapi_extra widget_config for OpenBB Workspace auto-discovery
@@ -67,20 +80,21 @@ Progress: ===============....... 75%
 
 ## Project Stats
 
-- Total LOC: ~52,000
-- Total Tests: 2,500+
-- API Endpoints: 14
+- Total LOC: ~53,000
+- Total Tests: 2,550+
+- API Endpoints: 18 (14 original + 4 workspace)
 - Dashboard Panels: 21
 - Alert Types: 7
 - Collectors: 31+
+- OpenBB Provider Fetchers: 3
 - GitHub: https://github.com/gptcompany/openbb_liquidity
-- Tag: v4.0
+- Tag: v5.0
 
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: Completed 23-03-PLAN.md (Table Endpoint Annotations + Docker Workspace Service)
-Next steps: Execute Plan 23-04 (testing/validation)
+Stopped at: Phase 25 complete — v5.0 milestone complete
+Next steps: `/gsd:complete-milestone` to archive v5.0
 
 ---
-*Last updated: 2026-02-21 after Plan 23-03 execution*
+*Last updated: 2026-02-21 after Phase 25 execution*
