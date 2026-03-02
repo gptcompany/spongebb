@@ -8,15 +8,71 @@ Provides:
 import logging
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
-from liquidity.analyzers import CombinedRegimeAnalyzer
+from liquidity.analyzers import CombinedRegime, CombinedRegimeAnalyzer, RegimeClassifier
 from liquidity.api.deps import RegimeClassifierDep
 from liquidity.api.schemas import APIMetadata, CombinedRegimeResponse, RegimeResponse
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/regime", tags=["regime"])
+
+
+def _build_current_regime_fallback(reason: str) -> RegimeResponse:
+    """Return a degraded current-regime response for widget consumers."""
+    now = datetime.now(UTC)
+    return RegimeResponse(
+        regime="UNAVAILABLE",
+        intensity=0.0,
+        confidence="LOW",
+        components=reason,
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
+
+
+async def _build_combined_regime_fallback(reason: str) -> CombinedRegimeResponse:
+    """Return a degraded combined regime response when oil data is unavailable."""
+    try:
+        liquidity = await RegimeClassifier().classify()
+        liquidity_regime = liquidity.direction.value
+        combined = (
+            CombinedRegime.BULLISH
+            if liquidity_regime == "EXPANSION"
+            else CombinedRegime.BEARISH
+        )
+        confidence = 0.4
+        drivers = [
+            f"Liquidity: {liquidity_regime} (fallback-only mode)",
+            "Oil regime unavailable; defaulting to BALANCED for widget continuity",
+            reason,
+        ]
+    except Exception:
+        liquidity_regime = "NEUTRAL"
+        combined = CombinedRegime.NEUTRAL
+        confidence = 0.2
+        drivers = [
+            "Liquidity regime unavailable; using neutral fallback",
+            "Oil regime unavailable; defaulting to BALANCED",
+            reason,
+        ]
+
+    commodity_signal = (
+        "long"
+        if combined == CombinedRegime.BULLISH
+        else "short" if combined == CombinedRegime.BEARISH else "neutral"
+    )
+    return CombinedRegimeResponse(
+        liquidity_regime=liquidity_regime,
+        oil_regime="balanced",
+        combined_regime=combined.value,
+        confidence=confidence,
+        commodity_signal=commodity_signal,
+        drivers=drivers,
+        as_of_date=datetime.now(UTC),
+        metadata=APIMetadata(timestamp=datetime.now(UTC)),
+    )
 
 
 @router.get(
@@ -83,17 +139,11 @@ async def get_current_regime(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("Regime classification failed: %s", e)
-        raise HTTPException(
-            status_code=503,
-            detail=f"Unable to classify regime: {e}",
-        ) from e
+        logger.warning("Current regime degraded: %s", e)
+        return _build_current_regime_fallback(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_current_regime")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {e}",
-        ) from e
+        return _build_current_regime_fallback(f"error: {e}")
 
 
 @router.get(
@@ -163,13 +213,11 @@ async def get_combined_regime() -> CombinedRegimeResponse:
         )
     except ValueError as e:
         logger.warning("Combined regime classification failed: %s", e)
-        raise HTTPException(
-            status_code=503,
-            detail=f"Unable to classify combined regime: {e}",
-        ) from e
+        return await _build_combined_regime_fallback(
+            f"Fallback activated: {e}"
+        )
     except Exception as e:
         logger.exception("Unexpected error in get_combined_regime")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {e}",
-        ) from e
+        return await _build_combined_regime_fallback(
+            f"Fallback activated after unexpected error: {e}"
+        )

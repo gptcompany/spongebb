@@ -7,7 +7,7 @@ Provides:
 import logging
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from liquidity.api.deps import StealthQECalcDep
 from liquidity.api.schemas import APIMetadata, StealthQEResponse
@@ -15,6 +15,24 @@ from liquidity.api.schemas import APIMetadata, StealthQEResponse
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/metrics", tags=["metrics"])
+
+
+def _fallback_stealth_qe_response(reason: str) -> StealthQEResponse:
+    """Return a degraded stealth-QE payload for widget consumers."""
+    now = datetime.now(UTC)
+    return StealthQEResponse(
+        score=0.0,
+        status="DEGRADED",
+        rrp_level=0.0,
+        rrp_velocity=None,
+        tga_level=0.0,
+        tga_spending=None,
+        fed_total=0.0,
+        fed_change=None,
+        components=reason,
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
 
 
 @router.get(
@@ -90,14 +108,8 @@ async def get_stealth_qe(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("Stealth QE calculation failed: %s", e)
-        raise HTTPException(
-            status_code=503,
-            detail=f"Unable to calculate stealth QE: {e}",
-        ) from e
+        logger.warning("Stealth QE degraded: %s", e)
+        return _fallback_stealth_qe_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_stealth_qe")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {e}",
-        ) from e
+        return _fallback_stealth_qe_response(f"error: {e}")

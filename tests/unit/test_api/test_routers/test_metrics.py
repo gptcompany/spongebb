@@ -97,7 +97,7 @@ class TestStealthQEEndpoint:
         assert data["tga_spending"] == -50.0  # Negative
 
     def test_get_stealth_qe_no_data(self, client):
-        """Test stealth QE endpoint when no data available."""
+        """Test stealth QE endpoint degrades cleanly when no data is available."""
         mock_calc = AsyncMock()
         mock_calc.get_current.side_effect = ValueError("No data available")
 
@@ -109,8 +109,12 @@ class TestStealthQEEndpoint:
 
         app.dependency_overrides.clear()
 
-        assert response.status_code == 503
-        assert "Unable to calculate" in response.json()["detail"]
+        assert response.status_code == 200
+        data = response.json()
+        assert data["score"] == 0.0
+        assert data["status"] == "DEGRADED"
+        assert "degraded:" in data["components"]
+        assert "degraded:" in data["metadata"]["source"]
 
     def test_stealth_qe_response_structure(self, client, mock_very_active_result):
         """Test response has all required fields."""

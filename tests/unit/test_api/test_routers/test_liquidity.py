@@ -62,7 +62,7 @@ class TestNetLiquidityEndpoint:
         assert "metadata" in data
 
     def test_get_net_liquidity_no_data(self, client):
-        """Test net liquidity when no data available."""
+        """Test net liquidity degrades cleanly when no data is available."""
         mock_calc = AsyncMock()
         mock_calc.get_current.side_effect = ValueError("No data available")
 
@@ -74,8 +74,12 @@ class TestNetLiquidityEndpoint:
 
         app.dependency_overrides.clear()
 
-        assert response.status_code == 503
-        assert "Unable to calculate" in response.json()["detail"]
+        assert response.status_code == 200
+        data = response.json()
+        assert data["value"] == 0.0
+        assert data["walcl"] == 0.0
+        assert data["sentiment"] == "DEGRADED"
+        assert "degraded:" in data["metadata"]["source"]
 
     def test_net_liquidity_response_structure(self, client, mock_net_liq_result):
         """Test response has all required fields."""
@@ -233,7 +237,7 @@ class TestGlobalLiquidityEndpoint:
         app.dependency_overrides.clear()
 
     def test_get_global_liquidity_no_data(self, client):
-        """Test global liquidity when no data available."""
+        """Test global liquidity degrades cleanly when no data is available."""
         mock_calc = AsyncMock()
         mock_calc.get_current.side_effect = ValueError("No data available")
 
@@ -245,5 +249,9 @@ class TestGlobalLiquidityEndpoint:
 
         app.dependency_overrides.clear()
 
-        assert response.status_code == 503
-        assert "Unable to calculate" in response.json()["detail"]
+        assert response.status_code == 200
+        data = response.json()
+        assert data["value"] == 0.0
+        assert data["coverage_pct"] == 0.0
+        assert data["components"]["fed_usd"] == 0.0
+        assert "degraded:" in data["metadata"]["source"]

@@ -8,7 +8,7 @@ import logging
 from datetime import UTC, datetime
 
 import pandas as pd
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from liquidity.api.deps import StressCollectorDep
 from liquidity.api.schemas import (
@@ -19,6 +19,22 @@ from liquidity.api.schemas import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/stress", tags=["stress"])
+
+
+def _fallback_stress_indicators_response(reason: str) -> StressIndicatorsResponse:
+    """Return a degraded stress-indicators payload for widget consumers."""
+    now = datetime.now(UTC)
+    return StressIndicatorsResponse(
+        sofr_ois_spread=None,
+        sofr_percentile=None,
+        repo_stress="unknown",
+        cp_spread=None,
+        sofr_width=None,
+        repo_ratio=None,
+        overall_stress="unknown",
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
 
 
 @router.get(
@@ -132,17 +148,11 @@ async def get_stress_indicators(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("Stress indicators fetch failed: %s", e)
-        raise HTTPException(
-            status_code=503,
-            detail=f"Unable to fetch stress indicators: {e}",
-        ) from e
+        logger.warning("Stress indicators degraded: %s", e)
+        return _fallback_stress_indicators_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_stress_indicators")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {e}",
-        ) from e
+        return _fallback_stress_indicators_response(f"error: {e}")
 
 
 def _calculate_sofr_percentile(

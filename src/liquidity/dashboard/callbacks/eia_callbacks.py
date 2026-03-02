@@ -8,8 +8,10 @@ Handles:
 
 import asyncio
 import logging
+import os
 from typing import Any
 
+import pandas as pd
 from dash import Dash, Input, Output
 
 from liquidity.dashboard.components.eia_panel import (
@@ -21,6 +23,65 @@ from liquidity.dashboard.components.eia_panel import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _env_flag(name: str) -> bool:
+    """Return True if environment variable is set to a truthy value."""
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _build_mock_eia_data() -> dict[str, Any]:
+    """Return deterministic EIA data for fallback mode."""
+    dates = pd.date_range(end=pd.Timestamp.now(tz="UTC"), periods=52, freq="W")
+
+    cushing_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "value": [52_000 + (i * 180) for i in range(len(dates))],
+        }
+    )
+
+    refinery_rows: list[dict[str, Any]] = []
+    series_levels = {
+        "WPULEUS3": 91.5,
+        "W_NA_YUP_R10_PER": 88.2,
+        "W_NA_YUP_R30_PER": 93.4,
+        "W_NA_YUP_R50_PER": 89.7,
+    }
+    for series_id, base in series_levels.items():
+        for idx, ts in enumerate(dates):
+            refinery_rows.append(
+                {
+                    "timestamp": ts,
+                    "series_id": series_id,
+                    "value": base + ((idx % 5) * 0.2),
+                }
+            )
+    refinery_df = pd.DataFrame(refinery_rows)
+
+    production_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "value": [13_100 + (i % 6) * 45 for i in range(len(dates))],
+        }
+    )
+    imports_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "value": [6_200 + (i % 4) * 55 for i in range(len(dates))],
+        }
+    )
+
+    latest_cushing = float(cushing_df.iloc[-1]["value"])
+
+    return {
+        "cushing_df": cushing_df,
+        "cushing_utilization_pct": (latest_cushing / 70_800) * 100,
+        "refinery_df": refinery_df,
+        "refinery_signal": "Normal",
+        "production_df": production_df,
+        "imports_df": imports_df,
+    }
 
 
 def register_eia_callbacks(app: Dash) -> None:
@@ -107,6 +168,9 @@ async def _fetch_eia_data_async() -> dict[str, Any]:
         Dictionary with real EIA data.
     """
     import importlib.util
+
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        return _build_mock_eia_data()
 
     data: dict[str, Any] = {}
 

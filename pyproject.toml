@@ -38,8 +38,6 @@ dependencies = [
     # Configuration management
     "pydantic-settings>=2.0.0",
     "psycopg2-binary>=2.9.11",
-    "pyvalet>=1.1",
-    "dbnomics>=1.2.7",
     # HTML parsing for scraping fallbacks
     "beautifulsoup4>=4.12.0",
     "lxml>=5.0.0",
@@ -47,7 +45,6 @@ dependencies = [
     "scipy>=1.17.0",
     # Calendar module
     "holidays>=0.40",
-    "python-dateutil>=2.8",
     # API server
     "fastapi>=0.115.0",
     "uvicorn>=0.30.0",

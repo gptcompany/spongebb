@@ -9,7 +9,7 @@ import logging
 from datetime import UTC, datetime
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Query
 
 from liquidity.api.deps import GlobalLiquidityCalcDep, NetLiquidityCalcDep
 from liquidity.api.schemas import (
@@ -22,6 +22,42 @@ from liquidity.api.schemas import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/liquidity", tags=["liquidity"])
+
+
+def _fallback_net_liquidity_response(reason: str) -> NetLiquidityResponse:
+    """Return a degraded net-liquidity payload for widget consumers."""
+    now = datetime.now(UTC)
+    return NetLiquidityResponse(
+        value=0.0,
+        walcl=0.0,
+        tga=0.0,
+        rrp=0.0,
+        weekly_delta=0.0,
+        sentiment="DEGRADED",
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
+
+
+def _fallback_global_liquidity_response(reason: str) -> GlobalLiquidityResponse:
+    """Return a degraded global-liquidity payload for widget consumers."""
+    now = datetime.now(UTC)
+    return GlobalLiquidityResponse(
+        value=0.0,
+        components=GlobalLiquidityComponent(
+            fed_usd=0.0,
+            ecb_usd=0.0,
+            boj_usd=0.0,
+            pboc_usd=0.0,
+            boe_usd=None,
+            snb_usd=None,
+            boc_usd=None,
+        ),
+        weekly_delta=0.0,
+        coverage_pct=0.0,
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
 
 
 @router.get(
@@ -88,17 +124,11 @@ async def get_net_liquidity(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("Net liquidity calculation failed: %s", e)
-        raise HTTPException(
-            status_code=503,
-            detail=f"Unable to calculate net liquidity: {e}",
-        ) from e
+        logger.warning("Net liquidity degraded: %s", e)
+        return _fallback_net_liquidity_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_net_liquidity")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {e}",
-        ) from e
+        return _fallback_net_liquidity_response(f"error: {e}")
 
 
 @router.get(
@@ -183,14 +213,8 @@ async def get_global_liquidity(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("Global liquidity calculation failed: %s", e)
-        raise HTTPException(
-            status_code=503,
-            detail=f"Unable to calculate global liquidity: {e}",
-        ) from e
+        logger.warning("Global liquidity degraded: %s", e)
+        return _fallback_global_liquidity_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_global_liquidity")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {e}",
-        ) from e
+        return _fallback_global_liquidity_response(f"error: {e}")

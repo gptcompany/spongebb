@@ -9,7 +9,7 @@ Provides:
 import logging
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from liquidity.api.deps import MOVEZScoreCalcDep, VIXTermCalcDep, VolatilitySignalCalcDep
 from liquidity.api.schemas import (
@@ -22,6 +22,55 @@ from liquidity.api.schemas import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/volatility", tags=["volatility"])
+
+
+def _fallback_move_zscore_response(reason: str) -> MOVEZScoreResponse:
+    """Return a degraded MOVE payload for widget consumers."""
+    now = datetime.now(UTC)
+    return MOVEZScoreResponse(
+        current_move=0.0,
+        mean_move=0.0,
+        std_move=0.0,
+        zscore=0.0,
+        percentile=50.0,
+        signal="UNKNOWN",
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
+
+
+def _fallback_vix_term_structure_response(reason: str) -> VIXTermStructureResponse:
+    """Return a degraded VIX-term payload for widget consumers."""
+    now = datetime.now(UTC)
+    return VIXTermStructureResponse(
+        vix=0.0,
+        vix3m=0.0,
+        ratio=0.0,
+        spread=0.0,
+        structure="UNKNOWN",
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
+
+
+def _fallback_volatility_signal_response(reason: str) -> VolatilitySignalResponse:
+    """Return a degraded composite-volatility payload for widget consumers."""
+    now = datetime.now(UTC)
+    return VolatilitySignalResponse(
+        composite_score=0.0,
+        regime="NEUTRAL",
+        move_zscore=0.0,
+        move_signal="UNKNOWN",
+        vix=0.0,
+        vix3m=0.0,
+        vix_ratio=0.0,
+        vix_structure="UNKNOWN",
+        move_component=0.0,
+        term_component=0.0,
+        level_component=0.0,
+        as_of_date=now,
+        metadata=APIMetadata(timestamp=now, source=f"spongebb ({reason})"),
+    )
 
 
 @router.get(
@@ -80,11 +129,11 @@ async def get_move_zscore(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("MOVE Z-Score calculation failed: %s", e)
-        raise HTTPException(status_code=503, detail=f"Unable to calculate MOVE Z-Score: {e}") from e
+        logger.warning("MOVE Z-Score degraded: %s", e)
+        return _fallback_move_zscore_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_move_zscore")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_move_zscore_response(f"error: {e}")
 
 
 @router.get(
@@ -139,11 +188,11 @@ async def get_vix_term_structure(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("VIX term structure calculation failed: %s", e)
-        raise HTTPException(status_code=503, detail=f"Unable to calculate VIX term structure: {e}") from e
+        logger.warning("VIX term structure degraded: %s", e)
+        return _fallback_vix_term_structure_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_vix_term_structure")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_vix_term_structure_response(f"error: {e}")
 
 
 @router.get(
@@ -211,8 +260,8 @@ async def get_volatility_signal(
             metadata=APIMetadata(timestamp=datetime.now(UTC)),
         )
     except ValueError as e:
-        logger.warning("Volatility signal calculation failed: %s", e)
-        raise HTTPException(status_code=503, detail=f"Unable to calculate volatility signal: {e}") from e
+        logger.warning("Volatility signal degraded: %s", e)
+        return _fallback_volatility_signal_response(f"degraded: {e}")
     except Exception as e:
         logger.exception("Unexpected error in get_volatility_signal")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_volatility_signal_response(f"error: {e}")

@@ -765,12 +765,88 @@ def register_callbacks(app: Dash) -> None:
     register_inflation_callbacks(app)
 
 
+def _build_mock_fomc_dates() -> list[date]:
+    """Return deterministic FOMC dates for fallback mode."""
+    return [
+        date(2024, 12, 18),
+        date(2025, 1, 29),
+    ]
+
+
+def _build_mock_fomc_diff(old_date: date, new_date: date) -> Any:
+    """Return a deterministic mock FOMC diff for fallback mode."""
+    from liquidity.news.fomc.diff import ChangeScore, PhraseShift, StatementDiff
+
+    return StatementDiff(
+        old_date=old_date,
+        new_date=new_date,
+        operations=[],
+        additions=[
+            "remains attentive to liquidity conditions",
+            "policy will stay sufficiently restrictive",
+        ],
+        deletions=[
+            "risks to inflation have eased materially",
+        ],
+        unchanged_ratio=0.72,
+        change_score=ChangeScore(
+            direction="hawkish",
+            magnitude=0.35,
+            key_changes=["+attentive", "+restrictive", "-eased"],
+        ),
+        phrase_shifts=[
+            PhraseShift(phrase="attentive to liquidity conditions", change="added", policy_signal="hawkish"),
+            PhraseShift(phrase="risks to inflation have eased materially", change="removed", policy_signal="dovish"),
+        ],
+        html=(
+            "<html><body style='background:#1a1a2e;color:#eee;font-family:sans-serif;padding:12px;'>"
+            "<h4 style='margin:0 0 8px;'>Mock FOMC Statement Diff</h4>"
+            "<p>The Committee judges that liquidity conditions remain "
+            "<span style='color:#ff4444;font-weight:bold'>attentive</span> and policy "
+            "must remain <span style='color:#ff4444;font-weight:bold'>sufficiently restrictive</span>.</p>"
+            "<p style='color:#adb5bd;'>Generated in fallback mode for deterministic dashboard validation.</p>"
+            "</body></html>"
+        ),
+    )
+
+
+def _build_mock_news_items() -> list[dict[str, Any]]:
+    """Return deterministic news items for fallback mode."""
+    now = _dashboard_now()
+    return [
+        {
+            "title": "Fed officials say liquidity conditions remain supportive for risk assets",
+            "source": "Fed",
+            "sentiment": "dovish",
+            "published": now - timedelta(minutes=45),
+            "link": "https://example.com/fed-liquidity",
+        },
+        {
+            "title": "ECB signals a gradual pace for balance-sheet normalization",
+            "source": "ECB",
+            "sentiment": "neutral",
+            "published": now - timedelta(hours=3),
+            "link": "https://example.com/ecb-balance-sheet",
+        },
+        {
+            "title": "BoJ monitors funding-market pressure and imported inflation risk",
+            "source": "BoJ",
+            "sentiment": "hawkish",
+            "published": now - timedelta(hours=6),
+            "link": "https://example.com/boj-funding",
+        },
+    ]
+
+
 def _fetch_fomc_statement_dates() -> list[date]:
     """Fetch available FOMC statement dates.
 
     Returns:
         List of dates for which statements are available.
     """
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        return _build_mock_fomc_dates()
+
     try:
         import importlib.util
 
@@ -800,6 +876,9 @@ def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
     Returns:
         StatementDiff object or None if fetch fails.
     """
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        return _build_mock_fomc_diff(old_date, new_date)
+
     try:
         import importlib.util
 
@@ -838,14 +917,29 @@ def _fetch_news_data() -> list[dict]:
     Returns:
         List of news item dictionaries.
     """
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        return _build_mock_news_items()
+
     try:
         import importlib.util
 
         if importlib.util.find_spec("liquidity.news"):
-            logger.debug("News module available but no live feed configured")
+            from liquidity.news import poll_feeds_once
 
-    except ImportError as e:
-        logger.warning("Could not import news module: %s", e)
+            items = asyncio.run(poll_feeds_once())
+            return [
+                {
+                    "title": item.title,
+                    "source": item.source.value,
+                    "sentiment": "neutral",
+                    "published": item.published,
+                    "link": str(item.link),
+                }
+                for item in items[:12]
+            ]
+
+    except Exception as e:
+        logger.warning("Could not load news feeds: %s", e)
 
     return []
 
@@ -1126,6 +1220,69 @@ def _fetch_extended_data() -> dict[str, Any]:
     return asyncio.run(_fetch_extended_async())
 
 
+def _build_mock_extended_data() -> dict[str, Any]:
+    """Build deterministic fallback data for extended dashboard panels."""
+    dates = pd.date_range(end=_dashboard_now(), periods=90, freq="D")
+    idx = list(range(len(dates)))
+
+    xlp_xly_ratio = pd.Series(
+        [0.98 + 0.02 * math.sin(i / 10.0) + (i * 0.0004) for i in idx],
+        index=dates,
+    )
+    axp_rebased = pd.Series(
+        [100.0 + (i * 0.12) + 1.5 * math.sin(i / 8.0) for i in idx],
+        index=dates,
+    )
+    igv_rebased = pd.Series(
+        [100.0 + (i * 0.18) + 2.0 * math.cos(i / 9.0) for i in idx],
+        index=dates,
+    )
+    relative_spread = axp_rebased - igv_rebased
+
+    xlp_xly_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "xlp_xly_ratio": xlp_xly_ratio.values,
+        }
+    )
+    axp_igv_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "axp_rebased": axp_rebased.values,
+            "igv_rebased": igv_rebased.values,
+            "relative_spread_pct": relative_spread.values,
+        }
+    )
+
+    consumer_credit_metrics = {
+        "consumer_credit_total_b": 5200.0,
+        "student_loans_b": 1780.0,
+        "consumer_credit_ex_students_b": 3420.0,
+        "debt_in_default_est_b": 145.0,
+        "debt_default_rate_pct": 3.8,
+        "mortgage_chargeoff_rate_pct": 0.7,
+        "loan_loss_reserves_b": 128.0,
+        "usd_liquidity_index": 58.4,
+    }
+
+    sensitive_stocks_df = pd.DataFrame(
+        {
+            "symbol": ["AXP", "COF", "DFS", "ALLY"],
+            "corr_to_stress": [0.72, 0.68, 0.61, 0.58],
+            "beta_to_stress": [1.20, 1.11, 0.97, 0.94],
+            "sensitivity_score": [0.88, 0.81, 0.74, 0.69],
+        }
+    )
+
+    return {
+        "xlp_xly_df": xlp_xly_df,
+        "axp_igv_df": axp_igv_df,
+        "consumer_credit_metrics": consumer_credit_metrics,
+        "sensitive_stocks_df": sensitive_stocks_df,
+        "calendar_events": [],
+    }
+
+
 async def _fetch_extended_async() -> dict[str, Any]:
     """Async function to fetch extended panel data.
 
@@ -1136,7 +1293,7 @@ async def _fetch_extended_async() -> dict[str, Any]:
 
     if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
         logger.info("Extended panel fallback mode forced by environment")
-        return {"calendar_events": []}
+        return _build_mock_extended_data()
 
     data: dict[str, Any] = {}
 

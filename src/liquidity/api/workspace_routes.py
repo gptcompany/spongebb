@@ -30,6 +30,44 @@ logger = logging.getLogger(__name__)
 workspace_router = APIRouter(prefix="/workspace", tags=["workspace"])
 
 
+def _fallback_workspace_metric(
+    *,
+    value: float,
+    label: str,
+    unit: str | None = None,
+    sentiment: str | None = None,
+    delta: float | None = None,
+) -> WorkspaceMetric:
+    """Return a valid degraded metric payload for widget consumers."""
+    return WorkspaceMetric(
+        value=value,
+        label=label,
+        delta=delta,
+        unit=unit,
+        sentiment=sentiment,
+    )
+
+
+def _fallback_workspace_chart(title: str, message: str) -> dict:
+    """Return a simple placeholder Plotly figure for degraded chart widgets."""
+    fig = go.Figure()
+    fig.add_annotation(
+        text=message,
+        showarrow=False,
+        font=dict(size=16),
+        x=0.5,
+        y=0.5,
+        xref="paper",
+        yref="paper",
+    )
+    fig.update_layout(
+        title=title,
+        template="plotly_dark",
+        height=400,
+    )
+    return fig.to_plotly_json()
+
+
 # =============================================================================
 # Metric Endpoints
 # =============================================================================
@@ -66,10 +104,21 @@ async def workspace_metric_net_liquidity(
             sentiment=result.sentiment.value,
         )
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
+        logger.warning("Workspace net liquidity metric degraded: %s", e)
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Net Liquidity unavailable",
+            unit="B USD",
+            sentiment="DEGRADED",
+        )
     except Exception as e:
         logger.exception("Workspace net liquidity metric failed")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Net Liquidity unavailable",
+            unit="B USD",
+            sentiment="ERROR",
+        )
 
 
 @workspace_router.get(
@@ -102,10 +151,21 @@ async def workspace_metric_global_liquidity(
             unit="B USD",
         )
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
+        logger.warning("Workspace global liquidity metric degraded: %s", e)
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Global Liquidity unavailable",
+            unit="B USD",
+            sentiment="DEGRADED",
+        )
     except Exception as e:
         logger.exception("Workspace global liquidity metric failed")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Global Liquidity unavailable",
+            unit="B USD",
+            sentiment="ERROR",
+        )
 
 
 @workspace_router.get(
@@ -139,10 +199,21 @@ async def workspace_metric_stealth_qe(
             sentiment=result.status,
         )
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
+        logger.warning("Workspace stealth QE metric degraded: %s", e)
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Stealth QE unavailable",
+            unit="/100",
+            sentiment="DEGRADED",
+        )
     except Exception as e:
         logger.exception("Workspace stealth QE metric failed")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Stealth QE unavailable",
+            unit="/100",
+            sentiment="ERROR",
+        )
 
 
 @workspace_router.get(
@@ -176,10 +247,21 @@ async def workspace_metric_regime(
             sentiment=result.direction.value,
         )
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
-    except Exception as e:
+        logger.warning("Workspace regime metric degraded: %s", e)
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Regime unavailable",
+            unit="%",
+            sentiment="DEGRADED",
+        )
+    except Exception:
         logger.exception("Workspace regime metric failed")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Regime unavailable",
+            unit="%",
+            sentiment="ERROR",
+        )
 
 
 # =============================================================================
@@ -229,10 +311,15 @@ async def workspace_chart_net_liquidity(
             fig.add_annotation(text="No data available", showarrow=False, font=dict(size=20))
         else:
             clean = history["net_liquidity"].dropna()
+            x_values = (
+                history.loc[clean.index, "timestamp"].dt.strftime("%Y-%m-%d").tolist()
+                if "timestamp" in history.columns
+                else clean.index.tolist()
+            )
             fig = go.Figure()
             fig.add_trace(
                 go.Scatter(
-                    x=clean.index.tolist(),
+                    x=x_values,
                     y=clean.tolist(),
                     mode="lines",
                     name="Net Liquidity",
@@ -251,10 +338,17 @@ async def workspace_chart_net_liquidity(
 
         return fig.to_plotly_json()
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
-    except Exception as e:
+        logger.warning("Workspace net liquidity chart degraded: %s", e)
+        return _fallback_workspace_chart(
+            "Fed Net Liquidity Index (B USD)",
+            f"Net Liquidity unavailable: {e}",
+        )
+    except Exception:
         logger.exception("Workspace net liquidity chart failed")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_workspace_chart(
+            "Fed Net Liquidity Index (B USD)",
+            "Net Liquidity unavailable",
+        )
 
 
 @workspace_router.get(
@@ -404,7 +498,18 @@ async def workspace_metric_volatility_signal(
             sentiment=result.regime.value,
         )
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
-    except Exception as e:
+        logger.warning("Workspace volatility signal metric degraded: %s", e)
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Vol Signal unavailable",
+            unit="/100",
+            sentiment="DEGRADED",
+        )
+    except Exception:
         logger.exception("Workspace volatility signal metric failed")
-        raise HTTPException(status_code=500, detail="Internal server error") from e
+        return _fallback_workspace_metric(
+            value=0.0,
+            label="Vol Signal unavailable",
+            unit="/100",
+            sentiment="ERROR",
+        )

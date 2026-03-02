@@ -130,7 +130,7 @@ class TestStressIndicatorsEndpoint:
         assert data["overall_stress"] == "critical"  # RED regime
 
     def test_get_stress_indicators_no_data(self, client):
-        """Test stress indicators when no data available."""
+        """Test stress indicators degrade cleanly when no data is available."""
         mock_collector = MagicMock()
         mock_collector.collect = AsyncMock(return_value=pd.DataFrame())
 
@@ -143,8 +143,12 @@ class TestStressIndicatorsEndpoint:
         finally:
             app.dependency_overrides.clear()
 
-        assert response.status_code == 503
-        assert "Unable to fetch" in response.json()["detail"]
+        assert response.status_code == 200
+        data = response.json()
+        assert data["repo_stress"] == "unknown"
+        assert data["overall_stress"] == "unknown"
+        assert data["sofr_ois_spread"] is None
+        assert "degraded:" in data["metadata"]["source"]
 
     def test_stress_response_structure(self, client, mock_stress_df):
         """Test response has all required fields with correct types."""

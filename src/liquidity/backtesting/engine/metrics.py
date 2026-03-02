@@ -1,15 +1,14 @@
-"""Performance metrics calculator using QuantStats."""
+"""Performance metrics calculator using pure numpy.
+
+Replaces the former QuantStats dependency with direct numpy/pandas calculations.
+All standard risk-adjusted metrics computed from daily return series.
+"""
+
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
-try:
-    import quantstats as qs
-    HAS_QUANTSTATS = True
-except ImportError:
-    HAS_QUANTSTATS = False
 
 
 @dataclass
@@ -58,24 +57,15 @@ class PerformanceMetrics:
 
 
 class MetricsCalculator:
-    """Calculate comprehensive performance metrics.
+    """Calculate comprehensive performance metrics with pure numpy.
 
-    Uses QuantStats for standard metrics plus custom calculations
-    for regime-specific analytics.
+    All computations use numpy/pandas directly — no external
+    analytics libraries required.
     """
 
     def __init__(self, risk_free_rate: float = 0.05):
-        """Initialize calculator.
-
-        Args:
-            risk_free_rate: Annual risk-free rate for Sharpe calculation
-        """
-        if not HAS_QUANTSTATS:
-            raise ImportError("quantstats required. Run: uv add quantstats")
-
         self.risk_free_rate = risk_free_rate
-        # Daily risk-free rate
-        self.daily_rf = (1 + risk_free_rate) ** (1/252) - 1
+        self.daily_rf = (1 + risk_free_rate) ** (1 / 252) - 1
 
     def calculate(
         self,
@@ -92,27 +82,35 @@ class MetricsCalculator:
             PerformanceMetrics with all calculations
         """
         returns = returns.dropna()
+        r = returns.values
 
         # Basic returns
-        total_return = qs.stats.comp(returns) * 100
-        cagr = qs.stats.cagr(returns) * 100
+        total_return = float((np.prod(1 + r) - 1) * 100)
+        n_years = len(r) / 252
+        cagr = float(((np.prod(1 + r)) ** (1 / n_years) - 1) * 100) if n_years > 0 else 0.0
         mtd = self._mtd(returns) * 100
         ytd = self._ytd(returns) * 100
 
         # Risk metrics
-        volatility = qs.stats.volatility(returns) * 100
+        daily_std = float(np.std(r, ddof=1)) if len(r) > 1 else 0.0
+        volatility = daily_std * np.sqrt(252) * 100
         downside_dev = self._downside_deviation(returns) * 100
-        max_dd = qs.stats.max_drawdown(returns) * 100
+        max_dd = self._max_drawdown(r) * 100
         avg_dd = self._avg_drawdown(returns) * 100
         dd_duration = self._max_drawdown_duration(returns)
 
         # Risk-adjusted
-        sharpe = qs.stats.sharpe(returns, rf=self.daily_rf)
-        sortino = qs.stats.sortino(returns, rf=self.daily_rf)
-        calmar = qs.stats.calmar(returns)
+        excess_mean = float(np.mean(r) - self.daily_rf)
+        sharpe = float(excess_mean / daily_std * np.sqrt(252)) if daily_std > 0 else 0.0
+
+        down_r = r[r < self.daily_rf]
+        down_std = float(np.sqrt(np.mean((down_r - self.daily_rf) ** 2))) if len(down_r) > 0 else 0.0
+        sortino = float(excess_mean / down_std * np.sqrt(252)) if down_std > 0 else 0.0
+
+        calmar = cagr / abs(max_dd) if max_dd != 0 else 0.0
         omega = self._omega_ratio(returns)
 
-        # Relative metrics (if benchmark provided)
+        # Relative metrics
         info_ratio = None
         treynor = None
         if benchmark is not None:
@@ -120,33 +118,40 @@ class MetricsCalculator:
             common_idx = returns.index.intersection(benchmark.index)
             if len(common_idx) > 0:
                 info_ratio = self._information_ratio(
-                    returns.loc[common_idx],
-                    benchmark.loc[common_idx]
+                    returns.loc[common_idx], benchmark.loc[common_idx]
                 )
                 treynor = self._treynor_ratio(
-                    returns.loc[common_idx],
-                    benchmark.loc[common_idx]
+                    returns.loc[common_idx], benchmark.loc[common_idx]
                 )
 
-        # Trade metrics (estimated from returns)
-        win_rate = (returns > 0).mean() * 100
-        wins = returns[returns > 0]
-        losses = returns[returns < 0]
-        profit_factor = abs(wins.sum() / losses.sum()) if len(losses) > 0 and losses.sum() != 0 else np.inf
-        payoff = abs(wins.mean() / losses.mean()) if len(losses) > 0 and losses.mean() != 0 else np.inf
-        expected = returns.mean() * 100
+        # Trade metrics (from daily returns)
+        wins = r[r > 0]
+        losses = r[r < 0]
+        win_rate = float(len(wins) / len(r) * 100) if len(r) > 0 else 0.0
+        profit_factor = (
+            abs(float(wins.sum()) / float(losses.sum()))
+            if len(losses) > 0 and losses.sum() != 0
+            else np.inf
+        )
+        payoff = (
+            abs(float(wins.mean()) / float(losses.mean()))
+            if len(losses) > 0 and losses.mean() != 0
+            else np.inf
+        )
+        expected = float(np.mean(r) * 100)
 
         # Tail risk
-        var_95 = qs.stats.value_at_risk(returns) * 100
-        cvar_95 = qs.stats.cvar(returns) * 100
-        skew = returns.skew()
-        kurt = returns.kurtosis()
+        var_95 = float(np.percentile(r, 5) * 100)
+        tail = r[r <= np.percentile(r, 5)]
+        cvar_95 = float(np.mean(tail) * 100) if len(tail) > 0 else var_95
+        skew = float(pd.Series(r).skew())
+        kurt = float(pd.Series(r).kurtosis())
 
         # Monthly
-        monthly = returns.resample('ME').apply(lambda x: (1 + x).prod() - 1)
-        best_month = monthly.max() * 100
-        worst_month = monthly.min() * 100
-        avg_monthly = monthly.mean() * 100
+        monthly = returns.resample("ME").apply(lambda x: (1 + x).prod() - 1)
+        best_month = float(monthly.max() * 100) if len(monthly) > 0 else 0.0
+        worst_month = float(monthly.min() * 100) if len(monthly) > 0 else 0.0
+        avg_monthly = float(monthly.mean() * 100) if len(monthly) > 0 else 0.0
 
         return PerformanceMetrics(
             total_return=total_return,
@@ -184,126 +189,115 @@ class MetricsCalculator:
         output_path: Path | None = None,
         title: str = "Strategy Performance",
     ) -> str | None:
-        """Generate HTML tearsheet using QuantStats.
+        """Generate a simple HTML tearsheet.
 
         Args:
             returns: Daily return series
             benchmark: Optional benchmark returns
-            output_path: Path to save HTML file (required for file output)
+            output_path: Path to save HTML file
             title: Report title
 
         Returns:
-            HTML content string if output_path is provided and file is saved,
-            None otherwise.
-
-        Note:
-            When output_path is provided, the tearsheet is saved to file
-            and the HTML content is returned. When output_path is None,
-            a temporary file is used and the content is returned.
+            HTML content string
         """
-        import tempfile
+        metrics = self.calculate(returns, benchmark)
+
+        # Build simple HTML report
+        rows = [
+            ("Total Return (%)", f"{metrics.total_return:.2f}"),
+            ("CAGR (%)", f"{metrics.cagr:.2f}"),
+            ("Volatility (%)", f"{metrics.volatility:.2f}"),
+            ("Sharpe Ratio", f"{metrics.sharpe_ratio:.3f}"),
+            ("Sortino Ratio", f"{metrics.sortino_ratio:.3f}"),
+            ("Calmar Ratio", f"{metrics.calmar_ratio:.3f}"),
+            ("Max Drawdown (%)", f"{metrics.max_drawdown:.2f}"),
+            ("Win Rate (%)", f"{metrics.win_rate:.1f}"),
+            ("VaR 95 (%)", f"{metrics.var_95:.2f}"),
+            ("CVaR 95 (%)", f"{metrics.cvar_95:.2f}"),
+        ]
+        table_rows = "\n".join(
+            f"<tr><td>{k}</td><td>{v}</td></tr>" for k, v in rows
+        )
+        html = f"""<!DOCTYPE html>
+<html><head><title>{title}</title></head>
+<body><h1>{title}</h1>
+<table border="1"><tr><th>Metric</th><th>Value</th></tr>
+{table_rows}
+</table></body></html>"""
 
         if output_path:
-            qs.reports.html(
-                returns,
-                benchmark=benchmark,
-                output=str(output_path),
-                title=title,
-            )
-            # Read and return the generated HTML
-            return output_path.read_text()
-        else:
-            # Use temporary file since QuantStats doesn't support direct HTML return
-            with tempfile.NamedTemporaryFile(suffix=".html", delete=False) as f:
-                temp_path = Path(f.name)
-            try:
-                qs.reports.html(
-                    returns,
-                    benchmark=benchmark,
-                    output=str(temp_path),
-                    title=title,
-                )
-                return temp_path.read_text()
-            finally:
-                temp_path.unlink(missing_ok=True)
+            output_path.write_text(html)
+        return html
 
-    def _mtd(self, returns: pd.Series) -> float:
-        """Month-to-date return."""
+    # ------------------------------------------------------------------
+    # Private helpers
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _max_drawdown(r: np.ndarray) -> float:
+        cumulative = np.cumprod(1 + r)
+        running_max = np.maximum.accumulate(cumulative)
+        drawdown = (cumulative - running_max) / running_max
+        return float(drawdown.min()) if len(drawdown) > 0 else 0.0
+
+    @staticmethod
+    def _mtd(returns: pd.Series) -> float:
         if len(returns) == 0:
             return 0.0
-        current_month = returns.index[-1].month
-        current_year = returns.index[-1].year
-        mtd_returns = returns[(returns.index.month == current_month) &
-                             (returns.index.year == current_year)]
-        return (1 + mtd_returns).prod() - 1
+        last = returns.index[-1]
+        mtd_ret = returns[(returns.index.month == last.month) & (returns.index.year == last.year)]
+        return float((1 + mtd_ret).prod() - 1)
 
-    def _ytd(self, returns: pd.Series) -> float:
-        """Year-to-date return."""
+    @staticmethod
+    def _ytd(returns: pd.Series) -> float:
         if len(returns) == 0:
             return 0.0
-        current_year = returns.index[-1].year
-        ytd_returns = returns[returns.index.year == current_year]
-        return (1 + ytd_returns).prod() - 1
+        ytd_ret = returns[returns.index.year == returns.index[-1].year]
+        return float((1 + ytd_ret).prod() - 1)
 
-    def _downside_deviation(self, returns: pd.Series, threshold: float = 0) -> float:
-        """Downside deviation (semi-deviation below threshold)."""
+    @staticmethod
+    def _downside_deviation(returns: pd.Series, threshold: float = 0) -> float:
         downside = returns[returns < threshold]
         if len(downside) == 0:
             return 0.0
-        return np.sqrt(np.mean((downside - threshold) ** 2)) * np.sqrt(252)
+        return float(np.sqrt(np.mean((downside - threshold) ** 2)) * np.sqrt(252))
 
-    def _avg_drawdown(self, returns: pd.Series) -> float:
-        """Average drawdown."""
+    @staticmethod
+    def _avg_drawdown(returns: pd.Series) -> float:
         cumulative = (1 + returns).cumprod()
         running_max = cumulative.cummax()
         drawdowns = (cumulative - running_max) / running_max
-        return drawdowns.mean()
+        return float(drawdowns.mean())
 
-    def _max_drawdown_duration(self, returns: pd.Series) -> int:
-        """Maximum drawdown duration in days."""
+    @staticmethod
+    def _max_drawdown_duration(returns: pd.Series) -> int:
         cumulative = (1 + returns).cumprod()
         running_max = cumulative.cummax()
-
-        # Find underwater periods
         underwater = cumulative < running_max
         groups = (~underwater).cumsum()
         underwater_lengths = underwater.groupby(groups).sum()
-
         return int(underwater_lengths.max()) if len(underwater_lengths) > 0 else 0
 
-    def _omega_ratio(self, returns: pd.Series, threshold: float = 0) -> float:
-        """Omega ratio: probability-weighted gain/loss ratio."""
+    @staticmethod
+    def _omega_ratio(returns: pd.Series, threshold: float = 0) -> float:
         gains = returns[returns > threshold] - threshold
         losses = threshold - returns[returns < threshold]
-
         if losses.sum() == 0:
             return np.inf
-        return gains.sum() / losses.sum()
+        return float(gains.sum() / losses.sum())
 
-    def _information_ratio(
-        self,
-        returns: pd.Series,
-        benchmark: pd.Series,
-    ) -> float:
-        """Information ratio: excess return / tracking error."""
+    def _information_ratio(self, returns: pd.Series, benchmark: pd.Series) -> float:
         excess = returns - benchmark
-        tracking_error = excess.std() * np.sqrt(252)
+        tracking_error = float(excess.std() * np.sqrt(252))
         if tracking_error == 0:
             return 0.0
-        return (excess.mean() * 252) / tracking_error
+        return float(excess.mean() * 252) / tracking_error
 
-    def _treynor_ratio(
-        self,
-        returns: pd.Series,
-        benchmark: pd.Series,
-    ) -> float:
-        """Treynor ratio: excess return / beta."""
-        # Calculate beta
+    def _treynor_ratio(self, returns: pd.Series, benchmark: pd.Series) -> float:
         covariance = np.cov(returns, benchmark)[0, 1]
-        benchmark_var = benchmark.var()
+        benchmark_var = float(benchmark.var())
         beta = covariance / benchmark_var if benchmark_var > 0 else 1
-
-        excess_return = (returns.mean() - self.daily_rf) * 252
+        excess_return = float((returns.mean() - self.daily_rf) * 252)
         return excess_return / beta if beta != 0 else 0.0
 
 
@@ -326,15 +320,15 @@ def compare_strategies(
     for name, returns in strategies.items():
         metrics = calculator.calculate(returns, benchmark)
         results[name] = {
-            'Total Return (%)': metrics.total_return,
-            'CAGR (%)': metrics.cagr,
-            'Volatility (%)': metrics.volatility,
-            'Sharpe': metrics.sharpe_ratio,
-            'Sortino': metrics.sortino_ratio,
-            'Max DD (%)': metrics.max_drawdown,
-            'Calmar': metrics.calmar_ratio,
-            'Win Rate (%)': metrics.win_rate,
-            'VaR 95 (%)': metrics.var_95,
+            "Total Return (%)": metrics.total_return,
+            "CAGR (%)": metrics.cagr,
+            "Volatility (%)": metrics.volatility,
+            "Sharpe": metrics.sharpe_ratio,
+            "Sortino": metrics.sortino_ratio,
+            "Max DD (%)": metrics.max_drawdown,
+            "Calmar": metrics.calmar_ratio,
+            "Win Rate (%)": metrics.win_rate,
+            "VaR 95 (%)": metrics.var_95,
         }
 
     return pd.DataFrame(results).T

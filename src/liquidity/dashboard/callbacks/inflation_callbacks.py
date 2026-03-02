@@ -9,8 +9,10 @@ Handles:
 
 import asyncio
 import logging
+import os
 from typing import Any
 
+import pandas as pd
 from dash import Dash, Input, Output
 
 from liquidity.dashboard.components.inflation import (
@@ -21,6 +23,44 @@ from liquidity.dashboard.components.inflation import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _env_flag(name: str) -> bool:
+    """Return True if environment variable is set to a truthy value."""
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _build_mock_inflation_data() -> dict[str, Any]:
+    """Return deterministic inflation data for fallback mode."""
+    dates = pd.date_range(end=pd.Timestamp.now(tz="UTC"), periods=60, freq="D")
+    breakeven_df = pd.DataFrame(
+        {
+            "timestamp": dates,
+            "bei_10y": [2.05 + (i % 7) * 0.03 for i in range(len(dates))],
+            "bei_5y": [2.15 + (i % 6) * 0.025 for i in range(len(dates))],
+            "forward_5y5y": [2.25 + (i % 5) * 0.02 for i in range(len(dates))],
+            "tips_10y": [1.55 + (i % 4) * 0.02 for i in range(len(dates))],
+            "tips_5y": [1.35 + (i % 4) * 0.02 for i in range(len(dates))],
+        }
+    )
+    oil_rates_df = pd.DataFrame(
+        {
+            "rates_diff": [(-0.3 + (i * 0.02)) for i in range(30)] + [(0.05 + (i * 0.015)) for i in range(30)],
+            "oil_ret": [(-0.08 + (i * 0.004)) for i in range(30)] + [(0.01 + (i * 0.003)) for i in range(30)],
+            "regime": ["normal"] * 30 + ["breakdown"] * 30,
+        }
+    )
+
+    latest = breakeven_df.iloc[-1]
+    return {
+        "breakeven_df": breakeven_df,
+        "oil_rates_df": oil_rates_df,
+        "bei_10y": float(latest["bei_10y"]),
+        "forward_5y5y": float(latest["forward_5y5y"]),
+        "tips_10y": float(latest["tips_10y"]),
+        "oil_corr": 0.42,
+        "regime": "Normal",
+    }
 
 
 def register_inflation_callbacks(app: Dash) -> None:
@@ -105,6 +145,9 @@ async def _fetch_inflation_data_async() -> dict[str, Any]:
         Dictionary with real inflation data.
     """
     import importlib.util
+
+    if _env_flag("LIQUIDITY_DASHBOARD_FORCE_FALLBACK"):
+        return _build_mock_inflation_data()
 
     data: dict[str, Any] = {}
 

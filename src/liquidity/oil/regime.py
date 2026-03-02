@@ -34,6 +34,7 @@ class OilRegime(Enum):
     TIGHT = "tight"  # Supply deficit, bullish
     BALANCED = "balanced"  # Supply-demand equilibrium
     LOOSE = "loose"  # Supply surplus, bearish
+    UNKNOWN = "unknown"  # Data unavailable
 
 
 @dataclass
@@ -149,46 +150,57 @@ class OilRegimeClassifier:
 
         Returns:
             OilRegimeState with current regime classification.
-
-        Raises:
-            ValueError: If required data is unavailable.
         """
-        # Get current data
-        supply_demand = await self._get_supply_demand()
-        inventory = await self._get_inventory()
+        try:
+            # Get current data
+            supply_demand = await self._get_supply_demand()
+            inventory = await self._get_inventory()
 
-        balance = await supply_demand.get_current_balance()
-        inv_analysis = await inventory.get_current_analysis()
-        utilization = await self._get_utilization()
+            balance = await supply_demand.get_current_balance()
+            inv_analysis = await inventory.get_current_analysis()
+            utilization = await self._get_utilization()
 
-        # Score each component
-        inventory_score = self._score_inventory(inv_analysis.vs_5yr_avg_pct)
-        balance_score = self._score_balance(balance.balance)
-        utilization_score = self._score_utilization(utilization)
+            # Score each component
+            inventory_score = self._score_inventory(inv_analysis.vs_5yr_avg_pct)
+            balance_score = self._score_balance(balance.balance)
+            utilization_score = self._score_utilization(utilization)
 
-        # Composite score (-100 to +100, positive = bullish)
-        composite = (inventory_score + balance_score + utilization_score) / 3
+            # Composite score (-100 to +100, positive = bullish)
+            composite = (inventory_score + balance_score + utilization_score) / 3
 
-        # Classify regime
-        regime = self._classify_regime(composite)
-        confidence = self._calculate_confidence(composite)
+            # Classify regime
+            regime = self._classify_regime(composite)
+            confidence = self._calculate_confidence(composite)
 
-        # Identify drivers
-        drivers = self._identify_drivers(
-            inventory_score, balance_score, utilization_score
-        )
+            # Identify drivers
+            drivers = self._identify_drivers(
+                inventory_score, balance_score, utilization_score
+            )
 
-        return OilRegimeState(
-            timestamp=datetime.now(),
-            regime=regime,
-            confidence=confidence,
-            inventory_signal=self._score_to_signal(inventory_score),
-            production_signal=self._score_to_signal(balance_score),
-            utilization_signal=self._score_to_signal(utilization_score),
-            balance_signal=balance.signal,
-            composite_score=composite,
-            drivers=drivers,
-        )
+            return OilRegimeState(
+                timestamp=datetime.now(),
+                regime=regime,
+                confidence=confidence,
+                inventory_signal=self._score_to_signal(inventory_score),
+                production_signal=self._score_to_signal(balance_score),
+                utilization_signal=self._score_to_signal(utilization_score),
+                balance_signal=balance.signal,
+                composite_score=composite,
+                drivers=drivers,
+            )
+        except Exception as e:
+            logger.warning("Oil market regime classification failed: %s", e)
+            return OilRegimeState(
+                timestamp=datetime.now(),
+                regime=OilRegime.UNKNOWN,
+                confidence=0.0,
+                inventory_signal="neutral",
+                production_signal="neutral",
+                utilization_signal="neutral",
+                balance_signal="flat",
+                composite_score=0.0,
+                drivers=[f"Error: {e}"],
+            )
 
     def _score_inventory(self, vs_5yr_pct: float) -> float:
         """Score inventory vs 5yr avg.

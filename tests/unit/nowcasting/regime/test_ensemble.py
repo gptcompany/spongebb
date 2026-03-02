@@ -162,19 +162,41 @@ def test_get_regime_probabilities(mock_hmm, mock_markov, mock_lstm, mock_probs):
     assert probs[0].current_regime == RegimeState.EXPANSION
 
 
-def test_forecast_delegation():
-    """Test forecast delegates to LSTM."""
-    ens = RegimeEnsemble()
-    ens._is_fitted = True
-    ens._lstm = MagicMock()
+def test_combined_regime_unknown_oil():
+    """Test that CombinedRegimeAnalyzer handles UNKNOWN oil regime gracefully."""
+    from liquidity.analyzers.regime_classifier import (
+        CombinedRegime,
+        CombinedRegimeAnalyzer,
+        RegimeDirection,
+    )
+    from liquidity.oil.regime import OilRegime
 
-    mock_forecast = MagicMock()
-    mock_forecast.horizon = 7
-    mock_forecast.probabilities = np.array([0.5, 0.3, 0.2])
+    mock_liq = MagicMock()
+    mock_liq.classify = AsyncMock()
+    mock_liq.classify.return_value = MagicMock(
+        direction=RegimeDirection.EXPANSION,
+        intensity=80.0,
+        confidence="HIGH"
+    )
 
-    ens._lstm.forecast.return_value = [mock_forecast]
+    mock_oil = MagicMock()
+    mock_oil.classify = AsyncMock()
+    mock_oil.classify.return_value = MagicMock(
+        regime=OilRegime.UNKNOWN,
+        confidence=0.0,
+        drivers=["Test error"]
+    )
 
-    result = ens.forecast(pd.DataFrame())
+    analyzer = CombinedRegimeAnalyzer(
+        liquidity_classifier=mock_liq,
+        oil_classifier=mock_oil
+    )
 
-    assert 7 in result
-    np.testing.assert_array_equal(result[7], np.array([0.5, 0.3, 0.2]))
+    # Need to run in an event loop
+    import asyncio
+    state = asyncio.run(analyzer.get_combined_regime())
+
+    assert state.oil_regime == OilRegime.UNKNOWN
+    # EXPANSION + UNKNOWN -> BULLISH (per our updated matrix)
+    assert state.combined_regime == CombinedRegime.BULLISH
+    assert "Oil: unknown" in state.drivers

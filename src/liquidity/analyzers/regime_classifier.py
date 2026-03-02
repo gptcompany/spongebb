@@ -577,12 +577,15 @@ class CombinedRegimeAnalyzer:
             ("EXPANSION", OilRegime.TIGHT): CombinedRegime.VERY_BULLISH,
             ("EXPANSION", OilRegime.BALANCED): CombinedRegime.BULLISH,
             ("EXPANSION", OilRegime.LOOSE): CombinedRegime.NEUTRAL,
+            ("EXPANSION", OilRegime.UNKNOWN): CombinedRegime.BULLISH,  # Liquidity is expansionary
             ("NEUTRAL", OilRegime.TIGHT): CombinedRegime.BULLISH,
             ("NEUTRAL", OilRegime.BALANCED): CombinedRegime.NEUTRAL,
             ("NEUTRAL", OilRegime.LOOSE): CombinedRegime.BEARISH,
+            ("NEUTRAL", OilRegime.UNKNOWN): CombinedRegime.NEUTRAL,
             ("CONTRACTION", OilRegime.TIGHT): CombinedRegime.NEUTRAL,
             ("CONTRACTION", OilRegime.BALANCED): CombinedRegime.BEARISH,
             ("CONTRACTION", OilRegime.LOOSE): CombinedRegime.VERY_BEARISH,
+            ("CONTRACTION", OilRegime.UNKNOWN): CombinedRegime.BEARISH,  # Liquidity is contracting
         }
 
     def __init__(

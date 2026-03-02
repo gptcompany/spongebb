@@ -1,8 +1,15 @@
 """Tests for /workspace/* metric and chart endpoints."""
 
-from unittest.mock import AsyncMock
+from datetime import UTC, datetime
+from unittest.mock import AsyncMock, MagicMock
 
-from liquidity.api.deps import get_net_liquidity_calculator
+import pandas as pd
+
+from liquidity.api.deps import (
+    get_net_liquidity_calculator,
+    get_regime_classifier,
+    get_volatility_signal_calculator,
+)
 from liquidity.openbb_ext.workspace_app import app
 
 
@@ -67,7 +74,7 @@ class TestWorkspaceErrorHandling:
     """Tests for error handling in workspace endpoints."""
 
     def test_metric_calculator_value_error_returns_503(self):
-        """When calculator raises ValueError, endpoint returns 503."""
+        """Net liquidity workspace metric degrades cleanly on ValueError."""
         from fastapi.testclient import TestClient
 
         mock_calc = AsyncMock()
@@ -81,11 +88,17 @@ class TestWorkspaceErrorHandling:
         finally:
             app.dependency_overrides.clear()
 
-        assert resp.status_code == 503
-        assert "QuestDB down" in resp.json()["detail"]
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "value": 0.0,
+            "label": "Net Liquidity unavailable",
+            "delta": None,
+            "unit": "B USD",
+            "sentiment": "DEGRADED",
+        }
 
     def test_metric_calculator_unexpected_error_returns_500(self):
-        """When calculator raises unexpected exception, endpoint returns 500."""
+        """Net liquidity workspace metric returns degraded payload on unexpected errors."""
         from fastapi.testclient import TestClient
 
         mock_calc = AsyncMock()
@@ -99,5 +112,169 @@ class TestWorkspaceErrorHandling:
         finally:
             app.dependency_overrides.clear()
 
-        assert resp.status_code == 500
-        assert resp.json()["detail"] == "Internal server error"
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "value": 0.0,
+            "label": "Net Liquidity unavailable",
+            "delta": None,
+            "unit": "B USD",
+            "sentiment": "ERROR",
+        }
+
+    def test_metric_regime_value_error_returns_degraded_payload(self):
+        """Regime widget should degrade cleanly instead of returning a 5xx."""
+        from fastapi.testclient import TestClient
+
+        mock_classifier = AsyncMock()
+        mock_classifier.classify.side_effect = ValueError("Insufficient data")
+
+        app.dependency_overrides[get_regime_classifier] = lambda: mock_classifier
+        client = TestClient(app)
+
+        try:
+            resp = client.get("/workspace/metrics/regime")
+        finally:
+            app.dependency_overrides.clear()
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "value": 0.0,
+            "label": "Regime unavailable",
+            "delta": None,
+            "unit": "%",
+            "sentiment": "DEGRADED",
+        }
+
+    def test_metric_global_liquidity_value_error_returns_degraded_payload(self):
+        """Global liquidity widget should degrade cleanly instead of returning a 5xx."""
+        from fastapi.testclient import TestClient
+
+        mock_calc = AsyncMock()
+        mock_calc.get_current.side_effect = ValueError("No global liquidity data")
+
+        from liquidity.api.deps import get_global_liquidity_calculator
+
+        app.dependency_overrides[get_global_liquidity_calculator] = lambda: mock_calc
+        client = TestClient(app)
+
+        try:
+            resp = client.get("/workspace/metrics/global-liquidity")
+        finally:
+            app.dependency_overrides.clear()
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "value": 0.0,
+            "label": "Global Liquidity unavailable",
+            "delta": None,
+            "unit": "B USD",
+            "sentiment": "DEGRADED",
+        }
+
+    def test_metric_stealth_qe_value_error_returns_degraded_payload(self):
+        """Stealth QE widget should degrade cleanly instead of returning a 5xx."""
+        from fastapi.testclient import TestClient
+
+        mock_calc = AsyncMock()
+        mock_calc.get_current.side_effect = ValueError("No stealth QE data")
+
+        from liquidity.api.deps import get_stealth_qe_calculator
+
+        app.dependency_overrides[get_stealth_qe_calculator] = lambda: mock_calc
+        client = TestClient(app)
+
+        try:
+            resp = client.get("/workspace/metrics/stealth-qe")
+        finally:
+            app.dependency_overrides.clear()
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "value": 0.0,
+            "label": "Stealth QE unavailable",
+            "delta": None,
+            "unit": "/100",
+            "sentiment": "DEGRADED",
+        }
+
+    def test_metric_volatility_signal_value_error_returns_degraded_payload(self):
+        """Volatility widget should degrade cleanly instead of returning a 5xx."""
+        from fastapi.testclient import TestClient
+
+        mock_calc = AsyncMock()
+        mock_calc.get_current.side_effect = ValueError("No volatility data")
+
+        app.dependency_overrides[get_volatility_signal_calculator] = lambda: mock_calc
+        client = TestClient(app)
+
+        try:
+            resp = client.get("/workspace/metrics/volatility-signal")
+        finally:
+            app.dependency_overrides.clear()
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "value": 0.0,
+            "label": "Vol Signal unavailable",
+            "delta": None,
+            "unit": "/100",
+            "sentiment": "DEGRADED",
+        }
+
+    def test_chart_net_liquidity_value_error_returns_placeholder_chart(self):
+        """Chart widget should return a placeholder figure when data is unavailable."""
+        from fastapi.testclient import TestClient
+
+        mock_calc = AsyncMock()
+        mock_calc.calculate.side_effect = ValueError("QuestDB down")
+
+        app.dependency_overrides[get_net_liquidity_calculator] = lambda: mock_calc
+        client = TestClient(app)
+
+        try:
+            resp = client.get("/workspace/charts/net-liquidity")
+        finally:
+            app.dependency_overrides.clear()
+
+        data = resp.json()
+
+        assert resp.status_code == 200
+        assert data["layout"]["title"]["text"] == "Fed Net Liquidity Index (B USD)"
+        assert "QuestDB down" in data["layout"]["annotations"][0]["text"]
+
+    def test_chart_net_liquidity_uses_timestamp_column_for_x_axis(self):
+        """Chart should serialize timestamp column values instead of pandas indexes."""
+        from fastapi.testclient import TestClient
+
+        history = pd.DataFrame(
+            {
+                "timestamp": [
+                    datetime(2026, 2, 20, tzinfo=UTC),
+                    datetime(2026, 2, 21, tzinfo=UTC),
+                ],
+                "net_liquidity": [5800.5, 5810.0],
+            }
+        )
+        history.index = pd.Index(
+            [
+                pd.Timestamp("2026-02-20T00:00:00Z"),
+                pd.Timestamp("2026-02-21T00:00:00Z"),
+            ]
+        )
+
+        mock_calc = AsyncMock()
+        mock_calc.calculate.return_value = history
+        mock_calc.get_current.return_value = MagicMock()
+
+        app.dependency_overrides[get_net_liquidity_calculator] = lambda: mock_calc
+        client = TestClient(app)
+
+        try:
+            resp = client.get("/workspace/charts/net-liquidity")
+        finally:
+            app.dependency_overrides.clear()
+
+        data = resp.json()
+
+        assert resp.status_code == 200
+        assert data["data"][0]["x"] == ["2026-02-20", "2026-02-21"]
