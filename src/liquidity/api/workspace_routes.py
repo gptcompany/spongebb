@@ -111,7 +111,7 @@ async def workspace_metric_net_liquidity(
             unit="B USD",
             sentiment="DEGRADED",
         )
-    except Exception as e:
+    except Exception:
         logger.exception("Workspace net liquidity metric failed")
         return _fallback_workspace_metric(
             value=0.0,
@@ -158,7 +158,7 @@ async def workspace_metric_global_liquidity(
             unit="B USD",
             sentiment="DEGRADED",
         )
-    except Exception as e:
+    except Exception:
         logger.exception("Workspace global liquidity metric failed")
         return _fallback_workspace_metric(
             value=0.0,
@@ -206,7 +206,7 @@ async def workspace_metric_stealth_qe(
             unit="/100",
             sentiment="DEGRADED",
         )
-    except Exception as e:
+    except Exception:
         logger.exception("Workspace stealth QE metric failed")
         return _fallback_workspace_metric(
             value=0.0,
