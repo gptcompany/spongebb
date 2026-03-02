@@ -84,7 +84,7 @@ async def get_move_zscore(
         raise HTTPException(status_code=503, detail=f"Unable to calculate MOVE Z-Score: {e}") from e
     except Exception as e:
         logger.exception("Unexpected error in get_move_zscore")
-        raise HTTPException(status_code=500, detail=f"Internal server error: {e}") from e
+        raise HTTPException(status_code=500, detail="Internal server error") from e
 
 
 @router.get(
@@ -143,7 +143,7 @@ async def get_vix_term_structure(
         raise HTTPException(status_code=503, detail=f"Unable to calculate VIX term structure: {e}") from e
     except Exception as e:
         logger.exception("Unexpected error in get_vix_term_structure")
-        raise HTTPException(status_code=500, detail=f"Internal server error: {e}") from e
+        raise HTTPException(status_code=500, detail="Internal server error") from e
 
 
 @router.get(
@@ -215,4 +215,4 @@ async def get_volatility_signal(
         raise HTTPException(status_code=503, detail=f"Unable to calculate volatility signal: {e}") from e
     except Exception as e:
         logger.exception("Unexpected error in get_volatility_signal")
-        raise HTTPException(status_code=500, detail=f"Internal server error: {e}") from e
+        raise HTTPException(status_code=500, detail="Internal server error") from e
