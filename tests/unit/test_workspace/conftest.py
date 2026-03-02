@@ -1,18 +1,18 @@
 """Shared fixtures for workspace tests."""
 
-import pytest
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock
 
+import pytest
 from fastapi.testclient import TestClient
 
-from liquidity.openbb_ext.workspace_app import app
 from liquidity.api.deps import (
-    get_net_liquidity_calculator,
     get_global_liquidity_calculator,
-    get_stealth_qe_calculator,
+    get_net_liquidity_calculator,
     get_regime_classifier,
+    get_stealth_qe_calculator,
 )
+from liquidity.openbb_ext.workspace_app import app
 
 
 @pytest.fixture

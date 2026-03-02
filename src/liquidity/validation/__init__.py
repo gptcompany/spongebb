@@ -65,7 +65,12 @@ from .cross_validation import (
 )
 from .freshness import FreshnessChecker, FreshnessCheckResult
 from .quality_score import QualityDetails, QualityReport, QualityScorer
-from .regression import RegressionInputs, RegressionSuiteResult, RegressionTester, RegressionTestResult
+from .regression import (
+    RegressionInputs,
+    RegressionSuiteResult,
+    RegressionTester,
+    RegressionTestResult,
+)
 
 
 class ValidationEngine:

@@ -8,9 +8,9 @@ import pytest
 
 from liquidity.calculators.global_liquidity import (
     CB_UNITS,
-    CBDataFrames,
     FX_CONVERSION_CONFIG,
     TIER_COVERAGE,
+    CBDataFrames,
     GlobalLiquidityCalculator,
     GlobalLiquidityResult,
 )
