@@ -1,4 +1,3 @@
-import pytest
 
 from liquidity.storage.schemas import (
     ALL_SCHEMAS,

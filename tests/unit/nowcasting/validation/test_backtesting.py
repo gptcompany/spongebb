@@ -1,7 +1,8 @@
+from unittest.mock import MagicMock, patch
+
 import numpy as np
 import pandas as pd
 import pytest
-from unittest.mock import MagicMock, patch
 
 from liquidity.nowcasting.validation.backtesting import (
     BacktestConfig,
@@ -45,7 +46,7 @@ def test_run_backtest_success(mock_lss_cls, sample_data):
     # Setup mock model
     mock_model = MagicMock()
     mock_lss_cls.return_value = mock_model
-    
+
     # Mock nowcast result
     mock_nowcast = MagicMock()
     mock_nowcast.mean = 5.5
@@ -53,12 +54,12 @@ def test_run_backtest_success(mock_lss_cls, sample_data):
     mock_nowcast.ci_upper = 5.6
     mock_nowcast.std = 0.05
     mock_model.nowcast.return_value = mock_nowcast
-    
+
     config = BacktestConfig(train_window=200, min_test_periods=10, release_lag=5)
     backtester = NowcastBacktester(config)
-    
+
     summary = backtester.run_backtest(sample_data)
-    
+
     assert summary.n_tests > 0
     assert len(summary.results) == summary.n_tests
     assert isinstance(summary.to_dataframe(), pd.DataFrame)
@@ -73,7 +74,7 @@ def test_run_backtest_insufficient_data(sample_data):
     # min_test_periods = 50 -> should fail
     config = BacktestConfig(train_window=350, min_test_periods=50, release_lag=5)
     backtester = NowcastBacktester(config)
-    
+
     with pytest.raises(ValueError, match="Insufficient data for backtesting"):
         backtester.run_backtest(sample_data)
 
@@ -89,12 +90,12 @@ def test_run_backtest_missing_column():
 def test_expanding_window_backtest(mock_run, sample_data):
     mock_summary = MagicMock()
     mock_run.return_value = mock_summary
-    
+
     backtester = NowcastBacktester()
     summaries = backtester.run_expanding_window_backtest(
         sample_data, initial_window=100, expansion_step=100
     )
-    
+
     # Should run for windows 100, 200, 300
     assert len(summaries) >= 3
 
@@ -103,8 +104,8 @@ def test_expanding_window_backtest(mock_run, sample_data):
 def test_cross_validate(mock_run, sample_data):
     mock_summary = MagicMock()
     mock_run.return_value = mock_summary
-    
+
     backtester = NowcastBacktester()
     summaries = backtester.cross_validate(sample_data, n_folds=3)
-    
+
     assert len(summaries) == 3

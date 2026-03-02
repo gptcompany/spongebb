@@ -1,16 +1,12 @@
-import pandas as pd
 import numpy as np
-import pytest
-from dash import html
+import pandas as pd
 
 from liquidity.dashboard.components.inflation import (
-    create_inflation_panel,
-    create_real_rates_chart,
     create_breakeven_chart,
-    create_oil_rates_scatter,
+    create_inflation_panel,
     create_inflation_summary,
-    INFLATION_CONCERN_THRESHOLD,
-    DEFLATION_RISK_THRESHOLD,
+    create_oil_rates_scatter,
+    create_real_rates_chart,
 )
 
 
@@ -66,12 +62,12 @@ def test_create_inflation_summary_thresholds():
     # Children[0] is Row, Row.children[0] is 10Y BEI Col
     bei_span = summary_red.children.children[0].children[1]
     assert bei_span.style["color"] == "#ff6b6b"
-    
+
     # Test deflation color (Blue)
     summary_blue = create_inflation_summary(bei_10y=1.2) # < 1.5
     bei_span_blue = summary_blue.children.children[0].children[1]
     assert bei_span_blue.style["color"] == "#4dabf7"
-    
+
     # Test normal color (Green)
     summary_green = create_inflation_summary(bei_10y=2.0)
     bei_span_green = summary_green.children.children[0].children[1]

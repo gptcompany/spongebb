@@ -1,12 +1,13 @@
-import pytest
-from unittest.mock import MagicMock, patch, AsyncMock
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pandas as pd
+import pytest
 from dash import Dash
 
 from liquidity.dashboard.callbacks.eia_callbacks import (
+    _fetch_eia_data_async,
     register_eia_callbacks,
     update_eia_panel_logic,
-    _fetch_eia_data_async,
 )
 
 
@@ -25,7 +26,7 @@ def test_register_eia_callbacks(app):
 @patch("importlib.util.find_spec")
 async def test_fetch_eia_data_async_success(mock_find_spec):
     mock_find_spec.return_value = True
-    
+
     # Mock EIACollector
     mock_collector = MagicMock()
     mock_df = pd.DataFrame({
@@ -38,12 +39,12 @@ async def test_fetch_eia_data_async_success(mock_find_spec):
     mock_collector.collect_imports = AsyncMock(return_value=mock_df)
     mock_collector.calculate_utilization_signal = MagicMock(return_value="Bullish")
     mock_collector.close = AsyncMock()
-    
+
     with patch("liquidity.collectors.eia.EIACollector", return_value=mock_collector), \
          patch("liquidity.collectors.eia.CUSHING_CAPACITY_KB", 76000):
-        
+
         data = await _fetch_eia_data_async()
-        
+
         assert "cushing_df" in data
         assert "cushing_utilization_pct" in data
         assert data["refinery_signal"] == "Bullish"
@@ -61,9 +62,9 @@ def test_update_eia_panel_success(mock_fetch):
         "production_df": pd.DataFrame({"test": [1]}),
         "imports_df": pd.DataFrame({"test": [1]})
     }
-    
+
     outputs = update_eia_panel_logic()
-    
+
     # Returns 6 outputs: cushing_fig, cushing_badge, refinery_fig, refinery_badge, production_fig, imports_fig
     assert len(outputs) == 6
     assert data_in_fig(outputs[0])
@@ -78,7 +79,7 @@ def data_in_fig(fig):
 @patch("liquidity.dashboard.callbacks.eia_callbacks._fetch_eia_data")
 def test_update_eia_panel_error(mock_fetch):
     mock_fetch.side_effect = Exception("Fetch failed")
-    
+
     outputs = update_eia_panel_logic()
     assert len(outputs) == 6
     # Badges should indicate data unavailable

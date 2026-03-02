@@ -26,7 +26,7 @@ def forecaster(mock_lstm_model):
     forecaster._is_fitted = True
     forecaster._input_size = 2
     forecaster._scalers = {"feat1": (0.0, 1.0), "feat2": (0.0, 1.0)}
-    
+
     # Pre-populate with mock models for horizons
     forecaster._models = {
         7: mock_lstm_model,
@@ -41,7 +41,7 @@ def test_init_device_selection():
     with patch("torch.cuda.is_available", return_value=False):
         f1 = LSTMRegimeForecaster()
         assert f1.device.type == "cpu"
-        
+
     f2 = LSTMRegimeForecaster(device="cpu")
     assert f2.device.type == "cpu"
 
@@ -49,11 +49,11 @@ def test_init_device_selection():
 def test_fit_insufficient_data():
     """Test fit raises error with insufficient data."""
     f = LSTMRegimeForecaster(sequence_length=10)
-    
+
     # Need at least sequence_length + max(HORIZONS) + 100 = 10 + 30 + 100 = 140
     df = pd.DataFrame({"feat1": np.random.randn(50)})
     labels = pd.Series([RegimeState.EXPANSION] * 50)
-    
+
     with pytest.raises(ValueError, match="Insufficient data: need at least 140 samples"):
         f.fit(df, labels)
 
@@ -63,7 +63,7 @@ def test_fit_mocked_training(mock_train_model):
     """Test fit method with mocked internal training."""
     f = LSTMRegimeForecaster(sequence_length=10, epochs=1, batch_size=2)
     f.HORIZONS = [7]  # Override for faster test
-    
+
     # Create minimum viable data (10 + 7 + 100 = 117 rows)
     n_samples = 120
     df = pd.DataFrame({
@@ -71,14 +71,14 @@ def test_fit_mocked_training(mock_train_model):
         "feat2": np.random.randn(n_samples)
     })
     labels = pd.Series([RegimeState.EXPANSION] * n_samples)
-    
+
     # Mock _train_model to return a dummy model and diagnostics
     mock_model = MagicMock()
     mock_diag = MagicMock()
     mock_train_model.return_value = (mock_model, mock_diag)
-    
+
     f.fit(df, labels)
-    
+
     assert f.is_fitted
     assert 7 in f._models
     assert "feat1" in f._scalers
@@ -107,12 +107,12 @@ def test_forecast_success(forecaster):
         "feat1": [1, 2, 3, 4, 5],
         "feat2": [1, 2, 3, 4, 5]
     })
-    
+
     forecasts = forecaster.forecast(df)
-    
+
     # Models are available for 7, 14, 30
     assert len(forecasts) == 3
-    
+
     f7 = forecasts[0]
     assert f7.horizon == 7
     # Based on the mock model logits [10, -10, -10], class 0 should have ~1.0 prob
@@ -126,12 +126,12 @@ def test_get_regime_probabilities(forecaster):
         "feat1": [1, 2, 3, 4, 5, 6],
         "feat2": [1, 2, 3, 4, 5, 6]
     }, index=pd.date_range("2026-01-01", periods=6))
-    
+
     # Sequence length is 5, total 6 rows. Expect 1 result (for the last row)
     # Actually, the loop goes from i=sequence_length to len(features)
     # range(5, 6) -> 1 iteration
     probs = forecaster.get_regime_probabilities(df, horizon=7)
-    
+
     assert len(probs) == 1
     assert isinstance(probs[0], RegimeProbabilities)
     assert probs[0].current_regime == RegimeState.EXPANSION

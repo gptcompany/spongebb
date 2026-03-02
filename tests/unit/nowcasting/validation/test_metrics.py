@@ -1,17 +1,17 @@
-import numpy as np
-import pandas as pd
-import pytest
 from unittest.mock import MagicMock
+
+import numpy as np
+import pytest
 
 from liquidity.nowcasting.kalman import NowcastResult
 from liquidity.nowcasting.validation.metrics import (
     NowcastMetrics,
+    calculate_bias,
+    calculate_coverage,
+    calculate_hit_rate,
+    calculate_mae,
     calculate_mape,
     calculate_rmse,
-    calculate_mae,
-    calculate_coverage,
-    calculate_bias,
-    calculate_hit_rate,
     compute_all_metrics,
     evaluate_nowcast_results,
 )
@@ -20,7 +20,7 @@ from liquidity.nowcasting.validation.metrics import (
 def test_calculate_mape():
     actual = np.array([100.0, 200.0, 300.0])
     predicted = np.array([110.0, 190.0, 330.0])
-    
+
     # |10/100| = 0.1, |-10/200| = 0.05, |30/300| = 0.1
     # Mean = (0.1 + 0.05 + 0.1) / 3 = 0.25 / 3 = 0.0833...
     # MAPE = 8.333...
@@ -79,7 +79,7 @@ def test_calculate_hit_rate():
     # Signs: [+, -, +] == [+, -, +] -> 3/3 = 100%
     hit_rate = calculate_hit_rate(actual, predicted)
     assert hit_rate == 100.0
-    
+
     predicted_bad = np.array([10, 9, 11, 10])
     # predicted changes: [-1, 2, -1]
     # Signs match: [False, False, False] -> 0%
@@ -109,7 +109,7 @@ def test_evaluate_nowcast_results():
         MagicMock(spec=NowcastResult, mean=19.0, ci_lower=17.0, ci_upper=21.0),
     ]
     actuals = np.array([10.0, 20.0])
-    
+
     metrics = evaluate_nowcast_results(results, actuals)
     assert metrics.n_observations == 2
     assert metrics.mape == 7.5 # (10% + 5%) / 2
@@ -121,12 +121,12 @@ def test_nowcast_metrics_properties():
         mape=2.5, rmse=0.1, mae=0.1, coverage=95.0, bias=0.01, n_observations=100
     )
     assert metrics.passes_threshold is True
-    
+
     bad_metrics = NowcastMetrics(
         mape=4.0, rmse=0.1, mae=0.1, coverage=95.0, bias=0.01, n_observations=100
     )
     assert bad_metrics.passes_threshold is False
-    
+
     d = metrics.to_dict()
     assert d["mape"] == 2.5
     assert "NowcastMetrics" in repr(metrics)
