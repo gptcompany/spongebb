@@ -14,7 +14,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -31,20 +31,6 @@ jobs:
         run: |
           uv run pytest tests/unit -q --tb=short \
             --cov=src/liquidity --cov-report=json:coverage.json --cov-report=term
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Playwright and dependencies
-        run: |
-          npm ci
-          npx playwright install --with-deps chromium
-
-      - name: Browser E2E tests
-        continue-on-error: true  # Requires running server (self-hosted only)
-        run: npm run test:e2e
 
       - name: Extract coverage percentage
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
