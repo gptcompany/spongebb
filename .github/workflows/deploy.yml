@@ -5,28 +5,75 @@ on:
     workflows: ["CI"]
     types: [completed]
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
     runs-on: self-hosted
     timeout-minutes: 15
+    concurrency: deploy
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t ghcr.io/gptcompany/spongebb:latest .
-
-      - name: Deploy API
+      - name: Pull latest code
         run: |
           cd /media/sam/1TB/openbb_liquidity
           git pull --ff-only origin main
-          LIQUIDITY_API_PORT=8003 docker compose up -d --build liquidity-api
 
-      - name: Verify health
+      - name: Build and deploy services
         run: |
-          echo "Waiting for API to start..."
-          sleep 10
-          curl -sf http://localhost:8003/health || (echo "Health check failed!" && exit 1)
-          echo "Deploy successful"
+          cd /media/sam/1TB/openbb_liquidity
+          dotenvx run -- docker compose build liquidity-api liquidity-workspace
+          dotenvx run -- docker compose up -d liquidity-api liquidity-workspace
+
+      - name: Wait for healthy services
+        run: |
+          set -euo pipefail
+
+          wait_healthy() {
+            local url="$1"
+            local name="$2"
+            local timeout_s="${3:-120}"
+            local start
+            start="$(date +%s)"
+            while true; do
+              if curl -fsS --max-time 5 "$url" >/dev/null 2>&1; then
+                echo "OK  $name ($url)"
+                return 0
+              fi
+              if [ $(( $(date +%s) - start )) -ge "$timeout_s" ]; then
+                echo "TIMEOUT  $name ($url) after ${timeout_s}s"
+                docker compose logs --tail=50 "$name" 2>&1 || true
+                return 1
+              fi
+              sleep 3
+            done
+          }
+
+          cd /media/sam/1TB/openbb_liquidity
+          wait_healthy "http://localhost:8003/health" "liquidity-api" 120
+          wait_healthy "http://localhost:6900/health" "liquidity-workspace" 120
+
+      - name: Verify API response
+        run: |
+          curl -sf http://localhost:8003/health | python3 -c "
+          import sys, json
+          h = json.load(sys.stdin)
+          assert h['status'] == 'healthy', f'Unhealthy: {h}'
+          print(f'API: {h[\"status\"]}, QuestDB: {h[\"questdb_connected\"]}, Version: {h[\"version\"]}')
+          "
+
+      - name: Show deployment status
+        if: always()
+        run: |
+          cd /media/sam/1TB/openbb_liquidity
+          echo "=== Container Status ==="
+          docker compose ps
+          echo ""
+          echo "=== Recent Logs (API, last 10) ==="
+          docker compose logs --tail=10 liquidity-api 2>&1 || true

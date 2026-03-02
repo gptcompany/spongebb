@@ -1,25 +1,30 @@
 # Docker Compose for SpongeBB (Global Liquidity Monitor)
-# Services: spongebb-api, QuestDB (time-series), Redis (pub/sub + caching)
+# Services: spongebb-api, spongebb-workspace, QuestDB (time-series), Redis (pub/sub)
 #
 # Usage:
-#   docker compose up -d                    # Start API with external QuestDB/Redis
-#   docker compose --profile isolated up -d # Start all services (isolated)
-#   docker compose --profile dev up -d      # Development mode with hot reload
-#   docker compose --profile dashboard up -d liquidity-dashboard
+#   dotenvx run -- docker compose up -d          # Start API + Workspace (production)
+#   docker compose --profile isolated up -d      # Start all services (isolated infra)
+#   docker compose --profile dev up -d           # Development mode with hot reload
+#   docker compose --profile dashboard up -d     # Dashboard only
 #   docker compose --profile test run --rm liquidity-pytest
 #   docker compose --profile test run --rm liquidity-playwright
 #
-# Port allocation strategy:
-# - API: 8003 (configurable via LIQUIDITY_API_PORT)
-# - Development: Use nautilus-questdb (9000/9009/8812) and nautilus-redis (6379)
-# - Isolated testing: Use liquidity-* containers with alternate ports
+# Always-on services (default profile, no --profile needed):
+#   - spongebb-api      → port 8003 (FastAPI REST)
+#   - spongebb-workspace → port 6900 (OpenBB Terminal Pro backend)
 #
-# Default: Share existing NautilusTrader infrastructure (same QuestDB/Redis)
-# Set profile=isolated to use dedicated containers
+# Both use network_mode: host for direct access to QuestDB/Redis on host.
+# Secrets injected via: dotenvx run -- docker compose up -d
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
 
 services:
   # ===========================================================================
-  # Application Services
+  # Always-On Production Services (default profile)
   # ===========================================================================
 
   liquidity-api:
@@ -28,9 +33,15 @@ services:
       dockerfile: Dockerfile
       target: runtime
     container_name: spongebb-api
-    restart: unless-stopped
-    ports:
-      - "${LIQUIDITY_API_PORT:-8003}:8000"
+    init: true
+    network_mode: host
+    restart: always
+    stop_grace_period: 10s
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: 1g
     environment:
       - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-localhost}
       - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
@@ -38,14 +49,51 @@ services:
       - LIQUIDITY_REDIS_URL=${LIQUIDITY_REDIS_URL:-redis://localhost:6379}
       - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
       - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
+    command: ["python", "-m", "uvicorn", "liquidity.api:app", "--host", "0.0.0.0", "--port", "8003"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 15s
-    networks:
-      - liquidity-network
+
+  liquidity-workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: spongebb-workspace
+    init: true
+    network_mode: host
+    restart: always
+    stop_grace_period: 10s
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+    command: >-
+      openbb-api --app liquidity.openbb_ext.workspace_app:app
+      --host 0.0.0.0 --port 6900
+    environment:
+      - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-localhost}
+      - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
+      - LIQUIDITY_QUESTDB_HTTP_PORT=${LIQUIDITY_QUESTDB_HTTP_PORT:-9000}
+      - LIQUIDITY_REDIS_URL=${LIQUIDITY_REDIS_URL:-redis://localhost:6379}
+      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
+      - LIQUIDITY_EIA_API_KEY=${LIQUIDITY_EIA_API_KEY:-}
+      - LIQUIDITY_CF_ACCESS_ENABLED=${LIQUIDITY_CF_ACCESS_ENABLED:-false}
+      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6900/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ===========================================================================
+  # Profiled Services (dev, isolated, dashboard, test)
+  # ===========================================================================
 
   # API with isolated infrastructure (depends on local QuestDB/Redis)
   liquidity-api-isolated:
@@ -60,7 +108,6 @@ services:
     ports:
       - "${LIQUIDITY_API_PORT:-8003}:8000"
     environment:
-      # Use container names for isolated network
       - LIQUIDITY_QUESTDB_HOST=liquidity-questdb
       - LIQUIDITY_QUESTDB_PORT=9009
       - LIQUIDITY_QUESTDB_HTTP_PORT=9000
@@ -174,38 +221,9 @@ services:
     networks:
       - liquidity-network
 
-  # OpenBB Workspace backend (openbb-api --app, port 6900)
-  liquidity-workspace:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: runtime
-    container_name: spongebb-workspace
-    profiles:
-      - workspace
-    restart: unless-stopped
-    ports:
-      - "${LIQUIDITY_WORKSPACE_PORT:-6900}:6900"
-    command: >-
-      openbb-api --app liquidity.openbb_ext.workspace_app:app
-      --host 0.0.0.0 --port 6900
-    environment:
-      - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-host.docker.internal}
-      - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
-      - LIQUIDITY_QUESTDB_HTTP_PORT=${LIQUIDITY_QUESTDB_HTTP_PORT:-9000}
-      - LIQUIDITY_REDIS_URL=${LIQUIDITY_REDIS_URL:-redis://host.docker.internal:6379}
-      - LIQUIDITY_FRED_API_KEY=${LIQUIDITY_FRED_API_KEY:-}
-      - LIQUIDITY_EIA_API_KEY=${LIQUIDITY_EIA_API_KEY:-}
-      - LIQUIDITY_CF_ACCESS_ENABLED=${LIQUIDITY_CF_ACCESS_ENABLED:-false}
-      - LIQUIDITY_LOG_LEVEL=${LIQUIDITY_LOG_LEVEL:-INFO}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6900/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
-    networks:
-      - liquidity-network
+  # ===========================================================================
+  # Test Services
+  # ===========================================================================
 
   # Deterministic dashboard service used by visual regression tests
   liquidity-dashboard-test:
@@ -284,8 +302,6 @@ services:
     environment:
       - QDB_TELEMETRY_ENABLED=false
       - QDB_HTTP_MIN_ENABLED=false
-      # ILP defaults to enabled
-      # PostgreSQL wire protocol defaults to enabled
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000"]
       interval: 30s
@@ -316,34 +332,11 @@ services:
     networks:
       - liquidity-network
 
-  # Prometheus (commented out - add when metrics needed)
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: liquidity-prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-  #     - prometheus_data:/prometheus
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #     - '--storage.tsdb.path=/prometheus'
-  #   healthcheck:
-  #     test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #   restart: unless-stopped
-  #   networks:
-  #     - liquidity-network
-
 volumes:
   questdb_data:
     name: liquidity-questdb-data
   redis_data:
     name: liquidity-redis-data
-  # prometheus_data:
-  #   name: liquidity-prometheus-data
 
 networks:
   liquidity-network:
