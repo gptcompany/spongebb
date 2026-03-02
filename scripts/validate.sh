@@ -6,7 +6,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 echo "============================================================"
-echo "VALIDATION REPORT: openbb_liquidity"
+echo "VALIDATION REPORT: spongebb"
 echo "============================================================"
 echo ""
 

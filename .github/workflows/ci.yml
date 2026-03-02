@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '*.md', '.planning/**']
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync --frozen --dev
+
+      - name: Lint
+        run: uv run ruff check src/ tests/
+
+      - name: Unit tests with coverage
+        run: |
+          uv run pytest tests/unit -q --tb=short \
+            --cov=src/liquidity --cov-report=json:coverage.json --cov-report=term
+
+      - name: Extract coverage percentage
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: coverage
+        run: |
+          COV=$(python3 -c "import json; print(round(json.load(open('coverage.json'))['totals']['percent_covered'],1))")
+          echo "pct=$COV" >> "$GITHUB_OUTPUT"
+          # Color: red < 40, yellow < 70, green < 90, brightgreen >= 90
+          if (( $(echo "$COV < 40" | bc -l) )); then COLOR="red";
+          elif (( $(echo "$COV < 70" | bc -l) )); then COLOR="yellow";
+          elif (( $(echo "$COV < 90" | bc -l) )); then COLOR="green";
+          else COLOR="brightgreen"; fi
+          echo "color=$COLOR" >> "$GITHUB_OUTPUT"
+
+      - name: Update coverage badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: 2f424df721ea43fb25188b03df5a8317
+          filename: spongebb-coverage.json
+          label: coverage
+          message: "${{ steps.coverage.outputs.pct }}%"
+          color: "${{ steps.coverage.outputs.color }}"

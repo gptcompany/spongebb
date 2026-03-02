@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help build up up-dev down logs ps test-python test-visual test-visual-update workspace workspace-dev workspace-logs
+.PHONY: help build up up-dev down logs ps test-python test-visual test-visual-update workspace workspace-dev workspace-logs api deploy
 
 help:
 	@echo "Targets disponibili:"
@@ -16,6 +16,8 @@ help:
 	@echo "  make workspace           Avvia OpenBB Workspace backend (http://localhost:6900)"
 	@echo "  make workspace-dev       Avvia Workspace con log streaming"
 	@echo "  make workspace-logs      Mostra log Workspace"
+	@echo "  make api                 Avvia SpongeBB API (http://localhost:8002)"
+	@echo "  make deploy              Build + restart API container"
 
 build:
 	docker compose --profile dashboard --profile test build liquidity-dashboard liquidity-dashboard-test liquidity-pytest
@@ -57,3 +59,10 @@ workspace-dev:
 
 workspace-logs:
 	docker compose --profile workspace logs -f liquidity-workspace
+
+api:
+	LIQUIDITY_API_PORT=8002 docker compose up -d liquidity-api
+
+deploy:
+	docker compose build liquidity-api
+	LIQUIDITY_API_PORT=8002 docker compose up -d liquidity-api

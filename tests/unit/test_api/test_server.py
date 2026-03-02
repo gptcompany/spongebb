@@ -91,7 +91,7 @@ class TestOpenAPIDocs:
         response = client.get("/openapi.json")
         assert response.status_code == 200
         data = response.json()
-        assert data["info"]["title"] == "Global Liquidity Monitor API"
+        assert data["info"]["title"] == "SpongeBB API"
         assert data["info"]["version"] == "1.0.0"
 
     def test_openapi_has_endpoints(self, client):
@@ -157,7 +157,7 @@ class TestAppMetadata:
 
     def test_app_title(self):
         """Test app has correct title."""
-        assert app.title == "Global Liquidity Monitor API"
+        assert app.title == "SpongeBB API"
 
     def test_app_version(self):
         """Test app has correct version."""

@@ -14,7 +14,7 @@ from liquidity.openbb_ext.models.stealth_qe import LiquidityStealthQEFetcher
 
 liquidity_provider = Provider(
     name="liquidity",
-    website="https://github.com/gptcompany/openbb_liquidity",
+    website="https://github.com/gptcompany/spongebb",
     description="Global liquidity monitoring: Fed Net Liquidity (Hayes), "
     "Global CB aggregate, Stealth QE detection.",
     credentials=[],

@@ -12,7 +12,7 @@ class APIMetadata(BaseModel):
     """Metadata included in all API responses."""
 
     timestamp: datetime = Field(description="Response generation timestamp")
-    source: str = Field(default="openbb_liquidity", description="Data source identifier")
+    source: str = Field(default="spongebb", description="Data source identifier")
     version: str = Field(default="1.0.0", description="API version")
 
 

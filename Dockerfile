@@ -1,8 +1,8 @@
-# Global Liquidity Monitor - Production Dockerfile
+# SpongeBB - Production Dockerfile
 # Multi-stage build with uv for fast dependency installation
 #
-# Build: docker build -t liquidity-monitor .
-# Run: docker run -p 8000:8000 --env-file .env liquidity-monitor
+# Build: docker build -t spongebb .
+# Run: docker run -p 8002:8000 --env-file .env spongebb
 
 # =============================================================================
 # Stage 1: Production Builder

@@ -1,6 +1,6 @@
 # NautilusTrader Integration Guide
 
-This guide explains how to integrate the Global Liquidity Monitor API with NautilusTrader for macro-filtered trading strategies.
+This guide explains how to integrate the SpongeBB API (formerly Global Liquidity Monitor) with NautilusTrader for macro-filtered trading strategies.
 
 ## Overview
 
@@ -79,7 +79,7 @@ class LiquidityMacroFilter:
 
     def __init__(
         self,
-        api_url: str = "http://localhost:8000",
+        api_url: str = "http://localhost:8002",
         expansion_only: bool = True,
         min_confidence: str = "MEDIUM",
         min_intensity: float = 40.0,
@@ -162,7 +162,7 @@ class LiquidityFilteredStrategy(Strategy):
     def __init__(self, config):
         super().__init__(config)
         self.macro_filter = LiquidityMacroFilter(
-            api_url="http://liquidity-monitor:8000",
+            api_url="http://spongebb-api:8002",
             expansion_only=True,
             min_confidence="MEDIUM",
             min_intensity=40.0,
@@ -211,7 +211,7 @@ class ComprehensiveMacroState:
 class AdvancedLiquidityFilter:
     """Advanced filter combining regime, stress, and calendar signals."""
 
-    def __init__(self, api_url: str = "http://localhost:8000"):
+    def __init__(self, api_url: str = "http://localhost:8002"):
         self.api_url = api_url
 
     async def get_comprehensive_state(self) -> ComprehensiveMacroState:
@@ -323,7 +323,7 @@ class ResilientMacroFilter:
 
     def __init__(
         self,
-        api_url: str = "http://localhost:8000",
+        api_url: str = "http://localhost:8002",
         fallback_permission: str = "REDUCED",
         retry_attempts: int = 3,
     ):
@@ -367,7 +367,7 @@ class ResilientMacroFilter:
 ```python
 """Health check for API connectivity."""
 
-async def check_api_health(api_url: str = "http://localhost:8000") -> dict:
+async def check_api_health(api_url: str = "http://localhost:8002") -> dict:
     """Check API health and connectivity.
 
     Returns:
@@ -407,7 +407,7 @@ async def check_api_health(api_url: str = "http://localhost:8000") -> dict:
 
 ```bash
 # API Configuration
-LIQUIDITY_API_URL=http://localhost:8000
+LIQUIDITY_API_URL=http://localhost:8002
 
 # Filter Settings
 MACRO_FILTER_EXPANSION_ONLY=true
@@ -419,10 +419,10 @@ MACRO_FILTER_MIN_INTENSITY=40.0
 
 ```yaml
 services:
-  liquidity-monitor:
-    image: liquidity-monitor:latest
+  spongebb-api:
+    image: ghcr.io/gptcompany/spongebb:latest
     ports:
-      - "8000:8000"
+      - "8002:8000"
     environment:
       - FRED_API_KEY=${FRED_API_KEY}
       - QUESTDB_HOST=questdb
@@ -435,9 +435,9 @@ services:
   nautilus-trader:
     image: nautilus-trader:latest
     environment:
-      - LIQUIDITY_API_URL=http://liquidity-monitor:8000
+      - LIQUIDITY_API_URL=http://spongebb-api:8000
     depends_on:
-      liquidity-monitor:
+      spongebb-api:
         condition: service_healthy
 ```
 

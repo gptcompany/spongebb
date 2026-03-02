@@ -23,7 +23,7 @@ class TestAPIMetadata:
     def test_create_with_defaults(self):
         """Test creation with default values."""
         meta = APIMetadata(timestamp=datetime.now(UTC))
-        assert meta.source == "openbb_liquidity"
+        assert meta.source == "spongebb"
         assert meta.version == "1.0.0"
         assert meta.timestamp is not None
 

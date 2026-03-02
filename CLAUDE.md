@@ -2,9 +2,10 @@
 
 ## Project Overview
 
-**Global Liquidity Monitor** - FAANG-grade macro liquidity tracking using OpenBB SDK.
+**SpongeBB** — FAANG-grade macro liquidity tracking using OpenBB SDK.
 
 Based on Arthur Hayes' framework for tracking central bank liquidity flows.
+Formerly `openbb_liquidity`, now `spongebb` — soaking up central bank flows like a sponge.
 
 ## Tech Stack
 

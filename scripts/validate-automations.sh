@@ -1,11 +1,11 @@
 #!/bin/bash
-# Automated validation script for openbb_liquidity
+# Automated validation script for spongebb
 # Run via cron: */30 * * * * /media/sam/1TB/openbb_liquidity/scripts/validate-automations.sh
 # Features: Auto-fix on failure + Discord alerts
 
 cd /media/sam/1TB/openbb_liquidity
 
-LOG_FILE="/tmp/openbb_validation_$(date +%Y%m%d).log"
+LOG_FILE="/tmp/spongebb_validation_$(date +%Y%m%d).log"
 DISCORD_WEBHOOK="${DISCORD_WEBHOOK_URL:-}"
 DOTENVX="/home/sam/.local/bin/dotenvx"
 
@@ -70,7 +70,7 @@ fix_and_retry "GitHub Issues >=35" \
 
 # GitHub Milestones - auto-fix by triggering sync
 fix_and_retry "GitHub Milestones =10" \
-    "[ \$(gh api repos/gptcompany/openbb_liquidity/milestones | jq length) -eq 10 ]" \
+    "[ \$(gh api repos/gptcompany/spongebb/milestones | jq length) -eq 10 ]" \
     "gh workflow run 'Sync Planning' && sleep 60"
 
 # Last Workflow - auto-fix by re-running
@@ -178,11 +178,11 @@ if [ -n "$DISCORD_WEBHOOK" ]; then
     if [ "$check_failed" -gt 0 ]; then
         curl -s -X POST "$DISCORD_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d "{\"content\": \"⚠️ **openbb_liquidity Validation Failed**\n❌ $check_failed checks failed\n🔧 $fixes_applied auto-fixes attempted\nSee: $LOG_FILE\"}"
+            -d "{\"content\": \"⚠️ **spongebb Validation Failed**\n❌ $check_failed checks failed\n🔧 $fixes_applied auto-fixes attempted\nSee: $LOG_FILE\"}"
     elif [ "$fixes_applied" -gt 0 ]; then
         curl -s -X POST "$DISCORD_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d "{\"content\": \"🔧 **openbb_liquidity Auto-Fixed**\n✅ $check_passed passed\n🔧 $fixes_applied issues auto-fixed\"}"
+            -d "{\"content\": \"🔧 **spongebb Auto-Fixed**\n✅ $check_passed passed\n🔧 $fixes_applied issues auto-fixed\"}"
     fi
 fi
 

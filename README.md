@@ -1,73 +1,120 @@
-# Global Liquidity Monitor
+<p align="center">
+  <img src="https://img.shields.io/badge/🧽-SpongeBB-yellow?style=for-the-badge&labelColor=blue" alt="SpongeBB"/>
+</p>
 
-FAANG-grade macro liquidity tracking using OpenBB SDK, based on Arthur Hayes' framework.
+<h1 align="center">SpongeBB</h1>
+<p align="center"><em>Who lives in a pineapple under the sea of liquidity?</em></p>
+
+<p align="center">
+  <a href="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gptprojectmanager/2f424df721ea43fb25188b03df5a8317/raw/spongebb-coverage.json" alt="Coverage">
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python" alt="Python">
+  <a href="https://github.com/gptcompany/spongebb/blob/main/LICENSE"><img src="https://img.shields.io/github/license/gptcompany/spongebb?style=flat-square" alt="License"></a>
+  <img src="https://img.shields.io/github/last-commit/gptcompany/spongebb?style=flat-square" alt="Last Commit">
+  <img src="https://img.shields.io/github/issues/gptcompany/spongebb?style=flat-square" alt="Issues">
+</p>
+
+---
+
+**SpongeBB** soaks up global central bank liquidity so you don't have to.
+
+FAANG-grade macro liquidity tracker based on [Arthur Hayes' framework](https://cryptohayes.medium.com/). Tracks the Fed, ECB, BoJ, and PBoC balance sheets, then squeezes out regime signals, stealth QE scores, and net liquidity indicators — all in real-time. Think of it as your Bikini Bottom early warning system for when the money printer goes brrr (or stops).
+
+## What's in the Krabby Patty?
+
+- **Net Liquidity Index** — `WALCL - TGA - RRP` (the secret formula)
+- **Global Liquidity Index** — Fed + ECB + BoJ + PBoC aggregated in USD
+- **Stealth QE Score** — detects hidden liquidity injections (sneaky, like Plankton)
+- **Regime Classification** — EXPANSION / CONTRACTION with confidence scoring
+- **Risk Metrics** — VaR, CVaR, funding stress indicators
+- **Nowcasting & Forecasting** — HMM regime detection, Kalman filtering, LSTM
+- **News Intelligence** — RSS feeds + NLP sentiment from central bank communications
+- **NautilusTrader Integration** — macro filter for algorithmic trading strategies
 
 ## Quick Start
 
 ```bash
-# Development
-uv run uvicorn liquidity.api:app --reload
+# Install dependencies
+uv sync
 
-# Docker (API)
+# Run API server (port 8002)
+uv run uvicorn liquidity.api:app --reload --port 8002
+
+# Docker (production)
 docker compose up -d
-curl http://localhost:8000/health
+curl http://localhost:8002/health
 ```
 
-## Dashboard Container (Step-by-Step)
+## Dashboard
 
 ```bash
-# 1) Build immagini necessarie
+# Build and run dashboard container
 make build
-
-# 2) Avvia dashboard container
 make up
+# Open http://localhost:8050
 
-# 3) Apri dashboard
-# http://localhost:8050
-
-# 4) Log runtime
-make logs
-
-# 5) Stop
-make down
+# Development mode with hot reload
+make up-dev
 ```
 
-## Runtime Tests in Container (Step-by-Step)
+## Testing
 
 ```bash
-# Python unit tests (inside test-runtime image)
+# Unit tests (local)
+uv run pytest tests/unit -v
+
+# Unit tests (containerized — avoids sandbox limits)
 make test-python
 
-# Visual regression (Playwright + dashboard test deterministica)
+# Visual regression (Playwright)
 make test-visual
 
-# Aggiorna baseline visual (quando cambi UI intenzionalmente)
-make test-visual-update
+# Coverage
+uv run pytest tests/unit --cov=src --cov-report=html
 ```
 
-Note: questo workflow evita i limiti runtime del sandbox (`/dev/urandom`) eseguendo i test in container.
+## Architecture
 
-## Features
-
-- Net Liquidity Index (WALCL - TGA - RRP)
-- Global Liquidity Index (Fed + ECB + BoJ + PBoC)
-- Stealth QE Score detection
-- Regime Classification (EXPANSION/CONTRACTION)
-
-## Visual E2E (Playwright)
-
-```bash
-# Install JS test dependencies
-npm install
-
-# Install browser binaries
-npx playwright install chromium
-
-# Create/refresh visual baselines
-npm run test:visual:update
-
-# Run visual regression checks
-npm run test:visual
+```
+src/liquidity/
+  api/          # FastAPI REST server (port 8002)
+  collectors/   # Data collectors (FRED, ECB, BoJ, PBoC, Yahoo)
+  core/         # Net liquidity, global liquidity, stealth QE engines
+  dashboard/    # Plotly Dash interactive dashboard
+  models/       # Pydantic models and data schemas
+  openbb_ext/   # OpenBB Provider extension (3 Fetcher adapters)
+  risk/         # VaR, CVaR, portfolio risk analytics
+  storage/      # QuestDB time-series storage
+  forecast/     # HMM, Kalman, LSTM nowcasting
+  news/         # RSS + NLP central bank news intelligence
 ```
 
-Playwright tests run the dashboard in deterministic fallback mode (fixed timestamp, no live API dependency) to reduce snapshot flakiness in CI.
+## Data Sources
+
+| Source | Data | Frequency |
+|--------|------|-----------|
+| FRED API | Fed, ECB, BoJ, rates, bonds | Daily/Weekly |
+| ECB SDW | ECB balance sheet | Weekly |
+| NY Fed | SOFR, RRP, repo | Daily |
+| Yahoo Finance | MOVE, VIX, FX | Real-time |
+| BIS SDMX | Eurodollar, intl banking | Quarterly |
+
+## CI/CD
+
+Push to `main` triggers:
+1. **CI** (ubuntu-latest) — lint, test, coverage badge update
+2. **Deploy** (self-hosted) — Docker build + rolling restart on Workstation
+
+## API Docs
+
+With the server running, visit:
+- Swagger UI: `http://localhost:8002/docs`
+- ReDoc: `http://localhost:8002/redoc`
+
+## License
+
+MIT
+
+---
+
+<p align="center"><em>"I'm ready! I'm ready!" — SpongeBB, every time the Fed prints money</em></p>

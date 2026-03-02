@@ -67,8 +67,9 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
 
 
 app = FastAPI(
-    title="Global Liquidity Monitor API",
+    title="SpongeBB API",
     description=(
+        "SpongeBB — soaking up global liquidity so you don't have to. "
         "Real-time liquidity regime classification based on Arthur Hayes' framework. "
         "Tracks Fed, ECB, BoJ, PBoC balance sheets and calculates Net Liquidity, "
         "Global Liquidity, and Stealth QE indicators."
@@ -135,7 +136,7 @@ async def root() -> JSONResponse:
     """Root endpoint redirecting to documentation."""
     return JSONResponse(
         content={
-            "message": "Global Liquidity Monitor API",
+            "message": "SpongeBB API — soaking up liquidity since 2026",
             "docs": "/docs",
             "health": "/health",
         }

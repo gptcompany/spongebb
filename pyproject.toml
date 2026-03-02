@@ -1,14 +1,14 @@
 [project]
-name = "liquidity-monitor"
-version = "0.1.0"
-description = "FAANG-grade global liquidity monitoring system based on Arthur Hayes' framework"
+name = "spongebb"
+version = "1.0.0"
+description = "SpongeBB — FAANG-grade global liquidity monitoring, soaking up central bank flows like a sponge"
 readme = "README.md"
 authors = [
     { name = "gptprojectmanager", email = "gptprojectmanager@gmail.com" }
 ]
 requires-python = ">=3.11"
 license = { text = "MIT" }
-keywords = ["liquidity", "central-bank", "macro", "trading", "openbb"]
+keywords = ["liquidity", "central-bank", "macro", "trading", "openbb", "spongebb"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
