@@ -1,0 +1,67 @@
+{
+  "sessionId": "session-1771686241878-ags560",
+  "name": "gsd-23-pre-execute",
+  "savedAt": "2026-02-21T15:04:01.878Z",
+  "stats": {
+    "tasks": 0,
+    "agents": 0,
+    "memoryEntries": 2,
+    "totalSize": 1164
+  },
+  "data": {
+    "memory": {
+      "entries": {
+        "gsd:openbb_liquidity:5": {
+          "key": "gsd:openbb_liquidity:5",
+          "value": {
+            "status": "in_progress",
+            "phase": 5,
+            "started_at": "2026-01-23T17:55:00Z",
+            "plans": [
+              "05-01",
+              "05-02",
+              "05-03",
+              "05-04",
+              "05-05"
+            ],
+            "agents": {
+              "05-01_tic": "a9987ad",
+              "05-02_fed_custody": "aeb7e07",
+              "05-03_stress": "a5a2dd8",
+              "05-04_risk_etfs": "a2988f9",
+              "05-05_cofer": "acb60a6"
+            }
+          },
+          "metadata": {},
+          "storedAt": "2026-01-23T17:57:12.194Z",
+          "accessCount": 0,
+          "lastAccessed": "2026-01-23T17:57:12.194Z"
+        },
+        "gsd:openbb_liquidity:6": {
+          "key": "gsd:openbb_liquidity:6",
+          "value": {
+            "status": "completed",
+            "phase": 6,
+            "started_at": "2026-01-24T09:07:00Z",
+            "completed_at": "2026-01-24T09:30:00Z",
+            "plans": [
+              "06-01",
+              "06-02",
+              "06-03"
+            ],
+            "results": {
+              "06-01": "CreditCollector created with SLOOS and CP methods",
+              "06-02": "BISCollector created with bulk CSV download and caching",
+              "06-03": "Collectors registered and exports added"
+            }
+          },
+          "metadata": {},
+          "storedAt": "2026-01-24T09:24:11.427Z",
+          "accessCount": 0,
+          "lastAccessed": "2026-01-24T09:24:11.427Z"
+        }
+      },
+      "version": "3.0.0"
+    }
+  }
+}

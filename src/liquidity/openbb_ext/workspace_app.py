@@ -10,11 +10,18 @@ The app object already contains all 14 existing endpoints with:
 
 import logging
 
-from liquidity.api.server import app  # noqa: F401
-from liquidity.api.workspace_routes import workspace_router
-from liquidity.config import get_settings
+from liquidity.config import configure_openbb_credentials, get_settings
 
 logger = logging.getLogger(__name__)
+
+# Configure OpenBB credentials BEFORE importing app (which may trigger collectors)
+if configure_openbb_credentials():
+    logger.info("OpenBB credentials configured for workspace")
+else:
+    logger.warning("OpenBB credentials not configured - FRED endpoints will fail")
+
+from liquidity.api.server import app  # noqa: E402, F401
+from liquidity.api.workspace_routes import workspace_router  # noqa: E402
 
 # Conditionally add Cloudflare Access middleware (defense-in-depth)
 _settings = get_settings()

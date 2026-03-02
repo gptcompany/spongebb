@@ -17,9 +17,11 @@ from fastapi import APIRouter, HTTPException, Query
 
 from liquidity.api.deps import (
     GlobalLiquidityCalcDep,
+    MOVEZScoreCalcDep,
     NetLiquidityCalcDep,
     RegimeClassifierDep,
     StealthQECalcDep,
+    VolatilitySignalCalcDep,
 )
 from liquidity.api.workspace_schemas import WorkspaceMetric
 
@@ -326,4 +328,83 @@ async def workspace_chart_global_liquidity(
         raise HTTPException(status_code=503, detail=str(e)) from e
     except Exception as e:
         logger.exception("Workspace global liquidity chart failed")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
+
+
+# =============================================================================
+# Volatility Metric Endpoints
+# =============================================================================
+
+
+@workspace_router.get(
+    "/metrics/move-zscore",
+    response_model=WorkspaceMetric,
+    summary="MOVE Z-Score KPI",
+    openapi_extra={
+        "widget_config": {
+            "name": "MOVE Z-Score",
+            "description": "Bond volatility Z-Score (20-day rolling)",
+            "category": "Macro Liquidity",
+            "subCategory": "Volatility",
+            "type": "metric",
+            "refetchInterval": 3600000,
+            "staleTime": 1800000,
+            "gridData": {"w": 10, "h": 4},
+        }
+    },
+)
+async def workspace_metric_move_zscore(
+    calculator: MOVEZScoreCalcDep,
+) -> WorkspaceMetric:
+    """MOVE Z-Score as Workspace metric widget."""
+    try:
+        result = await calculator.get_current()
+        return WorkspaceMetric(
+            value=round(result.zscore, 2),
+            label=f"MOVE Z-Score ({result.signal.value})",
+            delta=round(result.current_move, 1),
+            unit="Z",
+            sentiment=result.signal.value,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=503, detail=str(e)) from e
+    except Exception as e:
+        logger.exception("Workspace MOVE Z-Score metric failed")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
+
+
+@workspace_router.get(
+    "/metrics/volatility-signal",
+    response_model=WorkspaceMetric,
+    summary="Volatility Signal KPI",
+    openapi_extra={
+        "widget_config": {
+            "name": "Volatility Signal",
+            "description": "Composite MOVE + VIX signal (-100 to +100)",
+            "category": "Macro Liquidity",
+            "subCategory": "Volatility",
+            "type": "metric",
+            "refetchInterval": 3600000,
+            "staleTime": 1800000,
+            "gridData": {"w": 10, "h": 4},
+        }
+    },
+)
+async def workspace_metric_volatility_signal(
+    calculator: VolatilitySignalCalcDep,
+) -> WorkspaceMetric:
+    """Composite volatility signal as Workspace metric widget."""
+    try:
+        result = await calculator.get_current()
+        return WorkspaceMetric(
+            value=round(result.composite_score, 1),
+            label=f"Vol Signal ({result.regime.value})",
+            delta=None,
+            unit="/100",
+            sentiment=result.regime.value,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=503, detail=str(e)) from e
+    except Exception as e:
+        logger.exception("Workspace volatility signal metric failed")
         raise HTTPException(status_code=500, detail="Internal server error") from e

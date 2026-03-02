@@ -43,47 +43,52 @@ def register_eia_callbacks(app: Dash) -> None:
         prevent_initial_call=False,
     )
     def update_eia_panel(n_intervals: int) -> tuple:  # noqa: ARG001
-        """Update all EIA panel components.
+        """Update all EIA panel components."""
+        return update_eia_panel_logic()
 
-        Triggered by auto-refresh interval.
 
-        Returns:
-            Tuple of updated component values for EIA panel.
-        """
-        logger.info("EIA panel update triggered")
+def update_eia_panel_logic() -> tuple:
+    """Logic for updating all EIA panel components.
 
-        try:
-            # Fetch EIA data
-            data = _fetch_eia_data()
+    Separated from callback registration for testability.
 
-            # Cushing tab
-            cushing_fig = create_cushing_chart(data.get("cushing_df"))
-            cushing_badge = create_cushing_utilization_badge(
-                data.get("cushing_utilization_pct")
-            )
+    Returns:
+        Tuple of updated component values for EIA panel.
+    """
+    logger.info("EIA panel update triggered")
 
-            # Refinery tab
-            refinery_fig = create_refinery_chart(data.get("refinery_df"))
-            refinery_badge = create_refinery_signal_badge(data.get("refinery_signal"))
+    try:
+        # Fetch EIA data
+        data = _fetch_eia_data()
 
-            # Supply tab
-            production_fig, imports_fig = create_supply_chart(
-                data.get("production_df"),
-                data.get("imports_df"),
-            )
+        # Cushing tab
+        cushing_fig = create_cushing_chart(data.get("cushing_df"))
+        cushing_badge = create_cushing_utilization_badge(
+            data.get("cushing_utilization_pct")
+        )
 
-            return (
-                cushing_fig,
-                cushing_badge,
-                refinery_fig,
-                refinery_badge,
-                production_fig,
-                imports_fig,
-            )
+        # Refinery tab
+        refinery_fig = create_refinery_chart(data.get("refinery_df"))
+        refinery_badge = create_refinery_signal_badge(data.get("refinery_signal"))
 
-        except Exception as e:
-            logger.error("EIA panel update failed: %s", e)
-            return _get_eia_error_response()
+        # Supply tab
+        production_fig, imports_fig = create_supply_chart(
+            data.get("production_df"),
+            data.get("imports_df"),
+        )
+
+        return (
+            cushing_fig,
+            cushing_badge,
+            refinery_fig,
+            refinery_badge,
+            production_fig,
+            imports_fig,
+        )
+
+    except Exception as e:
+        logger.error("EIA panel update failed: %s", e)
+        return _get_eia_error_response()
 
 
 def _fetch_eia_data() -> dict[str, Any]:

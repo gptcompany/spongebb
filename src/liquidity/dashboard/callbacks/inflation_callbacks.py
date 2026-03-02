@@ -41,47 +41,52 @@ def register_inflation_callbacks(app: Dash) -> None:
         prevent_initial_call=False,
     )
     def update_inflation_panel(n_intervals: int) -> tuple:  # noqa: ARG001
-        """Update all inflation panel components.
+        """Update all inflation panel components."""
+        return update_inflation_panel_logic()
 
-        Triggered by auto-refresh interval.
 
-        Returns:
-            Tuple of updated component values for inflation panel.
-        """
-        logger.info("Inflation panel update triggered")
+def update_inflation_panel_logic() -> tuple:
+    """Logic for updating all inflation panel components.
 
-        try:
-            # Fetch inflation data
-            data = _fetch_inflation_data()
+    Separated from callback registration for testability.
 
-            # Real rates chart
-            real_rates_fig = create_real_rates_chart(data.get("breakeven_df"))
+    Returns:
+        Tuple of updated component values for inflation panel.
+    """
+    logger.info("Inflation panel update triggered")
 
-            # Breakeven chart
-            breakeven_fig = create_breakeven_chart(data.get("breakeven_df"))
+    try:
+        # Fetch inflation data
+        data = _fetch_inflation_data()
 
-            # Oil-rates scatter
-            scatter_fig = create_oil_rates_scatter(data.get("oil_rates_df"))
+        # Real rates chart
+        real_rates_fig = create_real_rates_chart(data.get("breakeven_df"))
 
-            # Summary
-            summary = create_inflation_summary(
-                bei_10y=data.get("bei_10y"),
-                forward_5y5y=data.get("forward_5y5y"),
-                tips_10y=data.get("tips_10y"),
-                oil_corr=data.get("oil_corr"),
-                regime=data.get("regime"),
-            )
+        # Breakeven chart
+        breakeven_fig = create_breakeven_chart(data.get("breakeven_df"))
 
-            return (
-                real_rates_fig,
-                breakeven_fig,
-                scatter_fig,
-                summary,
-            )
+        # Oil-rates scatter
+        scatter_fig = create_oil_rates_scatter(data.get("oil_rates_df"))
 
-        except Exception as e:
-            logger.error("Inflation panel update failed: %s", e)
-            return _get_inflation_error_response()
+        # Summary
+        summary = create_inflation_summary(
+            bei_10y=data.get("bei_10y"),
+            forward_5y5y=data.get("forward_5y5y"),
+            tips_10y=data.get("tips_10y"),
+            oil_corr=data.get("oil_corr"),
+            regime=data.get("regime"),
+        )
+
+        return (
+            real_rates_fig,
+            breakeven_fig,
+            scatter_fig,
+            summary,
+        )
+
+    except Exception as e:
+        logger.error("Inflation panel update failed: %s", e)
+        return _get_inflation_error_response()
 
 
 def _fetch_inflation_data() -> dict[str, Any]:

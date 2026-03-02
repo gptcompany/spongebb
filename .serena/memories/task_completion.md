@@ -1,0 +1,4 @@
+- After changes, run at least the relevant targeted tests.
+- For Python code, default check is `uv run ruff check src/ tests/` plus the affected pytest scope.
+- For dashboard/visual changes, run `npm ci && npm run test:visual` or `make test-visual`; if the UI intentionally changed, regenerate snapshots with `make test-visual-update`.
+- CI currently enforces lint + unit tests; visual regression is separate, so changes in dashboard code may need both paths checked.

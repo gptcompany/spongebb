@@ -1,0 +1,13 @@
+# Suggested Commands
+- Install deps: `uv sync`
+- Run unit tests: `uv run pytest tests/unit -v`
+- Run integration tests: `uv run pytest tests/integration -v -m integration`
+- Run all pytest tests: `uv run pytest -v`
+- Run coverage: `uv run pytest tests/unit --cov=src --cov-report=html`
+- Run visual tests: `npm run test:visual`
+- Update visual snapshots: `npm run test:visual:update`
+- Run API locally: `uv run uvicorn liquidity.api:app --reload --port 8003`
+- Run dashboard locally: `uv run python -m liquidity.dashboard --host 127.0.0.1 --port 8050`
+- Lint: `uv run ruff check src tests`
+- Type-check: `uv run mypy src`
+- Make targets in README: `make test-python`, `make test-visual`, `make up`, `make up-dev`

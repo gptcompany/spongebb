@@ -1,0 +1,22 @@
+[     502ms] [ERROR] TypeError: Cannot read properties of null (reading 'props')
+    at ya (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:114273)
+    at ba (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:114930)
+    at ha (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:114672)
+    at http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:202470
+    at Tf (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:189:448)
+    at ff (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:202251)
+    at Id (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:165:137)
+    at Xb (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:200:284)
+    at Rk (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:198:114)
+    at xb (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:196:166) @ http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:120
+[     518ms] TypeError: Cannot read properties of null (reading 'props')
+    at ya (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:114273)
+    at ba (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:114930)
+    at ha (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:114672)
+    at http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:202470
+    at Tf (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:189:448)
+    at ff (http://127.0.0.1:8050/_dash-component-suites/dash/dash-renderer/build/dash_renderer.v4_0_0m1770218690.min.js:2:202251)
+    at Id (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:165:137)
+    at Xb (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:200:284)
+    at Rk (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:198:114)
+    at xb (http://127.0.0.1:8050/_dash-component-suites/dash/deps/react-dom@18.v4_0_0m1770218690.3.1.min.js:196:166)

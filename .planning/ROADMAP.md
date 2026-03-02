@@ -187,10 +187,10 @@ Plans:
 **Research topics**: Kalman filter for macro nowcasting, Markov switching regression, Dynamic Factor Models
 
 Plans:
-- [ ] 12-01: Liquidity nowcast engine (Kalman filter on HF proxies) | wave:1 | effort:L
-- [ ] 12-02: PBoC balance sheet estimator (SHIBOR/DR007 regression) | wave:1 | effort:M
-- [ ] 12-03: Regime forecaster (HMM + LSTM) | wave:2 | effort:L
-- [ ] 12-04: Correlation trend predictor (rolling beta forecast) | wave:2 | effort:M
+- [x] 12-01: Liquidity nowcast engine (Kalman filter on HF proxies) | wave:1 | effort:L
+- [x] 12-02: PBoC balance sheet estimator (SHIBOR/DR007 regression) | wave:1 | effort:M
+- [x] 12-03: Regime forecaster (HMM + LSTM) | wave:2 | effort:L
+- [x] 12-04: Correlation trend predictor (rolling beta forecast) | wave:2 | effort:M
 
 ### Phase 13: Risk Metrics
 **Goal**: Professional risk analytics for portfolio management
@@ -266,10 +266,10 @@ Plans:
 **Research topics**: CFTC JSON API endpoint, COT report fields, net positioning calculation
 
 Plans:
-- [ ] 17-01: CFTC COT collector (weekly disaggregated) | wave:1 | effort:M
-- [ ] 17-02: Positioning metrics (commercial/non-commercial ratio) | wave:1 | effort:M
-- [ ] 17-03: Extreme positioning alerts (percentile thresholds) | wave:2 | effort:M
-- [ ] 17-04: Dashboard positioning heatmap | wave:2 | effort:M
+- [x] 17-01: CFTC COT collector (weekly disaggregated) | wave:1 | effort:M
+- [x] 17-02: Positioning metrics (commercial/non-commercial ratio) | wave:1 | effort:M
+- [x] 17-03: Extreme positioning alerts (percentile thresholds) | wave:2 | effort:M
+- [x] 17-04: Dashboard positioning heatmap | wave:2 | effort:M
 
 ### Phase 18: Oil Term Structure
 **Goal**: Contango/backwardation signals from futures curve

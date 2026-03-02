@@ -14,8 +14,11 @@ from liquidity.analyzers import RegimeClassifier
 from liquidity.analyzers.correlation_engine import CorrelationEngine
 from liquidity.calculators import (
     GlobalLiquidityCalculator,
+    MOVEZScoreCalculator,
     NetLiquidityCalculator,
     StealthQECalculator,
+    VIXTermStructureCalculator,
+    VolatilitySignalCalculator,
 )
 from liquidity.calendar.registry import CalendarRegistry
 from liquidity.collectors.fx import FXCollector
@@ -159,6 +162,27 @@ def get_calendar_registry() -> CalendarRegistry:
     return CalendarRegistry()
 
 
+def get_move_zscore_calculator(
+    settings: Annotated[Settings, Depends(get_settings_cached)],
+) -> MOVEZScoreCalculator:
+    """Get MOVE Z-Score calculator instance."""
+    return MOVEZScoreCalculator(settings=settings)
+
+
+def get_vix_term_structure_calculator(
+    settings: Annotated[Settings, Depends(get_settings_cached)],
+) -> VIXTermStructureCalculator:
+    """Get VIX Term Structure calculator instance."""
+    return VIXTermStructureCalculator(settings=settings)
+
+
+def get_volatility_signal_calculator(
+    settings: Annotated[Settings, Depends(get_settings_cached)],
+) -> VolatilitySignalCalculator:
+    """Get Volatility Signal calculator instance."""
+    return VolatilitySignalCalculator(settings=settings)
+
+
 # Type aliases for dependency injection
 StorageDep = Annotated[QuestDBStorage, Depends(get_storage)]
 SettingsDep = Annotated[Settings, Depends(get_settings_cached)]
@@ -172,3 +196,6 @@ FXCollectorDep = Annotated[FXCollector, Depends(get_fx_collector)]
 StressCollectorDep = Annotated[StressIndicatorCollector, Depends(get_stress_collector)]
 CorrelationEngineDep = Annotated[CorrelationEngine, Depends(get_correlation_engine)]
 CalendarRegistryDep = Annotated[CalendarRegistry, Depends(get_calendar_registry)]
+MOVEZScoreCalcDep = Annotated[MOVEZScoreCalculator, Depends(get_move_zscore_calculator)]
+VIXTermCalcDep = Annotated[VIXTermStructureCalculator, Depends(get_vix_term_structure_calculator)]
+VolatilitySignalCalcDep = Annotated[VolatilitySignalCalculator, Depends(get_volatility_signal_calculator)]

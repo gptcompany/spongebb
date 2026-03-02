@@ -26,9 +26,10 @@ from liquidity.api.routers import (
     metrics_router,
     regime_router,
     stress_router,
+    volatility_router,
 )
 from liquidity.api.schemas import ErrorResponse, HealthResponse
-from liquidity.config import get_settings
+from liquidity.config import configure_openbb_credentials, get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan handler.
 
     Performs startup and shutdown tasks:
-    - Startup: Log server start, optionally verify QuestDB connection
+    - Startup: Log server start, configure OpenBB credentials, verify QuestDB
     - Shutdown: Clean up resources
 
     Args:
@@ -49,6 +50,12 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     """
     # Startup
     logger.info("Starting Global Liquidity Monitor API")
+
+    # Configure OpenBB credentials (FRED, EIA) for all endpoints
+    if configure_openbb_credentials():
+        logger.info("OpenBB credentials configured successfully")
+    else:
+        logger.warning("OpenBB credentials not configured - FRED endpoints may fail")
 
     # Optionally verify QuestDB connection
     try:
@@ -98,6 +105,7 @@ app.include_router(regime_router)
 app.include_router(metrics_router)
 app.include_router(fx_router)
 app.include_router(stress_router)
+app.include_router(volatility_router)
 app.include_router(correlations_router)
 app.include_router(calendar_router)
 

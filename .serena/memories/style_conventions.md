@@ -1,0 +1,4 @@
+- Code style is Python-first with type hints and concise docstrings used throughout core modules and tests.
+- Linting uses Ruff with `line-length = 100`, target Python 3.11, import sorting via Ruff/isort, and first-party package name `liquidity`.
+- Tests use pytest with strict markers (`unit`, `integration`, `e2e`, `slow`) and `pytest-asyncio` in auto mode.
+- Naming is conventional snake_case for Python functions/modules and descriptive test names like `test_*`.

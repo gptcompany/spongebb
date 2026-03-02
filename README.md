@@ -26,9 +26,11 @@ FAANG-grade macro liquidity tracker based on [Arthur Hayes' framework](https://c
 - **Global Liquidity Index** — Fed + ECB + BoJ + PBoC aggregated in USD
 - **Stealth QE Score** — detects hidden liquidity injections (sneaky, like Plankton)
 - **Regime Classification** — EXPANSION / CONTRACTION with confidence scoring
+- **Volatility Signals** — MOVE Z-Score, VIX term structure, composite risk signal
 - **Risk Metrics** — VaR, CVaR, funding stress indicators
 - **Nowcasting & Forecasting** — HMM regime detection, Kalman filtering, LSTM
 - **News Intelligence** — RSS feeds + NLP sentiment from central bank communications
+- **OpenBB Workspace** — 24 widget per Terminal Pro (metriche, tabelle, chart)
 - **NautilusTrader Integration** — macro filter for algorithmic trading strategies
 
 ## Quick Start
@@ -73,16 +75,51 @@ make test-visual
 uv run pytest tests/unit --cov=src --cov-report=html
 ```
 
+## API Endpoints
+
+### Liquidity
+| Endpoint | Description |
+|----------|-------------|
+| `GET /liquidity/net` | Net Liquidity Index (Hayes formula) |
+| `GET /liquidity/global` | Global CB Liquidity (7 central banks) |
+| `GET /regime/current` | Regime classification (EXPANSION/CONTRACTION) |
+| `GET /metrics/stealth-qe` | Stealth QE Score (hidden injections) |
+
+### Volatility
+| Endpoint | Description |
+|----------|-------------|
+| `GET /volatility/move-zscore` | MOVE Bond Volatility Z-Score (20-day rolling) |
+| `GET /volatility/vix-term-structure` | VIX/VIX3M ratio + contango/backwardation |
+| `GET /volatility/signal` | Composite volatility signal (-100 to +100) |
+
+### Other
+| Endpoint | Description |
+|----------|-------------|
+| `GET /stress/indicators` | Funding market stress (SOFR, repo, CP spreads) |
+| `GET /correlations` | Asset-liquidity correlations |
+| `GET /calendar/next` | Upcoming liquidity-impacting events |
+| `GET /fx/dxy` | DXY and FX pairs |
+
+## OpenBB Workspace
+
+24 widget for [OpenBB Terminal Pro](https://pro.openbb.co) — connect via Custom Backend to `http://<host>:6900`.
+
+```bash
+# Start workspace backend
+make workspace-local    # local dev (with dotenvx)
+make workspace          # Docker
+```
+
 ## Architecture
 
 ```
 src/liquidity/
-  api/          # FastAPI REST server (port 8003)
+  api/          # FastAPI REST server (port 8003), 17 endpoints
+  calculators/  # Net liquidity, global liquidity, stealth QE, MOVE Z-Score, VIX term structure
   collectors/   # Data collectors (FRED, ECB, BoJ, PBoC, Yahoo)
-  core/         # Net liquidity, global liquidity, stealth QE engines
   dashboard/    # Plotly Dash interactive dashboard
   models/       # Pydantic models and data schemas
-  openbb_ext/   # OpenBB Provider extension (3 Fetcher adapters)
+  openbb_ext/   # OpenBB Workspace backend (24 widgets)
   risk/         # VaR, CVaR, portfolio risk analytics
   storage/      # QuestDB time-series storage
   forecast/     # HMM, Kalman, LSTM nowcasting

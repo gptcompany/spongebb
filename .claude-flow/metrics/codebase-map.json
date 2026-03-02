@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-03-02T18:19:53.286Z",
+  "projectRoot": "/media/sam/1TB/openbb_liquidity",
+  "structure": {
+    "hasPackageJson": true,
+    "hasTsConfig": false,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1772475593287
+}

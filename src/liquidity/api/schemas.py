@@ -278,3 +278,50 @@ class CalendarEventsResponse(BaseModel):
     count: int = Field(description="Number of events returned")
     events: list[CalendarEventData] = Field(description="List of calendar events")
     metadata: APIMetadata = Field(description="Response metadata")
+
+
+class MOVEZScoreResponse(BaseModel):
+    """Response model for /volatility/move-zscore endpoint."""
+
+    current_move: float = Field(description="Current MOVE index value")
+    mean_move: float = Field(description="Rolling 20-day mean")
+    std_move: float = Field(description="Rolling 20-day standard deviation")
+    zscore: float = Field(description="Z-Score value")
+    percentile: float = Field(ge=0, le=100, description="Percentile rank (0-100)")
+    signal: str = Field(
+        description="Signal: EXTREME_HIGH, HIGH, NORMAL, LOW, EXTREME_LOW"
+    )
+    as_of_date: datetime = Field(description="Data timestamp")
+    metadata: APIMetadata = Field(description="Response metadata")
+
+
+class VIXTermStructureResponse(BaseModel):
+    """Response model for /volatility/vix-term-structure endpoint."""
+
+    vix: float = Field(description="Current VIX value")
+    vix3m: float = Field(description="Current VIX3M value")
+    ratio: float = Field(description="VIX/VIX3M ratio")
+    spread: float = Field(description="VIX - VIX3M absolute spread")
+    structure: str = Field(description="Term structure: CONTANGO, FLAT, BACKWARDATION")
+    as_of_date: datetime = Field(description="Data timestamp")
+    metadata: APIMetadata = Field(description="Response metadata")
+
+
+class VolatilitySignalResponse(BaseModel):
+    """Response model for /volatility/signal endpoint."""
+
+    composite_score: float = Field(
+        ge=-100, le=100, description="Composite volatility score (-100 to +100)"
+    )
+    regime: str = Field(description="Volatility regime: RISK_ON, NEUTRAL, RISK_OFF")
+    move_zscore: float = Field(description="MOVE Z-Score value")
+    move_signal: str = Field(description="MOVE signal classification")
+    vix: float = Field(description="Current VIX value")
+    vix3m: float = Field(description="Current VIX3M value")
+    vix_ratio: float = Field(description="VIX/VIX3M ratio")
+    vix_structure: str = Field(description="VIX term structure classification")
+    move_component: float = Field(description="MOVE contribution to composite score")
+    term_component: float = Field(description="VIX term contribution to composite score")
+    level_component: float = Field(description="VIX level contribution to composite score")
+    as_of_date: datetime = Field(description="Data timestamp")
+    metadata: APIMetadata = Field(description="Response metadata")
