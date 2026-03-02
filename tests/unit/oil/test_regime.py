@@ -37,7 +37,8 @@ class TestOilRegimeEnum:
         assert "tight" in members
         assert "balanced" in members
         assert "loose" in members
-        assert len(members) == 3
+        assert "unknown" in members
+        assert len(members) == 4
 
 
 class TestOilRegimeState:
