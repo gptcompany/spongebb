@@ -103,10 +103,7 @@ def _extract_trades(
             exit_idx = min(j, n - 1)
             exit_px = px[exit_idx]
 
-            if direction == 1:
-                ret = (exit_px / entry_px) - 1
-            else:
-                ret = (entry_px / exit_px) - 1
+            ret = exit_px / entry_px - 1 if direction == 1 else entry_px / exit_px - 1
 
             trades.append(
                 {
@@ -263,10 +260,7 @@ class VectorBTBacktester:
         """
         n_assets = len(prices.columns)
 
-        if weights is None:
-            w = 1.0 / n_assets
-        else:
-            w = None  # use per-asset weights
+        w = 1.0 / n_assets if weights is None else None
 
         # Run per-asset and combine equity curves
         combined_equity = pd.Series(0.0, index=prices.index)
