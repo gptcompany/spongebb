@@ -7,7 +7,7 @@
 # =============================================================================
 # Stage 1: Production Builder
 # =============================================================================
-FROM python:3.11-slim AS builder-prod
+FROM python:3.14-slim AS builder-prod
 
 WORKDIR /app
 
@@ -30,7 +30,7 @@ RUN uv sync --frozen --no-dev
 # =============================================================================
 # Stage 2: Test Builder (includes dev dependencies like pytest)
 # =============================================================================
-FROM python:3.11-slim AS builder-test
+FROM python:3.14-slim AS builder-test
 
 WORKDIR /app
 
@@ -53,7 +53,7 @@ RUN uv sync --frozen --dev
 # =============================================================================
 # Stage 3: Runtime (production)
 # =============================================================================
-FROM python:3.11-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 WORKDIR /app
 
@@ -94,7 +94,7 @@ CMD ["python", "-m", "uvicorn", "liquidity.api:app", "--host", "0.0.0.0", "--por
 # =============================================================================
 # Stage 4: Runtime (tests)
 # =============================================================================
-FROM python:3.11-slim AS test-runtime
+FROM python:3.14-slim AS test-runtime
 
 WORKDIR /app
 
