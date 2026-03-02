@@ -21,8 +21,8 @@ Formerly `openbb_liquidity`, now `spongebb` — soaking up central bank flows li
 
 | Service | Porta | Comando | Descrizione |
 |---------|-------|---------|-------------|
-| SpongeBB API | 8003 | `make api-local` | REST API FastAPI (14 endpoint) |
-| Workspace | 6900 | `make workspace-local` | OpenBB Workspace backend (19 widget) |
+| SpongeBB API | 8003 | `make api-local` | REST API FastAPI con endpoint core + widget metadata |
+| Workspace | 6900 | `make workspace-local` | OpenBB Workspace backend sullo stesso FastAPI app |
 | Dashboard | 8050 | `make up` | Plotly Dash (Docker) |
 
 ### Avvio locale (sviluppo)
@@ -80,7 +80,7 @@ Terminal Pro NON e' self-hostable. E' il frontend SaaS di OpenBB.
 1. Accedi a `pro.openbb.co`
 2. Settings > Data Connectors > Custom Backend
 3. URL: `http://<WORKSTATION_IP>:6900` (es. `http://192.168.1.111:6900`)
-4. I 19 widget vengono scoperti automaticamente da `/widgets.json`
+4. I widget vengono scoperti automaticamente da `/widgets.json`
 
 ### Widget disponibili
 
@@ -92,7 +92,7 @@ Terminal Pro NON e' self-hostable. E' il frontend SaaS di OpenBB.
 | Regime Combined | `/regime/combined` | table |
 | Stealth QE | `/metrics/stealth-qe` | table |
 | Stress Indicators | `/stress/indicators` | table |
-| + 13 workspace metrics/charts | `/workspace/...` | vari |
+| + 8 workspace metrics/charts | `/workspace/...` | vari |
 
 ## Key Formulas
 
@@ -155,7 +155,7 @@ See: `.planning/reference/appscript_v3.4.1.md` for weights and thresholds.
 Push to main --> CI (ubuntu-latest) --> Deploy (self-hosted)
 ```
 
-- **CI** (`.github/workflows/ci.yml`): lint (ruff) + test (pytest) + coverage badge
+- **CI** (`.github/workflows/ci.yml`): lint (ruff) + test (pytest) + browser E2E + coverage badge
 - **Deploy** (`.github/workflows/deploy.yml`): Docker build + rolling restart
 - **Coverage badge**: Gist `2f424df721ea43fb25188b03df5a8317`
 - **Self-hosted runner**: `sam-workstation` (ID 47)
@@ -171,6 +171,9 @@ make test-python
 
 # Visual regression (Playwright)
 make test-visual
+
+# Browser E2E (Playwright)
+npm run test:e2e
 
 # Coverage
 uv run pytest tests/unit --cov=src --cov-report=html

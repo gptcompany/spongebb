@@ -38,6 +38,9 @@ node_modules/
 dist/
 build/
 
+# Branding assets
+logo.png
+
 # Secrets (never commit)
 *.pem
 *.key

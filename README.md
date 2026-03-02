@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/🧽-SpongeBB-yellow?style=for-the-badge&labelColor=blue" alt="SpongeBB"/>
+  <img src="./logo.png" alt="SpongeBB logo" width="220"/>
 </p>
 
 <h1 align="center">SpongeBB</h1>
@@ -30,7 +30,7 @@ FAANG-grade macro liquidity tracker based on [Arthur Hayes' framework](https://c
 - **Risk Metrics** — VaR, CVaR, funding stress indicators
 - **Nowcasting & Forecasting** — HMM regime detection, Kalman filtering, LSTM
 - **News Intelligence** — RSS feeds + NLP sentiment from central bank communications
-- **OpenBB Workspace** — 24 widget per Terminal Pro (metriche, tabelle, chart)
+- **OpenBB Workspace** — custom backend for OpenBB Terminal Pro (core API widgets + `/workspace/*` metrics/charts)
 - **NautilusTrader Integration** — macro filter for algorithmic trading strategies
 
 ## Quick Start
@@ -39,24 +39,26 @@ FAANG-grade macro liquidity tracker based on [Arthur Hayes' framework](https://c
 # Install dependencies
 uv sync
 
-# Run API server (port 8003)
+# Run API server locally (port 8003)
 uv run uvicorn liquidity.api:app --reload --port 8003
 
-# Docker (production)
-docker compose up -d
+# Docker API (host port 8003 -> container 8000)
+make api
 curl http://localhost:8003/health
 ```
 
 ## Dashboard
 
 ```bash
-# Build and run dashboard container
+# Build images once
 make build
-make up
-# Open http://localhost:8050
 
-# Development mode with hot reload
+# Run dashboard container (port 8050)
+make up
+
+# Development mode with hot reload (port 8050)
 make up-dev
+# Open http://localhost:8050
 ```
 
 ## Testing
@@ -71,9 +73,14 @@ make test-python
 # Visual regression (Playwright)
 make test-visual
 
+# Browser E2E interactions (Playwright)
+npm run test:e2e
+
 # Coverage
 uv run pytest tests/unit --cov=src --cov-report=html
 ```
+
+For panel-level validation and diagnosis of degraded dashboard sections, see `docs/dashboard_panel_health_plan.md`.
 
 ## API Endpoints
 
@@ -102,7 +109,9 @@ uv run pytest tests/unit --cov=src --cov-report=html
 
 ## OpenBB Workspace
 
-24 widget for [OpenBB Terminal Pro](https://pro.openbb.co) — connect via Custom Backend to `http://<host>:6900`.
+OpenBB Terminal Pro is not self-hosted: SpongeBB exposes a Custom Backend for [OpenBB Terminal Pro](https://pro.openbb.co) at `http://<host>:6900`.
+
+The backend exposes widget-enabled endpoints from both the core REST routers (`/liquidity/*`, `/regime/*`, `/metrics/*`, etc.) and the dedicated `/workspace/*` metric/chart routes.
 
 ```bash
 # Start workspace backend
@@ -114,15 +123,15 @@ make workspace          # Docker
 
 ```
 src/liquidity/
-  api/          # FastAPI REST server (port 8003), 17 endpoints
+  api/          # FastAPI REST server (port 8003 externally; container listens on 8000)
   calculators/  # Net liquidity, global liquidity, stealth QE, MOVE Z-Score, VIX term structure
   collectors/   # Data collectors (FRED, ECB, BoJ, PBoC, Yahoo)
   dashboard/    # Plotly Dash interactive dashboard
   models/       # Pydantic models and data schemas
-  openbb_ext/   # OpenBB Workspace backend (24 widgets)
+  openbb_ext/   # OpenBB Workspace backend mounted on the shared FastAPI app
   risk/         # VaR, CVaR, portfolio risk analytics
   storage/      # QuestDB time-series storage
-  forecast/     # HMM, Kalman, LSTM nowcasting
+  nowcasting/   # HMM, Kalman, LSTM nowcasting
   news/         # RSS + NLP central bank news intelligence
 ```
 
@@ -139,7 +148,7 @@ src/liquidity/
 ## CI/CD
 
 Push to `main` triggers:
-1. **CI** (ubuntu-latest) — lint, test, coverage badge update
+1. **CI** (ubuntu-latest) — lint, pytest, browser E2E, coverage badge update
 2. **Deploy** (self-hosted) — Docker build + rolling restart on Workstation
 
 ## API Docs
