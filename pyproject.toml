@@ -58,14 +58,10 @@ dependencies = [
     # Phase 12: Nowcasting & Forecasting
     "hmmlearn>=0.3.3", # HMM regime detection
     "statsmodels>=0.14.0", # State-space models, Markov switching
-    "filterpy>=1.4.5", # Kalman filter (prototyping)
     "torch>=2.0.0", # LSTM forecasting (CPU)
-    # Phase 13: Risk Metrics
-    "riskfolio-lib>=7.0.0", # Portfolio risk analytics (VaR, CVaR)
     # Phase 14: News Intelligence
     "feedparser>=6.0.0", # RSS feed parsing
     "transformers>=4.40.0", # NLP translation (OPUS-MT, Qwen)
-    "sentencepiece>=0.2.0", # Required by some OPUS models
     "fredapi>=0.5.2",
 ]
 

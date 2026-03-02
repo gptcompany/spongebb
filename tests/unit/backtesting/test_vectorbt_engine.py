@@ -1,26 +1,23 @@
-"""Tests for VectorBT backtesting engine."""
+"""Tests for pure numpy backtesting engine."""
 
 import numpy as np
 import pandas as pd
 import pytest
 
 from liquidity.backtesting.engine.vectorbt_engine import (
-    HAS_VECTORBT,
     BacktestResult,
     VectorBTBacktester,
 )
 
 
-@pytest.mark.skipif(not HAS_VECTORBT, reason="vectorbt not installed")
 class TestVectorBTBacktester:
-    """Test VectorBT backtester."""
+    """Test backtester."""
 
     @pytest.fixture
     def sample_prices(self) -> pd.Series:
         """Create sample price series with uptrend."""
         np.random.seed(42)
         dates = pd.date_range("2020-01-01", periods=500, freq="B")
-        # Random walk with slight upward drift
         returns = np.random.normal(0.0003, 0.015, 500)
         prices = 100 * np.exp(np.cumsum(returns))
         return pd.Series(prices, index=dates, name="price")
@@ -28,7 +25,6 @@ class TestVectorBTBacktester:
     @pytest.fixture
     def sample_signals(self, sample_prices: pd.Series) -> pd.Series:
         """Create sample signal series."""
-        # Alternating signals every 50 days
         signals = np.zeros(len(sample_prices))
         for i in range(0, len(signals), 100):
             signals[i : i + 50] = 1  # Long
@@ -64,7 +60,6 @@ class TestVectorBTBacktester:
         result = bt.run_backtest(sample_prices, sample_signals)
 
         assert result.initial_capital == 50000
-        # First equity value should be close to initial capital
         assert abs(result.equity_curve.iloc[0] - 50000) < 1000
 
     def test_commission_affects_returns(
@@ -77,7 +72,6 @@ class TestVectorBTBacktester:
         result_low = bt_low.run_backtest(sample_prices, sample_signals)
         result_high = bt_high.run_backtest(sample_prices, sample_signals)
 
-        # Higher commission should give lower returns
         assert result_low.total_return >= result_high.total_return
 
     def test_max_drawdown_exists(
@@ -87,9 +81,22 @@ class TestVectorBTBacktester:
         bt = VectorBTBacktester()
         result = bt.run_backtest(sample_prices, sample_signals)
 
-        # VectorBT reports max drawdown as a percentage (positive value = loss)
         assert result.max_drawdown is not None
         assert not pd.isna(result.max_drawdown)
+        assert result.max_drawdown <= 0
+
+    def test_trades_extracted(
+        self, sample_prices: pd.Series, sample_signals: pd.Series
+    ) -> None:
+        """Trades DataFrame should contain extracted trades."""
+        bt = VectorBTBacktester()
+        result = bt.run_backtest(sample_prices, sample_signals)
+
+        assert result.total_trades > 0
+        assert isinstance(result.trades, pd.DataFrame)
+        if not result.trades.empty:
+            assert "entry_date" in result.trades.columns
+            assert "return_pct" in result.trades.columns
 
     def test_multi_asset_backtest(self) -> None:
         """Multi-asset backtest should work."""
@@ -122,7 +129,6 @@ class TestVectorBTBacktester:
         """Parameter sweep should return results DataFrame."""
 
         def make_signals(window: int, threshold: float) -> pd.Series:
-            """Generate simple momentum signals."""
             returns = sample_prices.pct_change(window)
             signals = pd.Series(0, index=sample_prices.index)
             signals[returns > threshold] = 1
@@ -140,6 +146,23 @@ class TestVectorBTBacktester:
         assert len(results) == 4  # 2x2 combinations
         assert "sharpe" in results.columns
         assert "return" in results.columns
+
+    def test_benchmark_return(self, sample_prices: pd.Series, sample_signals: pd.Series) -> None:
+        """Benchmark return should be calculated when provided."""
+        benchmark = sample_prices * 1.001  # slightly different
+        bt = VectorBTBacktester()
+        result = bt.run_backtest(sample_prices, sample_signals, benchmark=benchmark)
+
+        assert result.benchmark_return != 0.0
+
+    def test_all_flat_signals(self, sample_prices: pd.Series) -> None:
+        """All-flat signals should produce zero trades."""
+        flat = pd.Series(0, index=sample_prices.index)
+        bt = VectorBTBacktester()
+        result = bt.run_backtest(sample_prices, flat)
+
+        assert result.total_trades == 0
+        assert result.total_return == pytest.approx(0.0, abs=0.1)
 
 
 class TestBacktestResult:
@@ -195,6 +218,5 @@ class TestBacktestResult:
         )
 
         repr_str = repr(result)
-        # equity_curve should not be in repr (field(repr=False))
         assert "equity_curve" not in repr_str
         assert "sharpe_ratio" in repr_str

@@ -1,4 +1,5 @@
-"""Tests for performance metrics calculator."""
+"""Tests for performance metrics calculator (pure numpy)."""
+
 import tempfile
 from pathlib import Path
 
@@ -7,14 +8,12 @@ import pandas as pd
 import pytest
 
 from liquidity.backtesting.engine.metrics import (
-    HAS_QUANTSTATS,
     MetricsCalculator,
     PerformanceMetrics,
     compare_strategies,
 )
 
 
-@pytest.mark.skipif(not HAS_QUANTSTATS, reason="quantstats not installed")
 class TestMetricsCalculator:
     """Test metrics calculator."""
 
@@ -22,12 +21,11 @@ class TestMetricsCalculator:
     def sample_returns(self) -> pd.Series:
         """Create sample daily returns."""
         np.random.seed(42)
-        dates = pd.date_range('2020-01-01', periods=500, freq='B')
-        # Positive drift with volatility
+        dates = pd.date_range("2020-01-01", periods=500, freq="B")
         returns = pd.Series(
             np.random.normal(0.0003, 0.015, 500),
             index=dates,
-            name='returns'
+            name="returns",
         )
         return returns
 
@@ -35,11 +33,11 @@ class TestMetricsCalculator:
     def benchmark_returns(self) -> pd.Series:
         """Create benchmark returns."""
         np.random.seed(123)
-        dates = pd.date_range('2020-01-01', periods=500, freq='B')
+        dates = pd.date_range("2020-01-01", periods=500, freq="B")
         return pd.Series(
             np.random.normal(0.0002, 0.012, 500),
             index=dates,
-            name='benchmark'
+            name="benchmark",
         )
 
     def test_calculate_returns_metrics(self, sample_returns):
@@ -56,7 +54,6 @@ class TestMetricsCalculator:
         calc = MetricsCalculator(risk_free_rate=0.05)
         metrics = calc.calculate(sample_returns)
 
-        # For random returns with slight drift, Sharpe typically -1 to 2
         assert -2 < metrics.sharpe_ratio < 3
 
     def test_sortino_ratio_calculated(self, sample_returns):
@@ -64,9 +61,7 @@ class TestMetricsCalculator:
         calc = MetricsCalculator()
         metrics = calc.calculate(sample_returns)
 
-        # Sortino should be a finite number (not NaN) when there's downside
         assert np.isfinite(metrics.sortino_ratio)
-        # Sortino typically differs from Sharpe
         assert metrics.sortino_ratio != metrics.sharpe_ratio
 
     def test_max_drawdown_negative(self, sample_returns):
@@ -99,13 +94,11 @@ class TestMetricsCalculator:
             result = calc.generate_tearsheet(
                 sample_returns,
                 output_path=output_path,
-                title="Test Report"
+                title="Test Report",
             )
 
-            # Should return HTML content
             assert result is not None
-            assert '<html' in result.lower() or '<!doctype' in result.lower()
-            # File should exist and contain same HTML
+            assert "<html" in result.lower() or "<!doctype" in result.lower()
             assert output_path.exists()
             content = output_path.read_text()
             assert content == result
@@ -116,34 +109,40 @@ class TestMetricsCalculator:
         result = calc.generate_tearsheet(
             sample_returns,
             output_path=None,
-            title="Test Report"
+            title="Test Report",
         )
 
-        # Should return HTML content
         assert result is not None
-        assert '<html' in result.lower() or '<!doctype' in result.lower()
+        assert "<html" in result.lower() or "<!doctype" in result.lower()
+
+    def test_var_cvar_reasonable(self, sample_returns):
+        """VaR and CVaR should be negative for returns with downside."""
+        calc = MetricsCalculator()
+        metrics = calc.calculate(sample_returns)
+
+        assert metrics.var_95 < 0
+        assert metrics.cvar_95 <= metrics.var_95
 
 
-@pytest.mark.skipif(not HAS_QUANTSTATS, reason="quantstats not installed")
 class TestCompareStrategies:
     """Test strategy comparison."""
 
     def test_compare_multiple_strategies(self):
         """Compare should return DataFrame with all strategies."""
         np.random.seed(42)
-        dates = pd.date_range('2020-01-01', periods=200, freq='B')
+        dates = pd.date_range("2020-01-01", periods=200, freq="B")
 
         strategies = {
-            'aggressive': pd.Series(np.random.normal(0.001, 0.02, 200), index=dates),
-            'conservative': pd.Series(np.random.normal(0.0003, 0.008, 200), index=dates),
+            "aggressive": pd.Series(np.random.normal(0.001, 0.02, 200), index=dates),
+            "conservative": pd.Series(np.random.normal(0.0003, 0.008, 200), index=dates),
         }
 
         result = compare_strategies(strategies)
 
         assert isinstance(result, pd.DataFrame)
-        assert 'aggressive' in result.index
-        assert 'conservative' in result.index
-        assert 'Sharpe' in result.columns
+        assert "aggressive" in result.index
+        assert "conservative" in result.index
+        assert "Sharpe" in result.columns
 
 
 class TestPerformanceMetrics:
