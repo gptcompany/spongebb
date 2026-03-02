@@ -18,7 +18,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from liquidity.api.deps import get_storage
-from liquidity.config import get_settings
 from liquidity.api.routers import (
     calendar_router,
     correlations_router,
@@ -29,6 +28,7 @@ from liquidity.api.routers import (
     stress_router,
 )
 from liquidity.api.schemas import ErrorResponse, HealthResponse
+from liquidity.config import get_settings
 
 logger = logging.getLogger(__name__)
 

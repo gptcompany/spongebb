@@ -130,7 +130,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["ARG002"]  # Unused method argument - pytest fixtures as side effects
+"tests/**" = ["ARG001", "ARG002"]  # Unused function/method arguments - pytest fixtures, Starlette handlers
 
 [tool.ruff.lint.isort]
 known-first-party = ["liquidity"]

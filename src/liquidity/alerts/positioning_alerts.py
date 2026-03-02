@@ -255,9 +255,11 @@ class PositioningAlertEngine:
             timestamp = datetime.now(UTC)
 
         alerts: list[PositioningAlert] = []
-        emit = lambda at, msg, sev: self._try_emit_alert(
-            at, commodity, timestamp, spec_percentile, comm_percentile, msg, sev, skip_dedup, alerts,
-        )
+
+        def emit(at: PositioningAlertType, msg: str, sev: str) -> None:
+            self._try_emit_alert(
+                at, commodity, timestamp, spec_percentile, comm_percentile, msg, sev, skip_dedup, alerts,
+            )
 
         # Speculator extremes (higher priority)
         if spec_percentile >= self.THRESHOLDS["critical_high"]:

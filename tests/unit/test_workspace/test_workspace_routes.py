@@ -1,6 +1,6 @@
 """Tests for /workspace/* metric and chart endpoints."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 from liquidity.api.deps import get_net_liquidity_calculator
 from liquidity.openbb_ext.workspace_app import app
