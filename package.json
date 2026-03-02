@@ -2,9 +2,11 @@
   "name": "openbb-liquidity-visual-tests",
   "private": true,
   "scripts": {
-    "test:visual": "playwright test",
-    "test:visual:update": "playwright test --update-snapshots",
-    "test:visual:report": "playwright show-report"
+    "test:e2e": "playwright test --project=chromium-desktop-e2e",
+    "test:visual": "playwright test --project=chromium-desktop-visual --project=chromium-mobile-visual",
+    "test:visual:update": "playwright test --project=chromium-desktop-visual --project=chromium-mobile-visual --update-snapshots",
+    "test:visual:report": "playwright show-report",
+    "test:browser": "playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0"

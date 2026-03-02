@@ -3,7 +3,7 @@ const { defineConfig, devices } = require("@playwright/test");
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:8050";
 
 module.exports = defineConfig({
-  testDir: "tests/visual",
+  testDir: "tests",
   timeout: 60_000,
   expect: {
     timeout: 15_000
@@ -32,12 +32,19 @@ module.exports = defineConfig({
       },
   projects: [
     {
-      name: "chromium-desktop",
+      name: "chromium-desktop-visual",
+      testDir: "tests/visual",
       use: { ...devices["Desktop Chrome"] }
     },
     {
-      name: "chromium-mobile",
+      name: "chromium-mobile-visual",
+      testDir: "tests/visual",
       use: { ...devices["Pixel 7"] }
+    },
+    {
+      name: "chromium-desktop-e2e",
+      testDir: "tests/e2e_ui",
+      use: { ...devices["Desktop Chrome"] }
     }
   ]
 });
