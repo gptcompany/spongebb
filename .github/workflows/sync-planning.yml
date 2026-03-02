@@ -18,7 +18,7 @@ jobs:
           token: ${{ secrets.GH_PROJECT_PAT }}  # Need PAT for push back
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
