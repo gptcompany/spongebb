@@ -16,7 +16,7 @@ help:
 	@echo "  make workspace           Avvia OpenBB Workspace backend (http://localhost:6900)"
 	@echo "  make workspace-dev       Avvia Workspace con log streaming"
 	@echo "  make workspace-logs      Mostra log Workspace"
-	@echo "  make api                 Avvia SpongeBB API (http://localhost:8002)"
+	@echo "  make api                 Avvia SpongeBB API (http://localhost:8003)"
 	@echo "  make deploy              Build + restart API container"
 
 build:
@@ -61,8 +61,8 @@ workspace-logs:
 	docker compose --profile workspace logs -f liquidity-workspace
 
 api:
-	LIQUIDITY_API_PORT=8002 docker compose up -d liquidity-api
+	LIQUIDITY_API_PORT=8003 docker compose up -d liquidity-api
 
 deploy:
 	docker compose build liquidity-api
-	LIQUIDITY_API_PORT=8002 docker compose up -d liquidity-api
+	LIQUIDITY_API_PORT=8003 docker compose up -d liquidity-api

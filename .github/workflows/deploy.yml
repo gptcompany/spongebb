@@ -10,7 +10,7 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -22,11 +22,11 @@ jobs:
         run: |
           cd /media/sam/1TB/openbb_liquidity
           git pull --ff-only origin main
-          LIQUIDITY_API_PORT=8002 docker compose up -d --build liquidity-api
+          LIQUIDITY_API_PORT=8003 docker compose up -d --build liquidity-api
 
       - name: Verify health
         run: |
           echo "Waiting for API to start..."
           sleep 10
-          curl -sf http://localhost:8002/health || (echo "Health check failed!" && exit 1)
+          curl -sf http://localhost:8003/health || (echo "Health check failed!" && exit 1)
           echo "Deploy successful"

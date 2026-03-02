@@ -10,7 +10,7 @@
 #   docker compose --profile test run --rm liquidity-playwright
 #
 # Port allocation strategy:
-# - API: 8002 (configurable via LIQUIDITY_API_PORT)
+# - API: 8003 (configurable via LIQUIDITY_API_PORT)
 # - Development: Use nautilus-questdb (9000/9009/8812) and nautilus-redis (6379)
 # - Isolated testing: Use liquidity-* containers with alternate ports
 #
@@ -30,7 +30,7 @@ services:
     container_name: spongebb-api
     restart: unless-stopped
     ports:
-      - "${LIQUIDITY_API_PORT:-8002}:8000"
+      - "${LIQUIDITY_API_PORT:-8003}:8000"
     environment:
       - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-localhost}
       - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}
@@ -58,7 +58,7 @@ services:
       - isolated
     restart: unless-stopped
     ports:
-      - "${LIQUIDITY_API_PORT:-8002}:8000"
+      - "${LIQUIDITY_API_PORT:-8003}:8000"
     environment:
       # Use container names for isolated network
       - LIQUIDITY_QUESTDB_HOST=liquidity-questdb
@@ -92,7 +92,7 @@ services:
       - dev
     restart: unless-stopped
     ports:
-      - "${LIQUIDITY_API_PORT:-8002}:8000"
+      - "${LIQUIDITY_API_PORT:-8003}:8000"
     environment:
       - LIQUIDITY_QUESTDB_HOST=${LIQUIDITY_QUESTDB_HOST:-localhost}
       - LIQUIDITY_QUESTDB_PORT=${LIQUIDITY_QUESTDB_PORT:-9009}

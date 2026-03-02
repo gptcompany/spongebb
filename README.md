@@ -37,12 +37,12 @@ FAANG-grade macro liquidity tracker based on [Arthur Hayes' framework](https://c
 # Install dependencies
 uv sync
 
-# Run API server (port 8002)
-uv run uvicorn liquidity.api:app --reload --port 8002
+# Run API server (port 8003)
+uv run uvicorn liquidity.api:app --reload --port 8003
 
 # Docker (production)
 docker compose up -d
-curl http://localhost:8002/health
+curl http://localhost:8003/health
 ```
 
 ## Dashboard
@@ -77,7 +77,7 @@ uv run pytest tests/unit --cov=src --cov-report=html
 
 ```
 src/liquidity/
-  api/          # FastAPI REST server (port 8002)
+  api/          # FastAPI REST server (port 8003)
   collectors/   # Data collectors (FRED, ECB, BoJ, PBoC, Yahoo)
   core/         # Net liquidity, global liquidity, stealth QE engines
   dashboard/    # Plotly Dash interactive dashboard
@@ -108,8 +108,8 @@ Push to `main` triggers:
 ## API Docs
 
 With the server running, visit:
-- Swagger UI: `http://localhost:8002/docs`
-- ReDoc: `http://localhost:8002/redoc`
+- Swagger UI: `http://localhost:8003/docs`
+- ReDoc: `http://localhost:8003/redoc`
 
 ## License
 

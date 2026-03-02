@@ -79,7 +79,7 @@ class LiquidityMacroFilter:
 
     def __init__(
         self,
-        api_url: str = "http://localhost:8002",
+        api_url: str = "http://localhost:8003",
         expansion_only: bool = True,
         min_confidence: str = "MEDIUM",
         min_intensity: float = 40.0,
@@ -162,7 +162,7 @@ class LiquidityFilteredStrategy(Strategy):
     def __init__(self, config):
         super().__init__(config)
         self.macro_filter = LiquidityMacroFilter(
-            api_url="http://spongebb-api:8002",
+            api_url="http://spongebb-api:8003",
             expansion_only=True,
             min_confidence="MEDIUM",
             min_intensity=40.0,
@@ -211,7 +211,7 @@ class ComprehensiveMacroState:
 class AdvancedLiquidityFilter:
     """Advanced filter combining regime, stress, and calendar signals."""
 
-    def __init__(self, api_url: str = "http://localhost:8002"):
+    def __init__(self, api_url: str = "http://localhost:8003"):
         self.api_url = api_url
 
     async def get_comprehensive_state(self) -> ComprehensiveMacroState:
@@ -323,7 +323,7 @@ class ResilientMacroFilter:
 
     def __init__(
         self,
-        api_url: str = "http://localhost:8002",
+        api_url: str = "http://localhost:8003",
         fallback_permission: str = "REDUCED",
         retry_attempts: int = 3,
     ):
@@ -367,7 +367,7 @@ class ResilientMacroFilter:
 ```python
 """Health check for API connectivity."""
 
-async def check_api_health(api_url: str = "http://localhost:8002") -> dict:
+async def check_api_health(api_url: str = "http://localhost:8003") -> dict:
     """Check API health and connectivity.
 
     Returns:
@@ -407,7 +407,7 @@ async def check_api_health(api_url: str = "http://localhost:8002") -> dict:
 
 ```bash
 # API Configuration
-LIQUIDITY_API_URL=http://localhost:8002
+LIQUIDITY_API_URL=http://localhost:8003
 
 # Filter Settings
 MACRO_FILTER_EXPANSION_ONLY=true
@@ -422,7 +422,7 @@ services:
   spongebb-api:
     image: ghcr.io/gptcompany/spongebb:latest
     ports:
-      - "8002:8000"
+      - "8003:8000"
     environment:
       - FRED_API_KEY=${FRED_API_KEY}
       - QUESTDB_HOST=questdb
