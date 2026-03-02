@@ -69,8 +69,6 @@ dependencies = [
     "feedparser>=6.0.0", # RSS feed parsing
     "transformers>=4.40.0", # NLP translation (OPUS-MT, Qwen)
     "sentencepiece>=0.2.0", # Required by some OPUS models
-    "vectorbt>=0.28.2",
-    "quantstats>=0.0.81",
     "fredapi>=0.5.2",
 ]
 

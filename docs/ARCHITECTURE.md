@@ -22,7 +22,7 @@ The system comprises ~52,000 lines of Python across 174 source files and 155 tes
 | Alerting | Discord Webhooks | Regime change, stress, correlation alerts |
 | NLP | HuggingFace Transformers | CB speech translation, sentiment analysis |
 | ML/Forecasting | PyTorch, hmmlearn, statsmodels, filterpy | LSTM, HMM, Markov switching, Kalman filter |
-| Backtesting | vectorbt, quantstats | Strategy simulation, performance metrics |
+| Backtesting | numpy, pandas | Strategy simulation, performance metrics |
 | Risk Analytics | riskfolio-lib, scipy | VaR, CVaR, portfolio optimization |
 | Resilience | tenacity, purgatory | Retry with backoff, circuit breaker |
 | Metrics | prometheus-client | Observability |
@@ -211,8 +211,8 @@ class LiquidityRiskFilter:
 **Purpose**: Historical strategy simulation using liquidity regime signals.
 **Location**: `src/liquidity/backtesting/`
 **Key files**:
-- `engine/vectorbt_engine.py` - `VectorBTBacktester` (vectorized backtesting)
-- `engine/metrics.py` - `MetricsCalculator` (Sharpe, Sortino, max drawdown via quantstats)
+- `engine/vectorbt_engine.py` - `VectorBTBacktester` (numpy-based vectorized backtesting)
+- `engine/metrics.py` - `MetricsCalculator` (Sharpe, Sortino, max drawdown via pure numpy)
 - `signals/regime_signals.py` - `RegimeSignalGenerator` (entry/exit from regime)
 - `data/historical_loader.py` - `HistoricalLoader` (point-in-time data reconstruction)
 - `data/asset_loader.py` - `AssetLoader` (price data for strategy testing)
@@ -347,14 +347,17 @@ class LiquidityRiskFilter:
 
 ### Component: Visual Regression & Browser Automation
 
-**Purpose**: Deterministic screenshot-based UI regression checks and interactive browser debugging.
+**Purpose**: Deterministic screenshot regression plus interaction-based browser E2E for the dashboard.
 **Location**:
 - `playwright.config.js`
+- `tests/e2e_ui/`
 - `tests/visual/`
 - `.github/workflows/visual-regression.yml`
 
 **Key files**:
-- `playwright.config.js` - Playwright projects (desktop/mobile Chromium), webServer orchestration
+- `playwright.config.js` - Playwright projects (visual + browser E2E), webServer orchestration
+- `package.json` - Browser test entrypoints (`test:e2e`, `test:visual`)
+- `tests/e2e_ui/dashboard.e2e.spec.js` - Interaction-focused browser E2E
 - `tests/visual/dashboard.visual.spec.js` - Above-the-fold snapshot test
 - `tests/visual/dashboard.visual.spec.js-snapshots/` - Baseline screenshots
 - `.github/workflows/visual-regression.yml` - CI visual regression job + artifact upload
@@ -413,7 +416,7 @@ class LiquidityRiskFilter:
      ▼          ▼          ▼              ▼
 ┌─────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐
 │NOWCAST  │ │ RISK   │ │BACKTEST │ │   OIL    │
-│Kalman   │ │VaR/CVaR│ │vectorbt │ │Supply/   │
+│Kalman   │ │VaR/CVaR│ │numpy/pd │ │Supply/   │
 │MIDAS    │ │Regime  │ │Monte    │ │Demand    │
 │HMM/LSTM│ │LA-VaR  │ │Carlo    │ │Regime    │
 └────┬────┘ └────┬───┘ └────┬────┘ └────┬─────┘
@@ -433,7 +436,7 @@ class LiquidityRiskFilter:
     ┌──────────────┐                ┌───────────────┐
     │   REST API   │                │   DASHBOARD   │
     │   FastAPI    │                │   Plotly Dash  │
-    │   Port 8000  │                │   Port 8050   │
+    │   Port 8003  │                │   Port 8050   │
     │   7 routers  │                │   18 panels   │
     └──────────────┘                └───────────────┘
 ```
@@ -486,7 +489,6 @@ class LiquidityRiskFilter:
 | `LIQUIDITY_QUESTDB_PORT` | QuestDB ILP port | `9009` |
 | `LIQUIDITY_QUESTDB_HTTP_PORT` | QuestDB HTTP port | `9000` |
 | `LIQUIDITY_REDIS_URL` | Redis connection | `redis://localhost:6379` |
-| `LIQUIDITY_API_PORT` | API server port | `8000` |
 | `LIQUIDITY_PROMETHEUS_PORT` | Metrics exposition | `8000` |
 | `LIQUIDITY_CB_THRESHOLD` | Circuit breaker failure count | `5` |
 | `LIQUIDITY_CB_TTL` | Circuit breaker half-open TTL (s) | `60` |
@@ -514,7 +516,7 @@ Configuration is managed via `pydantic-settings` in `src/liquidity/config.py` wi
 
 | Service | Default Port | Isolated Port |
 |---------|-------------|---------------|
-| API | 8000 | 8000 |
+| API | 8003 | 8003 |
 | Dashboard | 8050 | 8050 |
 | QuestDB Web | 9000 | 9002 |
 | QuestDB ILP | 9009 | 9011 |
@@ -525,10 +527,10 @@ Configuration is managed via `pydantic-settings` in `src/liquidity/config.py` wi
 
 | Command | Target | Port |
 |---------|--------|------|
-| `liquidity-api` | FastAPI server | 8000 |
+| `liquidity-api` | FastAPI server | 8003 (host) |
 | `liquidity-dashboard` | Dash server | 8050 |
 | `python -m liquidity.dashboard` | Dash server | 8050 |
-| `uvicorn liquidity.api:app` | FastAPI server | 8000 |
+| `uvicorn liquidity.api:app --port 8003` | FastAPI server | 8003 |
 
 ## Testing Strategy
 
@@ -536,7 +538,8 @@ Configuration is managed via `pydantic-settings` in `src/liquidity/config.py` wi
 |-------|----------|-------|-------|
 | Unit | `tests/unit/` | ~120 files | Individual modules, mocked dependencies |
 | Integration | `tests/integration/` | ~20 files | Cross-module with real API calls |
-| E2E | `tests/e2e/` | 1 file | Full dashboard with real data |
+| E2E | `tests/e2e/` | 1 file | Live-data pytest coverage (environment-dependent) |
+| Browser E2E | `tests/e2e_ui/` | 1 file | Playwright interaction regression |
 | Visual E2E | `tests/visual/` | 1 file | Playwright screenshot regression (desktop/mobile) |
 | Collectors | `tests/collectors/` | 1 file | Collector-specific |
 
@@ -555,6 +558,7 @@ uv run pytest -m e2e
 # Run visual regression (Playwright)
 npm ci
 npx playwright install chromium
+npm run test:e2e           # interaction checks
 npm run test:visual:update  # baseline refresh
 npm run test:visual         # regression check
 ```
