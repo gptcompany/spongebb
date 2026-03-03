@@ -68,6 +68,9 @@ COPY --from=builder-prod /app/.venv /app/.venv
 # Copy application source
 COPY --from=builder-prod /app/src /app/src
 
+# Copy entrypoint script (writes OpenBB credentials from env vars)
+COPY docker/entrypoint.sh /app/entrypoint.sh
+
 # Fix permissions for OpenBB build lock (it needs to write on first import)
 RUN chown -R appuser:appuser /app/.venv/lib/python3.11/site-packages/openbb* || true
 
@@ -86,6 +89,9 @@ EXPOSE 8000
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
+
+# Entrypoint bridges env vars to OpenBB user_settings.json
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Run with uvicorn (use string import for proper reload support)
 CMD ["python", "-m", "uvicorn", "liquidity.api:app", "--host", "0.0.0.0", "--port", "8000"]
