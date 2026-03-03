@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./logo.png" alt="SpongeBB logo" width="220"/>
+  <img src="./logo.png" alt="SpongeBB logo" width="800"/>
 </p>
 
 <h1 align="center">SpongeBB</h1>
