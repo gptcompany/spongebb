@@ -414,7 +414,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/analyzers/test_alert_engine.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/analyzers/test_alert_engine.py:4: in <module>\n    from datetime import UTC, datetime\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/analyzers/test_alert_engine.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/analyzers/test_alert_engine.py:1: in <module>\n    from datetime import UTC, datetime\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
             }
           ]
         }
@@ -519,7 +519,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/backtesting/test_metrics.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/backtesting/test_metrics.py:9: in <module>\n    from liquidity.backtesting.engine.metrics import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/backtesting/test_metrics.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/backtesting/test_metrics.py:10: in <module>\n    from liquidity.backtesting.engine.metrics import (\nE   ModuleNotFoundError: No module named 'liquidity'"
             }
           ]
         }
@@ -759,7 +759,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/dashboard/callbacks/test_eia_callbacks.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/dashboard/callbacks/test_eia_callbacks.py:4: in <module>\n    from dash import Dash\nE   ModuleNotFoundError: No module named 'dash'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/dashboard/callbacks/test_eia_callbacks.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/dashboard/callbacks/test_eia_callbacks.py:5: in <module>\n    from dash import Dash\nE   ModuleNotFoundError: No module named 'dash'"
             }
           ]
         }
@@ -774,7 +774,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/dashboard/callbacks/test_inflation_callbacks.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/dashboard/callbacks/test_inflation_callbacks.py:4: in <module>\n    from dash import Dash\nE   ModuleNotFoundError: No module named 'dash'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/dashboard/callbacks/test_inflation_callbacks.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/dashboard/callbacks/test_inflation_callbacks.py:5: in <module>\n    from dash import Dash\nE   ModuleNotFoundError: No module named 'dash'"
             }
           ]
         }
@@ -789,7 +789,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/dashboard/components/test_inflation.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/dashboard/components/test_inflation.py:4: in <module>\n    from dash import html\nE   ModuleNotFoundError: No module named 'dash'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/dashboard/components/test_inflation.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/dashboard/components/test_inflation.py:4: in <module>\n    from liquidity.dashboard.components.inflation import (\nE   ModuleNotFoundError: No module named 'liquidity'"
             }
           ]
         }
@@ -954,7 +954,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/nowcasting/regime/test_ensemble.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/nowcasting/regime/test_ensemble.py:7: in <module>\n    from liquidity.nowcasting.regime.ensemble import EnsembleMode, RegimeEnsemble\nE   ModuleNotFoundError: No module named 'liquidity'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/nowcasting/regime/test_ensemble.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/nowcasting/regime/test_ensemble.py:7: in <module>\n    from liquidity.nowcasting.regime.ensemble import RegimeEnsemble\nE   ModuleNotFoundError: No module named 'liquidity'"
             }
           ]
         }
@@ -1074,7 +1074,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/nowcasting/validation/test_backtesting.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/nowcasting/validation/test_backtesting.py:6: in <module>\n    from liquidity.nowcasting.validation.backtesting import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/nowcasting/validation/test_backtesting.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/nowcasting/validation/test_backtesting.py:7: in <module>\n    from liquidity.nowcasting.validation.backtesting import (\nE   ModuleNotFoundError: No module named 'liquidity'"
             }
           ]
         }
@@ -1254,7 +1254,7 @@
           "state": "failed",
           "errors": [
             {
-              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/storage/test_schemas.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/storage/test_schemas.py:3: in <module>\n    from liquidity.storage.schemas import (\nE   ModuleNotFoundError: No module named 'liquidity'"
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/storage/test_schemas.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/storage/test_schemas.py:2: in <module>\n    from liquidity.storage.schemas import (\nE   ModuleNotFoundError: No module named 'liquidity'"
             }
           ]
         }
@@ -1465,6 +1465,21 @@
           "errors": [
             {
               "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_api/test_routers/test_stress.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_api/test_routers/test_stress.py:3: in <module>\n    from datetime import UTC, datetime\nE   ImportError: cannot import name 'UTC' from 'datetime' (/usr/lib/python3.10/datetime.py)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "tests/unit/test_api/test_routers/test_volatility.py",
+      "tests": [
+        {
+          "name": "collection_error_tests/unit/test_api/test_routers/test_volatility.py",
+          "fullName": "tests/unit/test_api/test_routers/test_volatility.py",
+          "state": "failed",
+          "errors": [
+            {
+              "message": "ImportError while importing test module '/media/sam/1TB/openbb_liquidity/tests/unit/test_api/test_routers/test_volatility.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntests/unit/test_api/test_routers/test_volatility.py:8: in <module>\n    from liquidity.api.server import app\nE   ModuleNotFoundError: No module named 'liquidity'"
             }
           ]
         }
