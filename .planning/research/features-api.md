@@ -258,9 +258,9 @@ If exposing data as `obb.economy.custom_liquidity`:
 
 **Directory structure:**
 ```
-openbb_liquidity_provider/
+spongebb_provider/
 ├── pyproject.toml
-├── openbb_liquidity_provider/
+├── spongebb_provider/
 │   ├── __init__.py          # Provider instance
 │   └── models/
 │       └── net_liquidity.py # QueryParams + Data + Fetcher
@@ -335,7 +335,7 @@ class NetLiquidityFetcher(Fetcher[NetLiquidityQueryParams, list[NetLiquidityData
 **Provider registration (`__init__.py`):**
 ```python
 from openbb_core.provider.abstract.provider import Provider
-from openbb_liquidity_provider.models.net_liquidity import NetLiquidityFetcher
+from spongebb_provider.models.net_liquidity import NetLiquidityFetcher
 
 liquidity_provider = Provider(
     name="liquidity",
@@ -351,7 +351,7 @@ liquidity_provider = Provider(
 **pyproject.toml:**
 ```toml
 [tool.poetry.plugins."openbb_provider_extension"]
-liquidity = "openbb_liquidity_provider:liquidity_provider"
+liquidity = "spongebb_provider:liquidity_provider"
 ```
 
 **After installing:** Run `openbb-build` to rebuild static assets.

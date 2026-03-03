@@ -97,7 +97,7 @@ None — all milestones v1.0-v5.0 complete. Run `/gsd:new-milestone` for v6.0.
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Standalone repo `/media/sam/1TB/openbb_liquidity` | Separation of concerns (macro ≠ trading) | ✓ Good |
+| Standalone repo `/media/sam/1TB/spongebb` | Separation of concerns (macro ≠ trading) | ✓ Good |
 | OpenBB as data platform | 100+ providers, Python native, LLM-ready | ✓ Good |
 | Plotly over Grafana | Simpler deployment, HTML export, no extra service | ✓ Good |
 | Port Apps Script to Python | Remove Google limitations, enable backtest/integration | ✓ Good |

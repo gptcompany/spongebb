@@ -22,12 +22,12 @@ jobs:
 
       - name: Pull latest code
         run: |
-          cd /media/sam/1TB/openbb_liquidity
+          cd /media/sam/1TB/spongebb
           git pull --ff-only origin main
 
       - name: Build and deploy services
         run: |
-          cd /media/sam/1TB/openbb_liquidity
+          cd /media/sam/1TB/spongebb
           dotenvx run -- docker compose build liquidity-api liquidity-workspace
           dotenvx run -- docker compose up -d liquidity-api liquidity-workspace
 
@@ -55,7 +55,7 @@ jobs:
             done
           }
 
-          cd /media/sam/1TB/openbb_liquidity
+          cd /media/sam/1TB/spongebb
           wait_healthy "http://localhost:8003/health" "liquidity-api" 120
           wait_healthy "http://localhost:6900/health" "liquidity-workspace" 120
 
@@ -71,7 +71,7 @@ jobs:
       - name: Show deployment status
         if: always()
         run: |
-          cd /media/sam/1TB/openbb_liquidity
+          cd /media/sam/1TB/spongebb
           echo "=== Container Status ==="
           docker compose ps
           echo ""

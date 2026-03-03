@@ -252,7 +252,7 @@ Phase 15 (Backtest)
 
 ```bash
 # Verificare stato progetto
-cd /media/sam/1TB/openbb_liquidity
+cd /media/sam/1TB/spongebb
 
 # Run tests
 uv run pytest tests/ -v

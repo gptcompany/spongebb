@@ -87,7 +87,7 @@ Progress: ============================== 100%
 - Alert Types: 7
 - Collectors: 31+
 - OpenBB Provider Fetchers: 3
-- GitHub: https://github.com/gptcompany/openbb_liquidity
+- GitHub: https://github.com/gptcompany/spongebb
 - Tag: v5.0
 
 ## Session Continuity

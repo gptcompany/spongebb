@@ -1,9 +1,9 @@
 #!/bin/bash
 # Automated validation script for spongebb
-# Run via cron: */30 * * * * /media/sam/1TB/openbb_liquidity/scripts/validate-automations.sh
+# Run via cron: */30 * * * * /media/sam/1TB/spongebb/scripts/validate-automations.sh
 # Features: Auto-fix on failure + Discord alerts
 
-cd /media/sam/1TB/openbb_liquidity
+cd /media/sam/1TB/spongebb
 
 LOG_FILE="/tmp/spongebb_validation_$(date +%Y%m%d).log"
 DISCORD_WEBHOOK="${DISCORD_WEBHOOK_URL:-}"

@@ -35,7 +35,7 @@ All 4 researchers agree on the following:
 
 ### Divergence 1: Monorepo vs separate package for provider extension
 
-- **STACK.md:** Suggests a separate `openbb_liquidity_provider/` directory as an independent package with its own `pyproject.toml`.
+- **STACK.md:** Suggests a separate `spongebb_provider/` directory as an independent package with its own `pyproject.toml`.
 - **ARCHITECTURE.md:** Recommends a monorepo subfolder (`src/liquidity/openbb_ext/`) within the existing package, using the root `pyproject.toml` entry points.
 
 **Resolution: Monorepo subfolder (ARCHITECTURE.md wins).** The project has 174 files and 52K LOC. A separate package requires separate versioning, separate CI, and separate installation steps. The monorepo approach keeps business logic co-located and avoids the circular dependency trap. Extract to a standalone package in v6.0 when the API surface is stable.

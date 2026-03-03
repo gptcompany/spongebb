@@ -62,7 +62,7 @@ A monorepo subfolder keeps business logic co-located, avoids the circular depend
 ### Recommended structure (within existing monorepo):
 
 ```
-openbb_liquidity/                          ← existing repo root
+spongebb/                          ← existing repo root
 ├── src/
 │   └── liquidity/                         ← existing main package (unchanged)
 │       ├── calculators/                   ← UNCHANGED — business logic stays here
@@ -345,7 +345,7 @@ from liquidity.openbb_ext.models.stealth_qe import StealthQEFetcher
 
 liquidity_provider = Provider(
     name="liquidity",
-    website="https://github.com/your-org/openbb_liquidity",
+    website="https://github.com/your-org/spongebb",
     description=(
         "Global Liquidity Monitor — Arthur Hayes' macro liquidity framework. "
         "Tracks Fed Net Liquidity (WALCL-TGA-RRP), Global CB balance sheets "

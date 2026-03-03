@@ -96,7 +96,7 @@ src/liquidity/
   "data": {...},
   "metadata": {
     "timestamp": "2026-02-04T10:00:00Z",
-    "source": "openbb_liquidity",
+    "source": "spongebb",
     "version": "1.0.0"
   }
 }
