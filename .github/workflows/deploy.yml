@@ -1,33 +1,51 @@
-name: Deploy
+name: Core Deploy
 
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
+  push:
     branches: [main]
+    paths:
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - "Makefile"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "src/liquidity/**"
+      - "scripts/*.sh"
+      - ".github/workflows/deploy.yml"
   workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REPO_DIR: /media/sam/1TB/spongebb
+  DOTENV_FILE: /media/sam/1TB/.env
 
 jobs:
   deploy:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.event == 'push')
-    runs-on: self-hosted
+    runs-on: [self-hosted, Linux, X64, muletto]
     timeout-minutes: 30
-    concurrency: deploy
+    concurrency:
+      group: core-deploy-${{ github.repository }}-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Pull latest code
         run: |
-          cd /media/sam/1TB/spongebb
+          set -euo pipefail
+          cd "$REPO_DIR"
+          git fetch origin
+          git checkout main
           git pull --ff-only origin main
 
       - name: Build and deploy services
         run: |
-          cd /media/sam/1TB/spongebb
+          set -euo pipefail
+          cd "$REPO_DIR"
           dotenvx run -- docker compose build liquidity-api liquidity-workspace
           dotenvx run -- docker compose up -d liquidity-api liquidity-workspace
 
@@ -55,7 +73,7 @@ jobs:
             done
           }
 
-          cd /media/sam/1TB/spongebb
+          cd "$REPO_DIR"
           wait_healthy "http://localhost:8003/health" "liquidity-api" 120
           wait_healthy "http://localhost:6900/health" "liquidity-workspace" 120
 
@@ -68,10 +86,40 @@ jobs:
           print(f'API: {h[\"status\"]}, QuestDB: {h[\"questdb_connected\"]}, Version: {h[\"version\"]}')
           "
 
+      - name: Notify Discord on success
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          WEBHOOK="$(dotenvx get DISCORD_WEBHOOK_SPONGEBB -f "$DOTENV_FILE" 2>/dev/null || true)"
+          if [ -z "$WEBHOOK" ]; then
+            echo "DISCORD_WEBHOOK_SPONGEBB missing; skipping success notification."
+            exit 0
+          fi
+          payload=$(python3 -c 'import json, os; print(json.dumps({"content": f"✅ **spongebb deploy riuscito**\\nBranch: `{os.environ[\"GITHUB_REF_NAME\"]}`\\nCommit: `{os.environ[\"GITHUB_SHA\"]}`\\nAPI: http://localhost:8003/health\\nWorkspace: http://localhost:6900/health"}))')
+          curl -fsSL -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "$payload"
+
+      - name: Notify Discord on failure
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          WEBHOOK="$(dotenvx get DISCORD_WEBHOOK_SPONGEBB -f "$DOTENV_FILE" 2>/dev/null || true)"
+          if [ -z "$WEBHOOK" ]; then
+            echo "DISCORD_WEBHOOK_SPONGEBB missing; skipping failure notification."
+            exit 0
+          fi
+          payload=$(python3 -c 'import json, os; print(json.dumps({"content": f"🚨 **spongebb deploy fallito**\\nBranch: `{os.environ[\"GITHUB_REF_NAME\"]}`\\nCommit: `{os.environ[\"GITHUB_SHA\"]}`\\nWorkflow: {os.environ[\"GITHUB_SERVER_URL\"]}/{os.environ[\"GITHUB_REPOSITORY\"]}/actions/runs/{os.environ[\"GITHUB_RUN_ID\"]}"}))')
+          curl -fsSL -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "$payload"
+
       - name: Show deployment status
         if: always()
         run: |
-          cd /media/sam/1TB/spongebb
+          cd "$REPO_DIR"
           echo "=== Container Status ==="
           docker compose ps
           echo ""

@@ -7,6 +7,8 @@
 
 <p align="center">
   <a href="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://github.com/gptcompany/spongebb/actions/workflows/deploy.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/deploy.yml/badge.svg?branch=main" alt="Core Deploy"></a>
+  <a href="https://github.com/gptcompany/spongebb/releases"><img src="https://img.shields.io/github/v/release/gptcompany/spongebb?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gptprojectmanager/2f424df721ea43fb25188b03df5a8317/raw/spongebb-coverage.json" alt="Coverage">
   <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python" alt="Python">
   <a href="https://github.com/gptcompany/spongebb/blob/main/LICENSE"><img src="https://img.shields.io/github/license/gptcompany/spongebb?style=flat-square" alt="License"></a>
@@ -148,8 +150,14 @@ src/liquidity/
 ## CI/CD
 
 Push to `main` triggers:
-1. **CI** (ubuntu-latest) — lint, pytest, browser E2E, coverage badge update
-2. **Deploy** (self-hosted) — Docker build + rolling restart on Workstation
+1. **CI** (`self-hosted`, `Linux`, `X64`, `muletto`) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
+2. **Core Deploy** (`self-hosted`, `Linux`, `X64`, `muletto`) — rebuild + restart of `liquidity-api` and `liquidity-workspace`, health verification, Discord notification
+3. **Trigger Progressive Deploy** — `repository_dispatch` to `gptcompany/progressive-deploy` with event `spongebb-build`
+4. **Release** — creates a GitHub release from `pyproject.toml` version (`v<version>`) after successful CI on `main`
+
+Notes:
+- Existing local tags currently include `v2.0`, `v3.0`, and `v5.0`; the release workflow will not overwrite an existing release/tag.
+- No direct scrape/job wiring for `spongebb` was found in `/media/sam/1TB/monitoring-stack`; this repo exposes health endpoints and Prometheus settings, but monitoring-stack onboarding appears to still be external to this repository.
 
 ## API Docs
 

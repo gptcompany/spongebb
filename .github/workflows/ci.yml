@@ -3,29 +3,53 @@ name: CI
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '*.md', '.planning/**']
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - ".planning/**"
   pull_request:
     branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - ".planning/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.repository }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: "self-hosted / py3.11"
+    runs-on: [self-hosted, Linux, X64, muletto]
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: astral-sh/setup-uv@v7
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
       - name: Install dependencies
-        run: uv sync --frozen --dev
+        run: uv sync --frozen --extra dev
 
       - name: Lint
         run: uv run ruff check src/ tests/
+
+      - name: Docker compose smoke
+        run: docker compose config >/dev/null
 
       - name: Unit tests with coverage
         run: |
@@ -38,19 +62,34 @@ jobs:
         run: |
           COV=$(python3 -c "import json; print(round(json.load(open('coverage.json'))['totals']['percent_covered'],1))")
           echo "pct=$COV" >> "$GITHUB_OUTPUT"
-          # Color: red < 40, yellow < 70, green < 90, brightgreen >= 90
           if (( $(echo "$COV < 40" | bc -l) )); then COLOR="red";
           elif (( $(echo "$COV < 70" | bc -l) )); then COLOR="yellow";
           elif (( $(echo "$COV < 90" | bc -l) )); then COLOR="green";
           else COLOR="brightgreen"; fi
           echo "color=$COLOR" >> "$GITHUB_OUTPUT"
 
-      - name: Update coverage badge
+      - name: Check coverage badge config
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: coverage_badge
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          COVERAGE_GIST_ID: ${{ vars.COVERAGE_GIST_ID }}
+          DEFAULT_COVERAGE_GIST_ID: 2f424df721ea43fb25188b03df5a8317
+        run: |
+          if [ -n "$GIST_TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "gist_id=${COVERAGE_GIST_ID:-$DEFAULT_COVERAGE_GIST_ID}" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update coverage badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && steps.coverage_badge.outputs.enabled == 'true'
+        continue-on-error: true
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
-          gistID: 2f424df721ea43fb25188b03df5a8317
+          gistID: ${{ steps.coverage_badge.outputs.gist_id }}
           filename: spongebb-coverage.json
           label: coverage
           message: "${{ steps.coverage.outputs.pct }}%"

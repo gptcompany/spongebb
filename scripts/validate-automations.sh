@@ -6,7 +6,7 @@
 cd /media/sam/1TB/spongebb
 
 LOG_FILE="/tmp/spongebb_validation_$(date +%Y%m%d).log"
-DISCORD_WEBHOOK="${DISCORD_WEBHOOK_URL:-}"
+DISCORD_WEBHOOK="${DISCORD_WEBHOOK_SPONGEBB:-${DISCORD_WEBHOOK_URL:-${LIQUIDITY_DISCORD_WEBHOOK_URL:-}}}"
 DOTENVX="/home/sam/.local/bin/dotenvx"
 
 log() {
