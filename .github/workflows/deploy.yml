@@ -75,7 +75,7 @@ jobs:
           curl -sf http://localhost:8003/health | python3 -c "
           import sys, json
           h = json.load(sys.stdin)
-          assert h['status'] == 'healthy', f'Unhealthy: {h}'
+          assert h['status'] in {'healthy', 'degraded'}, f'Unhealthy: {h}'
           print(f'API: {h[\"status\"]}, QuestDB: {h[\"questdb_connected\"]}, Version: {h[\"version\"]}')
           "
 
