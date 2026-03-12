@@ -63,6 +63,13 @@ make up-dev
 # Open http://localhost:8050
 ```
 
+### FOMC Compare and Event Calendar Semantics
+
+- **FOMC Statement Comparison** uses cached official statements (via `liquidity.news.fomc`) when available, computes a structured diff, and highlights hawkish/dovish phrase shifts.
+- If statement cache/modules are unavailable, the panel degrades to deterministic fallback dates/diff so the UI remains operational (useful for CI and local smoke runs).
+- **Upcoming Events** is **event-driven**, not a universal/static calendar: it is populated from the liquidity event registry (`liquidity.calendar.registry`) and shows upcoming high/medium/low impact events (auctions, central-bank meetings, tax dates, etc.).
+- If no event feed is available, the strip explicitly shows `No upcoming events`.
+
 ## Testing
 
 ```bash
