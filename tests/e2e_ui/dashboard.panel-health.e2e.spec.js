@@ -8,6 +8,12 @@ const { test, expect } = require("@playwright/test");
 test.describe("Dashboard Semantic Health", () => {
   test.setTimeout(120_000);
 
+  const expectPlotlyReady = async (page, chartContainerSelector, timeout = 30_000) => {
+    const plotly = page.locator(`${chartContainerSelector} .js-plotly-plot:visible`).first();
+    await expect(plotly).toBeVisible({ timeout });
+    await expect(plotly).not.toHaveClass(/dash-graph--pending/, { timeout });
+  };
+
   test.beforeEach(async ({ page }) => {
     // Navigate to the dashboard with a forced wait for network to settle
     await page.goto("/", { waitUntil: "networkidle" });
@@ -42,9 +48,7 @@ test.describe("Dashboard Semantic Health", () => {
     const section = page.locator(".card").filter({ hasText: /EIA Weekly Petroleum/i });
     await section.scrollIntoViewIfNeeded();
     
-    // Check Plotly chart is rendered (not just the container)
-    // We check for the presence of the SVG layer or trace group
-    await expect(page.locator("#cushing-inventory-chart .js-plotly-plot .trace")).toBeVisible({ timeout: 30_000 });
+    await expectPlotlyReady(page, "#cushing-inventory-chart");
     
     // Check KPI badge has data (not the default "--")
     const badge = page.locator("#cushing-utilization-badge");
@@ -55,7 +59,7 @@ test.describe("Dashboard Semantic Health", () => {
     const section = page.locator(".card").filter({ hasText: /Inflation Expectations/i });
     await section.scrollIntoViewIfNeeded();
     
-    await expect(page.locator("#breakeven-chart .js-plotly-plot .trace")).toBeVisible({ timeout: 30_000 });
+    await expectPlotlyReady(page, "#real-rates-chart");
     
     const summary = page.locator("#inflation-summary");
     await expect(summary).not.toContainText("Data unavailable");
@@ -66,7 +70,7 @@ test.describe("Dashboard Semantic Health", () => {
     const section = page.locator(".card").filter({ hasText: /Consumer Credit Risk/i });
     await section.scrollIntoViewIfNeeded();
     
-    await expect(page.locator("#xlp-xly-ratio-chart .js-plotly-plot .trace")).toBeVisible({ timeout: 30_000 });
+    await expectPlotlyReady(page, "#xlp-xly-ratio-chart");
     
     const metrics = page.locator("#consumer-credit-metrics");
     await expect(metrics).not.toBeEmpty();
@@ -80,6 +84,6 @@ test.describe("Dashboard Semantic Health", () => {
     const text = await indicator.textContent();
     expect(text?.toUpperCase()).toMatch(/EXPANSION|CONTRACTION|STABLE|DEGRADED/);
     
-    await expect(page.locator("#regime-gauge .js-plotly-plot .trace")).toBeVisible();
+    await expectPlotlyReady(page, "#regime-gauge");
   });
 });

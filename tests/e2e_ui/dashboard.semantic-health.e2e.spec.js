@@ -12,9 +12,13 @@ test.describe("Dashboard Semantic Health", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the dashboard
     await page.goto("/", { waitUntil: "networkidle" });
-    
-    // Wait for the dashboard to settle (at least one graph finished loading)
-    await page.waitForSelector(".js-plotly-plot:not(.dash-graph--pending)", { timeout: 90_000 });
+
+    // Stable readiness gate: primary chart must be visible and rendered.
+    // Generic ".js-plotly-plot:not(.dash-graph--pending)" is flaky due to hidden tab graphs.
+    const primaryChart = page.locator("#net-liquidity-chart .js-plotly-plot");
+    await expect(page.locator("#net-liquidity-chart")).toBeVisible({ timeout: 60_000 });
+    await expect(primaryChart).toBeVisible({ timeout: 60_000 });
+    await expect(primaryChart).not.toHaveClass(/dash-graph--pending/, { timeout: 60_000 });
   });
 
   test("Central Bank News panel health", async ({ page }) => {
@@ -68,7 +72,7 @@ test.describe("Dashboard Semantic Health", () => {
   });
 
   test("Inflation Expectations panel health", async ({ page }) => {
-    const chart = page.locator("#breakeven-chart");
+    const chart = page.locator("#real-rates-chart");
     await expect(chart).toBeVisible();
     await expect(chart.locator(".js-plotly-plot")).not.toHaveClass(/dash-graph--pending/, { timeout: 30_000 });
     

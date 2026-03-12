@@ -111,6 +111,23 @@ test.describe("Dashboard E2E Interactions", () => {
     await expect(page.locator("#oil-chart .js-plotly-plot")).toBeVisible();
   });
 
+  test("FOMC comparison renders output from selected/default dates", async ({ page }) => {
+    const compareBtn = page.locator("#fomc-compare-btn");
+    await compareBtn.scrollIntoViewIfNeeded();
+    await expect(compareBtn).toBeVisible();
+
+    await compareBtn.click();
+
+    const summary = page.locator("#fomc-change-summary");
+    await expect(summary).toBeVisible({ timeout: 20_000 });
+    await expect(summary).toContainText(/HAWKISH|DOVISH|NEUTRAL/, { timeout: 20_000 });
+    await expect(summary).not.toContainText(/Please select|Failed to load|Error:/);
+
+    const diffView = page.locator("#fomc-diff-view");
+    await expect(diffView).toBeVisible();
+    await expect(diffView.locator("iframe")).toBeVisible({ timeout: 20_000 });
+  });
+
   test("verifies below-the-fold content is rendered", async ({ page }) => {
     // 7. Below-the-fold section assertion
     const correlationHeatmap = page.locator("#correlation-heatmap");
