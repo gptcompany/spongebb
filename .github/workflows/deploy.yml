@@ -19,8 +19,9 @@ permissions:
   packages: write
 
 env:
-  REPO_DIR: /media/sam/1TB/spongebb
+  REPO_DIR: ${{ github.workspace }}
   DOTENV_FILE: /media/sam/1TB/.env
+  DISCORD_WEBHOOK_SPONGEBB: ${{ secrets.DISCORD_WEBHOOK_SPONGEBB }}
 
 jobs:
   deploy:
@@ -33,14 +34,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Pull latest code
-        run: |
-          set -euo pipefail
-          cd "$REPO_DIR"
-          git fetch origin
-          git checkout main
-          git pull --ff-only origin main
 
       - name: Build and deploy services
         run: |
@@ -91,7 +84,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          WEBHOOK="$(dotenvx get DISCORD_WEBHOOK_SPONGEBB -f "$DOTENV_FILE" 2>/dev/null || true)"
+          WEBHOOK="${DISCORD_WEBHOOK_SPONGEBB:-}"
+          if [ -z "$WEBHOOK" ] && [ -f "$DOTENV_FILE" ]; then
+            WEBHOOK="$(dotenvx get DISCORD_WEBHOOK_SPONGEBB -f "$DOTENV_FILE" 2>/dev/null || true)"
+          fi
           if [ -z "$WEBHOOK" ]; then
             echo "DISCORD_WEBHOOK_SPONGEBB missing; skipping success notification."
             exit 0
@@ -106,7 +102,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          WEBHOOK="$(dotenvx get DISCORD_WEBHOOK_SPONGEBB -f "$DOTENV_FILE" 2>/dev/null || true)"
+          WEBHOOK="${DISCORD_WEBHOOK_SPONGEBB:-}"
+          if [ -z "$WEBHOOK" ] && [ -f "$DOTENV_FILE" ]; then
+            WEBHOOK="$(dotenvx get DISCORD_WEBHOOK_SPONGEBB -f "$DOTENV_FILE" 2>/dev/null || true)"
+          fi
           if [ -z "$WEBHOOK" ]; then
             echo "DISCORD_WEBHOOK_SPONGEBB missing; skipping failure notification."
             exit 0
