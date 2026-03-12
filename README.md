@@ -66,7 +66,7 @@ make up-dev
 ### FOMC Compare and Event Calendar Semantics
 
 - **FOMC Statement Comparison** uses cached official statements (via `liquidity.news.fomc`) when available, computes a structured diff, and highlights hawkish/dovish phrase shifts.
-- If statement cache/modules are unavailable, the panel degrades to deterministic fallback dates/diff so the UI remains operational (useful for CI and local smoke runs).
+- Deterministic fallback dates/diff are used only when explicitly enabled via `LIQUIDITY_DASHBOARD_FORCE_FALLBACK=1` (CI/smoke). In normal mode, unavailable statements remain a degraded/error state (no synthetic comparison output).
 - **Upcoming Events** is **event-driven**, not a universal/static calendar: it is populated from the liquidity event registry (`liquidity.calendar.registry`) and shows upcoming high/medium/low impact events (auctions, central-bank meetings, tax dates, etc.).
 - If no event feed is available, the strip explicitly shows `No upcoming events`.
 

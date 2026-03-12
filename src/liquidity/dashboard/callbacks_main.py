@@ -680,10 +680,6 @@ def register_callbacks(app: Dash) -> None:
         """
         try:
             dates = _fetch_fomc_statement_dates()
-            if not dates:
-                logger.warning("No FOMC statement dates available in cache; using fallback dates")
-                dates = _build_mock_fomc_dates()
-
             options = get_available_dates_options(dates)
 
             # Store dates as ISO strings
@@ -771,8 +767,10 @@ def register_callbacks(app: Dash) -> None:
             diff = _fetch_and_diff_statements(date1, date2)
 
             if diff is None:
-                logger.warning("FOMC statement fetch failed; falling back to mock diff output")
-                diff = _build_mock_fomc_diff(date1, date2)
+                return (
+                    html.Div("Failed to load statements", className="text-danger"),
+                    create_error_diff_view("Could not fetch FOMC statements"),
+                )
 
             # Create summary and diff view
             change_summary = create_change_summary(diff.change_score, diff.phrase_shifts)
