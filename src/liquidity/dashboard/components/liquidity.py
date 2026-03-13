@@ -253,7 +253,8 @@ def create_liquidity_panel() -> dbc.Row:
                         ),
                     ]
                 ),
-                width=6,
+                xs=12,
+                md=6,
             ),
             # Global Liquidity Card
             dbc.Col(
@@ -283,7 +284,8 @@ def create_liquidity_panel() -> dbc.Row:
                         ),
                     ]
                 ),
-                width=6,
+                xs=12,
+                md=6,
             ),
         ],
         className="mb-4",

@@ -93,12 +93,14 @@ def create_layout() -> html.Div:
                             # Regime panel
                             dbc.Col(
                                 create_regime_panel(),
-                                width=6,
+                                xs=12,
+                                md=6,
                             ),
                             # Correlation heatmap panel
                             dbc.Col(
                                 create_correlation_panel(),
-                                width=6,
+                                xs=12,
+                                md=6,
                             ),
                         ],
                         className="mb-4",
@@ -121,22 +123,30 @@ def create_layout() -> html.Div:
                             # FX panel
                             dbc.Col(
                                 create_fx_panel(),
-                                width=3,
+                                xs=12,
+                                md=6,
+                                lg=3,
                             ),
                             # Stress panel
                             dbc.Col(
                                 create_stress_panel(),
-                                width=3,
+                                xs=12,
+                                md=6,
+                                lg=3,
                             ),
                             # Commodities panel
                             dbc.Col(
                                 create_commodities_panel(),
-                                width=3,
+                                xs=12,
+                                md=6,
+                                lg=3,
                             ),
                             # Capital flows panel
                             dbc.Col(
                                 create_flows_panel(),
-                                width=3,
+                                xs=12,
+                                md=6,
+                                lg=3,
                             ),
                         ],
                         className="mb-4",
@@ -149,12 +159,14 @@ def create_layout() -> html.Div:
                             # Central Bank News panel
                             dbc.Col(
                                 create_news_panel(),
-                                width=6,
+                                xs=12,
+                                md=6,
                             ),
                             # FOMC Statement Diff panel (Plan 14-08)
                             dbc.Col(
                                 create_fomc_diff_panel(),
-                                width=6,
+                                xs=12,
+                                md=6,
                             ),
                         ],
                         className="mb-4",
@@ -167,12 +179,14 @@ def create_layout() -> html.Div:
                             # EIA Oil Data panel
                             dbc.Col(
                                 create_eia_panel(),
-                                width=6,
+                                xs=12,
+                                md=6,
                             ),
                             # Inflation Expectations panel (Phase 19)
                             dbc.Col(
                                 create_inflation_panel(),
-                                width=6,
+                                xs=12,
+                                md=6,
                             ),
                         ],
                         className="mb-4",
