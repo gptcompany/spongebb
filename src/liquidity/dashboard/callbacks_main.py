@@ -17,6 +17,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, Input, Output, State, callback_context, dcc
 
+from liquidity.config import get_settings
 from liquidity.dashboard.components.calendar import (
     add_calendar_overlay,
     create_calendar_events_from_dict,
@@ -73,7 +74,6 @@ from liquidity.dashboard.components.stress import (
     create_stress_status,
     get_overall_regime,
 )
-from liquidity.config import get_settings
 from liquidity.dashboard.export import HTMLExporter
 
 logger = logging.getLogger(__name__)
