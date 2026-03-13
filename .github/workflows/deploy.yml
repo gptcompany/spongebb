@@ -39,8 +39,8 @@ jobs:
         run: |
           set -euo pipefail
           cd "$REPO_DIR"
-          dotenvx run -- docker compose build liquidity-api liquidity-workspace
-          dotenvx run -- docker compose up -d liquidity-api liquidity-workspace
+          dotenvx run -- docker compose --profile dashboard build liquidity-api liquidity-workspace liquidity-dashboard
+          dotenvx run -- docker compose --profile dashboard up -d liquidity-api liquidity-workspace liquidity-dashboard
 
       - name: Wait for healthy services
         run: |
@@ -69,6 +69,7 @@ jobs:
           cd "$REPO_DIR"
           wait_healthy "http://localhost:8003/health" "liquidity-api" 120
           wait_healthy "http://localhost:6900/health" "liquidity-workspace" 120
+          wait_healthy "http://localhost:8050" "liquidity-dashboard" 120
 
       - name: Verify API response
         run: |
@@ -124,3 +125,6 @@ jobs:
           echo ""
           echo "=== Recent Logs (API, last 10) ==="
           docker compose logs --tail=10 liquidity-api 2>&1 || true
+          echo ""
+          echo "=== Recent Logs (Dashboard, last 10) ==="
+          docker compose --profile dashboard logs --tail=10 liquidity-dashboard 2>&1 || true
