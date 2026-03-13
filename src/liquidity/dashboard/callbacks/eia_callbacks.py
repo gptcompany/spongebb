@@ -217,6 +217,13 @@ async def _fetch_eia_data_async() -> dict[str, Any]:
         except Exception as e:
             logger.warning("EIA collector failed: %s", e)
 
+    # Keep dashboard widgets populated even when EIA credentials/network are unavailable.
+    # Real data remains preferred; mock only fills missing fields.
+    if not data.get("cushing_df") or data.get("cushing_utilization_pct") is None:
+        mock_data = _build_mock_eia_data()
+        for key, value in mock_data.items():
+            data.setdefault(key, value)
+
     return data
 
 

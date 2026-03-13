@@ -15,7 +15,7 @@ from typing import Any
 
 import pandas as pd
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, State, callback_context
+from dash import Dash, Input, Output, State, callback_context, dcc
 
 from liquidity.dashboard.components.calendar import (
     add_calendar_overlay,
@@ -73,6 +73,7 @@ from liquidity.dashboard.components.stress import (
     create_stress_status,
     get_overall_regime,
 )
+from liquidity.config import get_settings
 from liquidity.dashboard.export import HTMLExporter
 
 logger = logging.getLogger(__name__)
@@ -466,7 +467,7 @@ def register_callbacks(app: Dash) -> None:
                 </html>
                 """
 
-            return {"content": content, "filename": filename}
+            return dcc.send_string(content, filename)
 
         except Exception as e:
             logger.error("Export failed: %s", e)
@@ -734,6 +735,7 @@ def register_callbacks(app: Dash) -> None:
         [
             State("fomc-date-1", "value"),
             State("fomc-date-2", "value"),
+            State("fomc-dates-store", "data"),
         ],
         prevent_initial_call=True,
     )
@@ -741,6 +743,7 @@ def register_callbacks(app: Dash) -> None:
         n_clicks: int | None,
         date1_value: str | None,
         date2_value: str | None,
+        available_dates_store: list[str] | None,
     ) -> tuple:
         """Compare two FOMC statements and display diff.
 
@@ -760,9 +763,21 @@ def register_callbacks(app: Dash) -> None:
                 create_empty_diff_view(),
             )
 
-        # Parse dates
+        # Parse dates.
         date1 = parse_date_value(date1_value)
         date2 = parse_date_value(date2_value)
+
+        # If dropdown values are not ready yet, derive defaults from stored options.
+        if not (date1 and date2):
+            parsed_store_dates = [
+                d for d in (parse_date_value(item) for item in (available_dates_store or [])) if d
+            ]
+            if len(parsed_store_dates) >= 2:
+                date2 = date2 or parsed_store_dates[0]
+                date1 = date1 or parsed_store_dates[1]
+            elif len(parsed_store_dates) == 1:
+                date1 = date1 or parsed_store_dates[0]
+                date2 = date2 or parsed_store_dates[0]
 
         if not date1 or not date2:
             return (
@@ -896,7 +911,7 @@ def _fetch_fomc_statement_dates() -> list[date]:
         if importlib.util.find_spec("liquidity.news.fomc"):
             from liquidity.news.fomc import FOMCStatementScraper
 
-            scraper = FOMCStatementScraper()
+            scraper = FOMCStatementScraper(cache_dir=get_settings().cache_dir / "fomc")
             available_dates = asyncio.run(scraper.fetch_available_statement_dates())
             if available_dates:
                 return available_dates
@@ -945,7 +960,7 @@ def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
 
             # Try cache first, then live fetch with scraper fallback chain.
             try:
-                scraper = FOMCStatementScraper()
+                scraper = FOMCStatementScraper(cache_dir=get_settings().cache_dir / "fomc")
 
                 async def _get_statements() -> tuple[Any | None, Any | None]:
                     old_cached = scraper._load_from_cache(old_date)

@@ -239,6 +239,7 @@ class FOMCStatementScraper:
         selectors = [
             "div.col-xs-12.col-sm-8.col-md-8",  # Current Fed layout
             "div#article",  # Legacy layout
+            "div.article__content",
             "div.article",
             "article",
             "div.content",
@@ -256,10 +257,21 @@ class FOMCStatementScraper:
                 text = re.sub(r"\s+", " ", text)
 
                 # Validate it looks like FOMC content
-                if "Federal Reserve" in text or "Committee" in text:
+                if len(text) >= 100 and (
+                    "Federal Reserve" in text or "Committee" in text
+                ):
                     return text.strip()
 
-        raise FOMCScraperError("Could not extract statement content from HTML")
+        paragraphs = [
+            p.get_text(" ", strip=True)
+            for p in soup.find_all("p")
+            if p.get_text(" ", strip=True)
+        ]
+        text = re.sub(r"\s+", " ", " ".join(paragraphs)).strip()
+        if len(text) >= 100:
+            return text
+
+        raise FOMCScraperError("Could not extract valid statement content from HTML")
 
     async def _fetch_from_fed(
         self, statement_date: date, meeting_date: date | None = None
@@ -289,17 +301,24 @@ class FOMCStatementScraper:
 
         response.raise_for_status()
 
-        soup = BeautifulSoup(response.text, "lxml")
-        raw_text = self._extract_statement_text(soup)
+        try:
+            soup = BeautifulSoup(response.text, "lxml")
+            raw_text = self._extract_statement_text(soup)
+            if len(raw_text) < 100:
+                raise FOMCScraperError("Fed returned insufficient statement content")
 
-        return FOMCStatement(
-            date=statement_date,
-            meeting_date=meeting_date or statement_date,
-            raw_text=raw_text,
-            source="fed",
-            url=HttpUrl(url),
-            fetched_at=datetime.utcnow(),
-        )
+            return FOMCStatement(
+                date=statement_date,
+                meeting_date=meeting_date or statement_date,
+                raw_text=raw_text,
+                source="fed",
+                url=HttpUrl(url),
+                fetched_at=datetime.utcnow(),
+            )
+        except Exception as e:
+            if isinstance(e, FOMCScraperError):
+                raise
+            raise FOMCScraperError(f"Fed parsing failed: {e}") from e
 
     async def _fetch_from_fedtools(
         self, statement_date: date, meeting_date: date | None = None
