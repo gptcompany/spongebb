@@ -168,7 +168,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: runtime
-    container_name: spongebb-dashboard
+    container_name: ${LIQUIDITY_DASHBOARD_CONTAINER_NAME:-spongebb-dashboard}
     profiles:
       - dashboard
     restart: unless-stopped
