@@ -882,15 +882,15 @@ def _fetch_fomc_statement_dates() -> list[date]:
         if importlib.util.find_spec("liquidity.news.fomc"):
             from liquidity.news.fomc import FOMCStatementScraper
 
-            # Get cached dates from scraper
             scraper = FOMCStatementScraper()
-            cached_dates = scraper.list_cached()
-
-            if cached_dates:
-                return cached_dates
+            available_dates = asyncio.run(scraper.fetch_available_statement_dates())
+            if available_dates:
+                return available_dates
 
     except ImportError as e:
         logger.warning("Could not import FOMC scraper: %s", e)
+    except Exception as e:
+        logger.warning("Could not discover FOMC statement dates: %s", e)
 
     return []
 

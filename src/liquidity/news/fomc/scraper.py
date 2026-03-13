@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 FED_STATEMENT_PATTERN = (
     "https://www.federalreserve.gov/newsevents/pressreleases/monetary{date}a.htm"
 )
+FED_FOMC_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 GITHUB_FOMC_REPO = "https://raw.githubusercontent.com/fomc/statements/main/"
 
 # Cache configuration
@@ -568,3 +569,41 @@ class FOMCStatementScraper:
                 continue
 
         return sorted(dates, reverse=True)
+
+    async def fetch_available_statement_dates(self, max_dates: int = 24) -> list[date]:
+        """Discover available FOMC statement dates from the Federal Reserve calendar page.
+
+        Falls back to locally cached statement dates if discovery fails.
+
+        Args:
+            max_dates: Maximum number of dates to return (most recent first).
+
+        Returns:
+            List of statement dates sorted descending.
+        """
+        try:
+            client = await self._get_client()
+            response = await client.get(FED_FOMC_CALENDAR_URL)
+            response.raise_for_status()
+
+            # Links follow /newsevents/pressreleases/monetaryYYYYMMDDa.htm
+            matches = re.findall(r"monetary(\d{8})a\.htm", response.text)
+
+            discovered: set[date] = set()
+            today = date.today()
+            for token in matches:
+                try:
+                    parsed = datetime.strptime(token, "%Y%m%d").date()
+                except ValueError:
+                    continue
+                if parsed <= today:
+                    discovered.add(parsed)
+
+            if discovered:
+                return sorted(discovered, reverse=True)[:max_dates]
+
+        except Exception as e:
+            logger.warning("Failed to discover FOMC statement dates from Fed calendar: %s", e)
+
+        # Last resort: local cache only (no synthetic dates here).
+        return self.list_cached()[:max_dates]

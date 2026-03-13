@@ -560,6 +560,49 @@ class TestFOMCStatementScraperContextManager:
         # Should not raise
 
 
+class TestFOMCStatementDateDiscovery:
+    """Tests for FOMC statement date discovery."""
+
+    @pytest.mark.asyncio
+    async def test_fetch_available_statement_dates_from_fed_page(
+        self, scraper: FOMCStatementScraper
+    ) -> None:
+        """Extract dates from Fed calendar HTML links."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status = MagicMock()
+        mock_response.text = """
+            <a href="/newsevents/pressreleases/monetary20250129a.htm">Statement</a>
+            <a href="/newsevents/pressreleases/monetary20241218a.htm">Statement</a>
+            <a href="/newsevents/pressreleases/monetary20250129a.htm">Duplicate</a>
+        """
+
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_response)
+
+        with patch.object(scraper, "_get_client", return_value=mock_client):
+            dates = await scraper.fetch_available_statement_dates(max_dates=10)
+
+        assert dates == [date(2025, 1, 29), date(2024, 12, 18)]
+
+    @pytest.mark.asyncio
+    async def test_fetch_available_statement_dates_falls_back_to_cache(
+        self,
+        scraper: FOMCStatementScraper,
+        sample_statement: FOMCStatement,
+    ) -> None:
+        """Use cached dates if Fed calendar fetch fails."""
+        scraper._save_to_cache(sample_statement)
+
+        with patch.object(
+            scraper,
+            "_get_client",
+            side_effect=RuntimeError("network unavailable"),
+        ):
+            dates = await scraper.fetch_available_statement_dates(max_dates=10)
+
+        assert dates == [sample_statement.date]
+
+
 class TestFOMCStatementScraperFedTools:
     """Tests for FedTools integration (Tier 2)."""
 
