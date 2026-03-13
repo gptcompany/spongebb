@@ -258,7 +258,15 @@ class FXCollector(BaseCollector[pd.DataFrame]):
             DataFrame with DXY data.
         """
         try:
-            return await self.collect(symbols=["DX-Y.NYB"], period=period)
+            yahoo_df = await self.collect(symbols=["DX-Y.NYB"], period=period)
+            if not yahoo_df.empty:
+                return yahoo_df
+
+            if not use_fred_fallback:
+                return yahoo_df
+
+            logger.warning("DXY Yahoo returned empty data, trying FRED fallback")
+            return await self._collect_dxy_fred(period)
         except CollectorFetchError as e:
             if not use_fred_fallback:
                 raise

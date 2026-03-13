@@ -265,9 +265,17 @@ def register_callbacks(app: Dash) -> None:
             Output("calendar-events", "children"),
         ],
         [Input("refresh-interval", "n_intervals")],
+        [
+            State("fomc-date-1", "value"),
+            State("fomc-date-2", "value"),
+        ],
         prevent_initial_call=False,
     )
-    def update_extended_panels(n_intervals: int) -> tuple:  # noqa: ARG001
+    def update_extended_panels(
+        n_intervals: int,  # noqa: ARG001
+        selected_date_1: str | None = None,
+        selected_date_2: str | None = None,
+    ) -> tuple:
         """Update all extended dashboard panels.
 
         Triggered by auto-refresh interval.
@@ -336,7 +344,13 @@ def register_callbacks(app: Dash) -> None:
             )
 
             # Calendar panel
-            calendar_events = create_calendar_events_from_dict(data.get("calendar_events", []))
+            selected_fomc_dates = {
+                d for d in [selected_date_1, selected_date_2] if d
+            }
+            calendar_events = create_calendar_events_from_dict(
+                data.get("calendar_events", []),
+                selected_dates=selected_fomc_dates,
+            )
 
             return (
                 dxy_fig,
@@ -892,6 +906,21 @@ def _fetch_fomc_statement_dates() -> list[date]:
     except Exception as e:
         logger.warning("Could not discover FOMC statement dates: %s", e)
 
+    # Real fallback: use known FOMC meeting decision dates from the calendar module.
+    # This keeps the date pickers usable even when remote discovery is unavailable.
+    try:
+        from liquidity.calendar.central_banks import FOMC_MEETINGS_2026
+
+        today = date.today()
+        decision_dates = sorted(
+            [meeting_end for _, meeting_end in FOMC_MEETINGS_2026 if meeting_end <= today],
+            reverse=True,
+        )
+        if decision_dates:
+            return decision_dates
+    except Exception as e:
+        logger.warning("Could not load calendar fallback FOMC dates: %s", e)
+
     return []
 
 
@@ -914,13 +943,19 @@ def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
         if importlib.util.find_spec("liquidity.news.fomc"):
             from liquidity.news.fomc import FOMCStatementScraper, StatementDiffEngine
 
-            # Try to fetch from scraper (sync wrapper)
+            # Try cache first, then live fetch with scraper fallback chain.
             try:
                 scraper = FOMCStatementScraper()
 
-                # Load from cache if available
-                old_statement = scraper._load_from_cache(old_date)
-                new_statement = scraper._load_from_cache(new_date)
+                async def _get_statements() -> tuple[Any | None, Any | None]:
+                    old_cached = scraper._load_from_cache(old_date)
+                    new_cached = scraper._load_from_cache(new_date)
+
+                    old_stmt = old_cached or await scraper.fetch(old_date)
+                    new_stmt = new_cached or await scraper.fetch(new_date)
+                    return old_stmt, new_stmt
+
+                old_statement, new_statement = asyncio.run(_get_statements())
 
                 if old_statement and new_statement:
                     engine = StatementDiffEngine()
@@ -932,7 +967,7 @@ def _fetch_and_diff_statements(old_date: date, new_date: date) -> Any:
                     )
 
             except Exception as e:
-                logger.warning("Failed to fetch statements from scraper: %s", e)
+                logger.warning("Failed to fetch/diff statements from scraper: %s", e)
 
     except ImportError as e:
         logger.warning("Could not import FOMC modules: %s", e)

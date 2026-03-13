@@ -120,7 +120,10 @@ def create_calendar_events(events: list[CalendarEvent] | None = None) -> list:
     return badges
 
 
-def create_calendar_events_from_dict(events: list[dict] | None = None) -> list:
+def create_calendar_events_from_dict(
+    events: list[dict] | None = None,
+    selected_dates: set[str] | None = None,
+) -> list:
     """Render event badges from dictionary format.
 
     Alternative function for when events are passed as dicts.
@@ -145,6 +148,8 @@ def create_calendar_events_from_dict(events: list[dict] | None = None) -> list:
 
     badges = []
     today = date.today()
+
+    selected_dates = selected_dates or set()
 
     for event in events[:5]:
         # Parse impact
@@ -178,6 +183,21 @@ def create_calendar_events_from_dict(events: list[dict] | None = None) -> list:
 
         title = event.get("title", "Event")
 
+        event_iso = event_date.isoformat()
+        is_selected = event_iso in selected_dates
+
+        badge_style = {"fontSize": "0.85rem"}
+        if is_selected:
+            # Explicitly highlight dates selected in the FOMC comparison panel.
+            badge_style.update(
+                {
+                    "fontSize": "0.9rem",
+                    "fontWeight": "700",
+                    "border": "2px solid #4dabf7",
+                    "boxShadow": "0 0 0 2px rgba(77, 171, 247, 0.25)",
+                }
+            )
+
         badges.append(
             dbc.Badge(
                 [
@@ -186,7 +206,7 @@ def create_calendar_events_from_dict(events: list[dict] | None = None) -> list:
                 ],
                 color=color,
                 className="me-2 mb-1",
-                style={"fontSize": "0.85rem"},
+                style=badge_style,
             )
         )
 
