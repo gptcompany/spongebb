@@ -25,7 +25,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, Linux, X64, muletto]
+    runs-on: [self-hosted, Linux, X64, sam-workstation]
     timeout-minutes: 30
     concurrency:
       group: core-deploy-${{ github.repository }}-${{ github.ref }}
@@ -34,6 +34,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Extract Metadata
+        id: meta
+        run: |
+          VERSION=$(grep '^version =' pyproject.toml | cut -d '"' -f 2)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          echo "build_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
 
       - name: Build and deploy services
         run: |

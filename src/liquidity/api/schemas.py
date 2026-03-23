@@ -14,6 +14,8 @@ class APIMetadata(BaseModel):
     timestamp: datetime = Field(description="Response generation timestamp")
     source: str = Field(default="spongebb", description="Data source identifier")
     version: str = Field(default="1.0.0", description="API version")
+    commit_sha: str = Field(default="unknown", description="Git commit SHA")
+    build_at: str = Field(default="unknown", description="Build timestamp")
 
 
 class NetLiquidityResponse(BaseModel):
@@ -119,6 +121,8 @@ class HealthResponse(BaseModel):
     status: str = Field(description="Service health status")
     questdb_connected: bool = Field(description="QuestDB connection status")
     version: str = Field(default="1.0.0", description="API version")
+    commit_sha: str = Field(default="unknown", description="Git commit SHA")
+    build_at: str = Field(default="unknown", description="Build timestamp")
 
 
 class ErrorResponse(BaseModel):

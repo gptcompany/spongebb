@@ -9,6 +9,15 @@
 # =============================================================================
 FROM python:3.11-slim AS builder-prod
 
+
+ARG VERSION=unknown
+ARG COMMIT_SHA=unknown
+ARG BUILD_AT=unknown
+
+ENV SPONGEBB_VERSION=${VERSION}
+ENV SPONGEBB_COMMIT_SHA=${COMMIT_SHA}
+ENV SPONGEBB_BUILD_AT=${BUILD_AT}
+
 WORKDIR /app
 
 # Install uv for fast package management
@@ -32,6 +41,15 @@ RUN uv sync --frozen --no-dev
 # =============================================================================
 FROM python:3.11-slim AS builder-test
 
+
+ARG VERSION=unknown
+ARG COMMIT_SHA=unknown
+ARG BUILD_AT=unknown
+
+ENV SPONGEBB_VERSION=${VERSION}
+ENV SPONGEBB_COMMIT_SHA=${COMMIT_SHA}
+ENV SPONGEBB_BUILD_AT=${BUILD_AT}
+
 WORKDIR /app
 
 # Install uv for fast package management
@@ -54,6 +72,15 @@ RUN uv sync --frozen --dev
 # Stage 3: Runtime (production)
 # =============================================================================
 FROM python:3.11-slim AS runtime
+
+
+ARG VERSION=unknown
+ARG COMMIT_SHA=unknown
+ARG BUILD_AT=unknown
+
+ENV SPONGEBB_VERSION=${VERSION}
+ENV SPONGEBB_COMMIT_SHA=${COMMIT_SHA}
+ENV SPONGEBB_BUILD_AT=${BUILD_AT}
 
 WORKDIR /app
 
@@ -101,6 +128,15 @@ CMD ["python", "-m", "uvicorn", "liquidity.api:app", "--host", "0.0.0.0", "--por
 # Stage 4: Runtime (tests)
 # =============================================================================
 FROM python:3.11-slim AS test-runtime
+
+
+ARG VERSION=unknown
+ARG COMMIT_SHA=unknown
+ARG BUILD_AT=unknown
+
+ENV SPONGEBB_VERSION=${VERSION}
+ENV SPONGEBB_COMMIT_SHA=${COMMIT_SHA}
+ENV SPONGEBB_BUILD_AT=${BUILD_AT}
 
 WORKDIR /app
 
