@@ -94,7 +94,7 @@ jobs:
       - name: Update coverage badge
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' && steps.coverage_badge.outputs.enabled == 'true'
         continue-on-error: true
-        uses: schneegans/dynamic-badges-action@v1.7.0
+        uses: schneegans/dynamic-badges-action@v1.8.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
           gistID: ${{ steps.coverage_badge.outputs.gist_id }}
