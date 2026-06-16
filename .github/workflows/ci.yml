@@ -27,6 +27,8 @@ jobs:
     name: "self-hosted / py3.11"
     runs-on: [self-hosted, Linux, X64, muletto]
     timeout-minutes: 15
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
 
     steps:
       - name: Checkout

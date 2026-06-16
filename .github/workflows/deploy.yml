@@ -101,7 +101,21 @@ jobs:
             echo "DISCORD_WEBHOOK_SPONGEBB missing; skipping success notification."
             exit 0
           fi
-          payload=$(python3 -c 'import json, os; print(json.dumps({"content": f"✅ **spongebb deploy riuscito**\\nBranch: `{os.environ[\"GITHUB_REF_NAME\"]}`\\nCommit: `{os.environ[\"GITHUB_SHA\"]}`\\nAPI: http://localhost:8003/health\\nWorkspace: http://localhost:6900/health"}))')
+          payload=$(python3 <<'PY'
+          import json
+          import os
+
+          print(json.dumps({
+              "content": (
+                  "**spongebb deploy riuscito**\n"
+                  f"Branch: `{os.environ['GITHUB_REF_NAME']}`\n"
+                  f"Commit: `{os.environ['GITHUB_SHA']}`\n"
+                  "API: http://localhost:8003/health\n"
+                  "Workspace: http://localhost:6900/health"
+              )
+          }))
+          PY
+          )
           curl -fsSL -X POST "$WEBHOOK" \
             -H "Content-Type: application/json" \
             -d "$payload"
@@ -119,7 +133,22 @@ jobs:
             echo "DISCORD_WEBHOOK_SPONGEBB missing; skipping failure notification."
             exit 0
           fi
-          payload=$(python3 -c 'import json, os; print(json.dumps({"content": f"🚨 **spongebb deploy fallito**\\nBranch: `{os.environ[\"GITHUB_REF_NAME\"]}`\\nCommit: `{os.environ[\"GITHUB_SHA\"]}`\\nWorkflow: {os.environ[\"GITHUB_SERVER_URL\"]}/{os.environ[\"GITHUB_REPOSITORY\"]}/actions/runs/{os.environ[\"GITHUB_RUN_ID\"]}"}))')
+          payload=$(python3 <<'PY'
+          import json
+          import os
+
+          print(json.dumps({
+              "content": (
+                  "**spongebb deploy fallito**\n"
+                  f"Branch: `{os.environ['GITHUB_REF_NAME']}`\n"
+                  f"Commit: `{os.environ['GITHUB_SHA']}`\n"
+                  f"Workflow: {os.environ['GITHUB_SERVER_URL']}/"
+                  f"{os.environ['GITHUB_REPOSITORY']}/actions/runs/"
+                  f"{os.environ['GITHUB_RUN_ID']}"
+              )
+          }))
+          PY
+          )
           curl -fsSL -X POST "$WEBHOOK" \
             -H "Content-Type: application/json" \
             -d "$payload"
