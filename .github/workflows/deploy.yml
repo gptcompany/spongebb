@@ -25,7 +25,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, Linux, X64, sam-workstation]
+    runs-on: [self-hosted, Linux, X64, muletto]
     timeout-minutes: 30
     concurrency:
       group: core-deploy-${{ github.repository }}-${{ github.ref }}
