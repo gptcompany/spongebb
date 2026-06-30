@@ -1,0 +1,10 @@
+# Project-scoped Codex MCP config for spongebb.
+# These servers are loaded only when Codex runs with cwd/project root in this repo.
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+
+[mcp_servers.chromedev]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest"]
