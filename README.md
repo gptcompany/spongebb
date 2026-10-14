@@ -157,8 +157,8 @@ src/liquidity/
 ## CI/CD
 
 Push to `main` triggers:
-1. **CI** (`self-hosted`, `Linux`, `X64`, `muletto`) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
-2. **Core Deploy** (`self-hosted`, `Linux`, `X64`, `muletto`) — rebuild + restart of `liquidity-api` and `liquidity-workspace`, health verification, Discord notification
+1. **CI** (`vars.CI_RUNS_ON`, currently `gbg-ci`) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
+2. **Core Deploy** (`self-hosted`, `prod`, `tokyo`) — rebuild + restart of `liquidity-api` and `liquidity-workspace`, health verification, Discord notification
 3. **Trigger Progressive Deploy** — `repository_dispatch` to `gptcompany/progressive-deploy` with event `spongebb-build`
 4. **Release** — creates a GitHub release from `pyproject.toml` version (`v<version>`) after successful CI on `main`
 
