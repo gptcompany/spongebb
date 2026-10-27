@@ -25,7 +25,7 @@ concurrency:
 jobs:
   test:
     name: "self-hosted / py3.11"
-    runs-on: ${{ vars.CI_RUNS_ON }}
+    runs-on: ${{ fromJSON(vars.CI_DOCKER_RUNS_ON || '["self-hosted","gbg-ci"]') }}
     timeout-minutes: 15
     env:
       UV_CACHE_DIR: /tmp/uv-cache-${{ github.run_id }}-${{ github.run_attempt }}
