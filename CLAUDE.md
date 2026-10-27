@@ -152,13 +152,13 @@ See: `.planning/reference/appscript_v3.4.1.md` for weights and thresholds.
 ## CI/CD
 
 ```
-Push to main --> CI (self-hosted, CI_DOCKER_RUNS_ON, default gbg-ci) --> Deploy (self-hosted, prod, tokyo)
+Push to main --> CI (CI_DOCKER_RUNS_ON, default ubuntu-latest for Docker) --> Deploy (self-hosted, prod, tokyo)
 ```
 
 - **CI** (`.github/workflows/ci.yml`): lint (ruff) + test (pytest) + browser E2E + coverage badge
 - **Deploy** (`.github/workflows/deploy.yml`): Docker build + rolling restart
 - **Coverage badge**: Gist `2f424df721ea43fb25188b03df5a8317`
-- **Runners**: no GitHub-hosted runners. CI uses `vars.CI_DOCKER_RUNS_ON` (default `self-hosted` + `gbg-ci`, Docker), deploy uses `self-hosted` + `prod` + `tokyo`, every other job uses `vars.CI_RUNS_ON` (sg-ci)
+- **Runners**: CI uses Docker, so it declares `vars.CI_DOCKER_RUNS_ON` with default `ubuntu-latest` (no self-hosted runner has Docker for PR jobs, gbg-agents F-488); deploy uses `self-hosted` + `prod` + `tokyo`, every other job uses `vars.CI_RUNS_ON` (sg-ci)
 
 ## Testing
 

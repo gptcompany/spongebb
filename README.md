@@ -157,12 +157,12 @@ src/liquidity/
 ## CI/CD
 
 Push to `main` triggers:
-1. **CI** (`vars.CI_DOCKER_RUNS_ON`, default `self-hosted` + `gbg-ci`, because of the Docker Compose smoke) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
+1. **CI** (`vars.CI_DOCKER_RUNS_ON`, default `ubuntu-latest`, because of the Docker Compose smoke: no self-hosted runner has Docker for PR jobs, gbg-agents F-488) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
 2. **Core Deploy** (`self-hosted`, `prod`, `tokyo`) — rebuild + restart of `liquidity-api` and `liquidity-workspace`, health verification, Discord notification
 3. **Trigger Progressive Deploy** — `repository_dispatch` to `gptcompany/progressive-deploy` with event `spongebb-build`
 4. **Release** — creates a GitHub release from `pyproject.toml` version (`v<version>`) after successful CI on `main`
 
-Jobs without Docker (Release, Trigger Progressive Deploy, Sync Planning, Visual Regression) run on `vars.CI_RUNS_ON` (currently `sg-ci`); no job uses GitHub-hosted runners.
+Jobs without Docker (Release, Trigger Progressive Deploy, Sync Planning, Visual Regression) run on `vars.CI_RUNS_ON` (currently `sg-ci`); only the Docker CI job declares a GitHub-hosted runner.
 
 Notes:
 - Existing local tags currently include `v2.0`, `v3.0`, and `v5.0`; the release workflow will not overwrite an existing release/tag.
