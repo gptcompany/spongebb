@@ -22,7 +22,7 @@ name: Visual Regression
 
 jobs:
   visual-regression:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNS_ON }}
     timeout-minutes: 40
 
     steps:
