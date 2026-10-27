@@ -152,13 +152,13 @@ See: `.planning/reference/appscript_v3.4.1.md` for weights and thresholds.
 ## CI/CD
 
 ```
-Push to main --> CI (ubuntu-latest) --> Deploy (self-hosted)
+Push to main --> CI (self-hosted, CI_DOCKER_RUNS_ON, default gbg-ci) --> Deploy (self-hosted, prod, tokyo)
 ```
 
 - **CI** (`.github/workflows/ci.yml`): lint (ruff) + test (pytest) + browser E2E + coverage badge
 - **Deploy** (`.github/workflows/deploy.yml`): Docker build + rolling restart
 - **Coverage badge**: Gist `2f424df721ea43fb25188b03df5a8317`
-- **Self-hosted runner**: `sam-workstation` (ID 47)
+- **Runners**: no GitHub-hosted runners. CI uses `vars.CI_DOCKER_RUNS_ON` (default `self-hosted` + `gbg-ci`, Docker), deploy uses `self-hosted` + `prod` + `tokyo`, every other job uses `vars.CI_RUNS_ON` (sg-ci)
 
 ## Testing
 
