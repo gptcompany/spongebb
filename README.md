@@ -7,7 +7,6 @@
 
 <p align="center">
   <a href="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="https://github.com/gptcompany/spongebb/actions/workflows/deploy.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/deploy.yml/badge.svg?branch=main" alt="Core Deploy"></a>
   <a href="https://github.com/gptcompany/spongebb/releases"><img src="https://img.shields.io/github/v/release/gptcompany/spongebb?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gptprojectmanager/2f424df721ea43fb25188b03df5a8317/raw/spongebb-coverage.json" alt="Coverage">
   <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python" alt="Python">

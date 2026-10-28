@@ -10,7 +10,7 @@ name: Sync Planning
 
 jobs:
   sync:
-    runs-on: ${{ vars.CI_RUNS_ON }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

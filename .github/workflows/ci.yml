@@ -24,8 +24,9 @@ concurrency:
 
 jobs:
   test:
-    name: "self-hosted / py3.11"
-    runs-on: ${{ fromJSON(vars.CI_DOCKER_RUNS_ON || '["ubuntu-latest"]') }}
+    # The ruleset requires the check context "test": the job name must match it.
+    name: test
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       UV_CACHE_DIR: /tmp/uv-cache-${{ github.run_id }}-${{ github.run_attempt }}
@@ -56,6 +57,9 @@ jobs:
 
       - name: Install dependencies
         run: uv sync --frozen --extra dev
+
+      - name: Check workflow runners
+        run: uv run python scripts/check_workflow_runners.py
 
       - name: Lint
         run: uv run ruff check src/ tests/
