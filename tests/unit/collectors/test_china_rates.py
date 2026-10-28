@@ -8,7 +8,7 @@ Tests use mocked akshare responses to verify:
 """
 
 import sys
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
@@ -20,11 +20,17 @@ from liquidity.collectors.china_rates import (
 )
 
 
+def _recent_dates() -> list[str]:
+    """Last three days relative to now: the collector's default window is the last 90 days."""
+    today = datetime.now(UTC).date()
+    return [(today - timedelta(days=n)).isoformat() for n in (1, 2, 3)]
+
+
 @pytest.fixture
 def mock_shibor_data() -> pd.DataFrame:
     """Sample akshare SHIBOR response."""
     return pd.DataFrame({
-        "日期": ["2026-02-04", "2026-02-03", "2026-02-02"],
+        "日期": _recent_dates(),
         "O/N-定价": [1.325, 1.320, 1.318],
         "O/N-涨跌幅": [0.005, 0.002, -0.001],
         "1W-定价": [1.650, 1.645, 1.640],
@@ -48,7 +54,7 @@ def mock_shibor_data() -> pd.DataFrame:
 def mock_dr007_data() -> pd.DataFrame:
     """Sample akshare DR007 response."""
     return pd.DataFrame({
-        "日期": ["2026-02-04", "2026-02-03", "2026-02-02"],
+        "日期": _recent_dates(),
         "利率": [1.70, 1.68, 1.65],
     })
 
@@ -313,9 +319,10 @@ class TestChinaRatesCollector:
         """Test date range filtering works correctly."""
         collector = ChinaRatesCollector()
 
-        # Set narrow date range that includes Feb 3 only
-        start_date = datetime(2026, 2, 3)
-        end_date = datetime(2026, 2, 3, 23, 59, 59)
+        # Set narrow date range that includes the middle fixture day only
+        target = datetime.fromisoformat(_recent_dates()[1])
+        start_date = target
+        end_date = target.replace(hour=23, minute=59, second=59)
 
         mock_ak = MagicMock()
         mock_ak.macro_china_shibor_all.return_value = mock_shibor_data
@@ -326,11 +333,11 @@ class TestChinaRatesCollector:
                 end_date=end_date,
             )
 
-            # Should only have data from Feb 3
+            # Should only have data from the target day
             if not result.empty:
                 dates = result["timestamp"].dt.date.unique()
                 assert len(dates) == 1
-                assert dates[0] == datetime(2026, 2, 3).date()
+                assert dates[0] == target.date()
 
 
 class TestChinaRatesErrorHandling:
