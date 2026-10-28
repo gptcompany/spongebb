@@ -1,4 +1,3 @@
-import os
 """FastAPI server for the Global Liquidity Monitor API.
 
 Provides REST endpoints for:
