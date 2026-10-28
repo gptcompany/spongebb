@@ -7,7 +7,6 @@
 
 <p align="center">
   <a href="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="https://github.com/gptcompany/spongebb/actions/workflows/deploy.yml"><img src="https://github.com/gptcompany/spongebb/actions/workflows/deploy.yml/badge.svg?branch=main" alt="Core Deploy"></a>
   <a href="https://github.com/gptcompany/spongebb/releases"><img src="https://img.shields.io/github/v/release/gptcompany/spongebb?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gptprojectmanager/2f424df721ea43fb25188b03df5a8317/raw/spongebb-coverage.json" alt="Coverage">
   <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python" alt="Python">
@@ -157,10 +156,12 @@ src/liquidity/
 ## CI/CD
 
 Push to `main` triggers:
-1. **CI** (`self-hosted`, `Linux`, `X64`, `muletto`) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
-2. **Core Deploy** (`self-hosted`, `Linux`, `X64`, `muletto`) — rebuild + restart of `liquidity-api` and `liquidity-workspace`, health verification, Discord notification
+1. **CI** (`vars.CI_DOCKER_RUNS_ON`, default `ubuntu-latest`, because of the Docker Compose smoke: no self-hosted runner has Docker for PR jobs, gbg-agents F-488) — `uv sync`, Ruff, unit tests with coverage, Docker Compose smoke, optional coverage badge refresh
+2. **Core Deploy** (`self-hosted`, `prod`, `tokyo`) — rebuild + restart of `liquidity-api` and `liquidity-workspace`, health verification, Discord notification
 3. **Trigger Progressive Deploy** — `repository_dispatch` to `gptcompany/progressive-deploy` with event `spongebb-build`
 4. **Release** — creates a GitHub release from `pyproject.toml` version (`v<version>`) after successful CI on `main`
+
+Jobs without Docker (Release, Trigger Progressive Deploy, Sync Planning, Visual Regression) run on `vars.CI_RUNS_ON` (currently `sg-ci`); only the Docker CI job declares a GitHub-hosted runner.
 
 Notes:
 - Existing local tags currently include `v2.0`, `v3.0`, and `v5.0`; the release workflow will not overwrite an existing release/tag.

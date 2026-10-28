@@ -219,7 +219,8 @@ async def _fetch_eia_data_async() -> dict[str, Any]:
 
     # Keep dashboard widgets populated even when EIA credentials/network are unavailable.
     # Real data remains preferred; mock only fills missing fields.
-    if not data.get("cushing_df") or data.get("cushing_utilization_pct") is None:
+    cushing_df = data.get("cushing_df")
+    if (cushing_df is None or cushing_df.empty) or data.get("cushing_utilization_pct") is None:
         mock_data = _build_mock_eia_data()
         for key, value in mock_data.items():
             data.setdefault(key, value)

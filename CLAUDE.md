@@ -152,13 +152,13 @@ See: `.planning/reference/appscript_v3.4.1.md` for weights and thresholds.
 ## CI/CD
 
 ```
-Push to main --> CI (ubuntu-latest) --> Deploy (self-hosted)
+Push to main --> CI (ubuntu-latest) --> trigger-progressive-deploy (repository_dispatch) --> progressive-deploy
 ```
 
 - **CI** (`.github/workflows/ci.yml`): lint (ruff) + test (pytest) + browser E2E + coverage badge
-- **Deploy** (`.github/workflows/deploy.yml`): Docker build + rolling restart
+- **Deploy**: `.github/workflows/trigger-progressive-deploy.yml` sends a repository_dispatch to gptcompany/progressive-deploy, which deploys; this public repo has no deploy job (the prod runner is not allowed in public repositories, gbg-agents F-491)
 - **Coverage badge**: Gist `2f424df721ea43fb25188b03df5a8317`
-- **Self-hosted runner**: `sam-workstation` (ID 47)
+- **Runners**: the repository is public, so every job uses the literal `runs-on: ubuntu-latest` (gbg-agents F-491); `.github/runner-policy.json` declares the visibility and `scripts/check_workflow_runners.py` enforces it in CI
 
 ## Testing
 

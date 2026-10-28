@@ -5,6 +5,8 @@ from unittest.mock import AsyncMock, patch
 
 import pandas as pd
 import pytest
+from openbb_core.app.model.abstract.error import OpenBBError
+from pydantic import SecretStr
 
 from liquidity.calculators.stealth_qe import (
     SCORE_CONFIG,
@@ -610,10 +612,18 @@ class TestGetCurrent:
             }
         )
 
-        with patch.object(
-            calc, "calculate_daily", new_callable=AsyncMock
-        ) as mock_daily_call:
+        # On a Wednesday get_current also calls calculate_weekly: mock the FRED fetch
+        # so the test never touches the network, whatever weekday it runs on.
+        with (
+            patch.object(
+                calc, "calculate_daily", new_callable=AsyncMock
+            ) as mock_daily_call,
+            patch.object(
+                calc._collector, "collect", new_callable=AsyncMock
+            ) as mock_fred,
+        ):
             mock_daily_call.return_value = mock_daily
+            mock_fred.return_value = pd.DataFrame()
             result = await calc.get_current()
 
             assert isinstance(result, StealthQEResult)
@@ -806,3 +816,25 @@ class TestDailyPreStartSmoothing:
 
             # Result should have data
             assert isinstance(result, pd.DataFrame)
+
+
+class TestMissingFredCredential:
+    """Without a FRED key the calculator must fail closed, never return empty data."""
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("method", ["calculate_daily", "calculate_weekly", "get_current"])
+    async def test_no_api_key_raises_explicit_error(self, method):
+        """No credential: CollectorFetchError naming the key, not an empty result."""
+        from liquidity.collectors.base import CollectorFetchError
+        from liquidity.config import get_settings
+
+        settings = get_settings().model_copy(update={"fred_api_key": SecretStr("")})
+        calc = StealthQECalculator(settings=settings)
+        missing = OpenBBError("Missing credential 'fred_api_key'.")
+
+        # OpenBB raises this before any request when no key is set; mocking it keeps
+        # the test offline even on hosts that have a key in the OpenBB user settings.
+        with patch("liquidity.collectors.fred.obb") as mock_obb:
+            mock_obb.economy.fred_series.side_effect = missing
+            with pytest.raises(CollectorFetchError, match="fred_api_key"):
+                await getattr(calc, method)()
