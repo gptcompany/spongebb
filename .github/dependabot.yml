@@ -1,3 +1,5 @@
+# Security updates only: version updates are managed by Renovate.
+# Each ecosystem keeps its separate security-update PR limit.
 version: 2
 
 updates:
@@ -7,7 +9,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
       - "python"
@@ -23,6 +25,7 @@ updates:
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    open-pull-requests-limit: 0
     schedule:
       interval: "monthly"
     labels:
@@ -34,6 +37,7 @@ updates:
   # Docker base images
   - package-ecosystem: "docker"
     directory: "/"
+    open-pull-requests-limit: 0
     schedule:
       interval: "weekly"
     labels:

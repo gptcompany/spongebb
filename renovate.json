@@ -1,0 +1,64 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>gptcompany/gbg-agents//renovate/automerge"
+  ],
+  "packageRules": [
+    {
+      "description": "Financial platform, AI/ML, numerical and database libraries: always manual review (nautilus_dev#576, F70-R1-M1)",
+      "matchPackageNames": [
+        "torch",
+        "transformers",
+        "pandas",
+        "numpy",
+        "scipy",
+        "statsmodels",
+        "hmmlearn",
+        "scikit-learn",
+        "questdb",
+        "redis",
+        "psycopg2-binary",
+        "hiredis",
+        "aiosqlite",
+        "peewee",
+        "openbb",
+        "openbb-benzinga",
+        "openbb-bls",
+        "openbb-cftc",
+        "openbb-commodity",
+        "openbb-congress-gov",
+        "openbb-core",
+        "openbb-crypto",
+        "openbb-currency",
+        "openbb-derivatives",
+        "openbb-econdb",
+        "openbb-economy",
+        "openbb-equity",
+        "openbb-etf",
+        "openbb-federal-reserve",
+        "openbb-fixedincome",
+        "openbb-fmp",
+        "openbb-fred",
+        "openbb-government-us",
+        "openbb-imf",
+        "openbb-index",
+        "openbb-intrinio",
+        "openbb-news",
+        "openbb-oecd",
+        "openbb-platform-api",
+        "openbb-polygon",
+        "openbb-regulators",
+        "openbb-sec",
+        "openbb-tiingo",
+        "openbb-tradingeconomics",
+        "openbb-us-eia",
+        "openbb-yfinance"
+      ],
+      "labels": [
+        "dependencies",
+        "needs-review"
+      ],
+      "automerge": false
+    }
+  ]
+}
