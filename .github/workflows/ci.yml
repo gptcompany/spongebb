@@ -28,10 +28,12 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      UV_CACHE_DIR: /tmp/uv-cache-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
+      # ubuntu-26.04 mounts /tmp as a size-limited tmpfs; the torch/CUDA wheels exceed it.
+      - name: Put the uv cache on disk
+        run: echo "UV_CACHE_DIR=$RUNNER_TEMP/uv-cache" >> "$GITHUB_ENV"
+
       - name: Checkout
         uses: actions/checkout@v6
 
