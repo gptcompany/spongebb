@@ -93,3 +93,12 @@ def test_local_reusable_workflow_is_analyzed(tmp_path):
         "jobs:\n  call:\n    uses: ./.github/workflows/reusable.yml\n"
     )
     assert checker.main(root) == 1
+
+
+@pytest.mark.parametrize("runner", ["${{ (github.event_name == 'pull_request' || github.event_name == 'pull_request_review') && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || vars.CI_RUNS_ON || 'sg-ci' }}", "${{ vars.CI_RUNS_ON || 'sg-ci' }}"])
+def test_operator_pause_admits_only_approved_sg_ci_selectors(runner):
+    checker.check_job({"runs-on": runner}, "public", set())
+    with pytest.raises(ValueError):
+        checker.check_job({"runs-on": "sg-ci"}, "public", set())
+    with pytest.raises(ValueError):
+        checker.check_job({"runs-on": runner.replace("sg-ci", "prod")}, "public", set())
