@@ -12,6 +12,8 @@ POLICY_FILE = ROOT / ".github/runner-policy.json"
 # F-491: the org runner group holding sg-ci and dell-ci excludes public repositories, so a public repository job on a
 # self-hosted selector stays queued forever without an error; public repositories get free hosted minutes instead.
 EXPECTED = {"public": "ubuntu-latest", "private": "${{ vars.CI_RUNS_ON }}"}
+# Operator decision 2026-11-08; explicit selectors preserve fork isolation.
+PAUSED_SELECTORS = {"${{ (github.event_name == 'pull_request' || github.event_name == 'pull_request_review') && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || vars.CI_RUNS_ON || 'sg-ci' }}", "${{ vars.CI_RUNS_ON || 'sg-ci' }}"}
 # Job-level keys from the GitHub Actions workflow syntax; anything else fails closed.
 JOB_KEYS = {
     "name",
@@ -50,7 +52,7 @@ def visibility(path=POLICY_FILE):
     return data["visibility"]
 
 
-def check_job(job, repo_visibility, local_workflows):
+def check_job(job, repo_visibility, local_workflows, pr_reachable=False):
     """A reusable workflow is admitted only as a local file that this check also analyzes (F-492: an external one,
     gptcompany/.github included, can route a public repository job to a self-hosted runner)."""
     if not isinstance(job, dict):
@@ -73,8 +75,10 @@ def check_job(job, repo_visibility, local_workflows):
         return
     if "runs-on" not in job:
         raise ValueError("job must have runs-on or a local reusable workflow")
+    if pr_reachable and job["runs-on"] == "${{ vars.CI_RUNS_ON || 'sg-ci' }}":
+        raise ValueError("PR-reachable sg-ci selector must isolate fork code")
     expected = EXPECTED[repo_visibility]
-    if job["runs-on"] != expected:
+    if job["runs-on"] != expected and not (isinstance(job["runs-on"], str) and job["runs-on"] in PAUSED_SELECTORS):
         raise ValueError(
             f"{repo_visibility} repository requires runs-on: {expected}, found {job['runs-on']!r}"
         )
@@ -93,7 +97,9 @@ def main(root=ROOT):
             raise ValueError(f"invalid workflow: {path.name}")
         for name, job in workflow["jobs"].items():
             try:
-                check_job(job, repo_visibility, local_workflows)
+                events = workflow.get("on", workflow.get(True, {}))
+                events = {events} if isinstance(events, str) else set(events or {})
+                check_job(job, repo_visibility, local_workflows, bool(events & {"pull_request", "pull_request_review", "workflow_call", "pull_request_target"}))
                 print(f"{path.name}:{name} ok ({repo_visibility})")
             except ValueError as error:
                 print(f"{path.name}:{name} ERROR: {error}")

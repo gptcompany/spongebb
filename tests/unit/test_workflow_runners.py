@@ -102,3 +102,8 @@ def test_operator_pause_admits_only_approved_sg_ci_selectors(runner):
         checker.check_job({"runs-on": "sg-ci"}, "public", set())
     with pytest.raises(ValueError):
         checker.check_job({"runs-on": runner.replace("sg-ci", "prod")}, "public", set())
+
+
+def test_pr_reachable_plain_sg_ci_selector_is_rejected():
+    with pytest.raises(ValueError, match="isolate fork"):
+        checker.check_job({"runs-on": "${{ vars.CI_RUNS_ON || 'sg-ci' }}"}, "public", set(), pr_reachable=True)
